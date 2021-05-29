@@ -49,6 +49,8 @@ dependencies {
 
     def lifecycle_version = "2.3.1"
     def nav_version = "2.3.5"
+    def appcompat_version = "1.2.0"
+
     
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -58,4 +60,10 @@ dependencies {
     // Kotlin
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
+
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
+    // For loading and tinting drawables on older versions of the platform
+    implementation "androidx.appcompat:appcompat-resources:$appcompat_version"
 }

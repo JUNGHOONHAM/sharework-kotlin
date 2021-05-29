@@ -5,11 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.databinding.FragmentHomeworkerBinding
 
-class HomeWorkerFragment : Fragment() {
+class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
 
     private var mBinding : FragmentHomeworkerBinding? = null
+    private lateinit var mView : MapView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -20,6 +25,10 @@ class HomeWorkerFragment : Fragment() {
 
         mBinding = binding
 
+        mView = binding.map
+        mView.onCreate(savedInstanceState)
+        mView.getMapAsync(this)
+
         return mBinding?.root
     }
 
@@ -27,4 +36,48 @@ class HomeWorkerFragment : Fragment() {
         mBinding = null
         super.onDestroyView()
     }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        val myLocation = LatLng(37.654601, 127.060530)
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation))
+        googleMap.moveCamera(CameraUpdateFactory.zoomTo(15f))
+
+        //마커 출력
+        val marker = MarkerOptions()
+            .position(myLocation)
+            .title("Nowon")
+            .snippet("노원역입니다.")
+        googleMap?.addMarker(marker)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mView.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mView.onStop()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mView.onPause()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mView.onLowMemory()
+    }
+
+    override fun onDestroy() {
+        mView.onDestroy()
+        super.onDestroy()
+    }
+
 }
