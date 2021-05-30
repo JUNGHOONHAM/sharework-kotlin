@@ -79,4 +79,8 @@ dependencies {
 
     // simple json
     implementation 'com.googlecode.json-simple:json-simple:1.1'
+
+    // bottom-sheet
+    implementation 'com.github.HeyAlex:BottomDrawer:v1.0.0'
+    implementation 'com.github.HeyAlex:ExapandableCardView:-SNAPSHOT'
 }

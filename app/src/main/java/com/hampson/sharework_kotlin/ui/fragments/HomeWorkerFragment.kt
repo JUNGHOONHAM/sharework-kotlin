@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.hampson.sharework_kotlin.GoogleTaskExampleDialog
 import com.hampson.sharework_kotlin.databinding.FragmentHomeworkerBinding
 import com.hampson.sharework_kotlin.ui.single_job.SingleJob
 
@@ -31,10 +33,15 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
         mView.getMapAsync(this)
 
         binding.button.setOnClickListener {
-            val intent = Intent(context, SingleJob::class.java)
-            intent.putExtra("id", 1775)
-            this.startActivity(intent)
+            //val intent = Intent(context, SingleJob::class.java)
+            //intent.putExtra("id", 1775)
+            //this.startActivity(intent)
+
+            (activity as FragmentActivity).supportFragmentManager?.beginTransaction()?.add(
+                GoogleTaskExampleDialog(), "test")
+                ?.commit()
         }
+
 
         return mBinding?.root
     }

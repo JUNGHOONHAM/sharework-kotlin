@@ -51,14 +51,7 @@ class SingleJob : AppCompatActivity() {
     }
 
     fun bindUI(it: Job) {
-        val jobs: Object = it.response
-        Log.d("getDATAStart0", it.toString())
-        Log.d("getDATAStart0", "@@@")
-        Log.d("getDATAStart0", it.response
-            .toString())
         val json = Gson().toJson(it)
-        Log.d("getDATAStart1", "@@@")
-        Log.d("getDATAStart1", json)
 
         try {
             val parser = JSONParser()
