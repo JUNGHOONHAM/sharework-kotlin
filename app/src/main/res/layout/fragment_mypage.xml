@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.hampson.sharework_kotlin.fragments.MyPageFragment"
+    tools:context=".ui.fragments.MyPageFragment"
     android:id="@+id/myPageFragment">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

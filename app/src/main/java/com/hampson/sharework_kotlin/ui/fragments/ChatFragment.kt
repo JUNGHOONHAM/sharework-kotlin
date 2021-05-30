@@ -1,22 +1,22 @@
-package com.hampson.sharework_kotlin.fragments
+package com.hampson.sharework_kotlin.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.hampson.sharework_kotlin.databinding.FragmentMypageBinding
+import com.hampson.sharework_kotlin.databinding.FragmentChatBinding
 
-class MyPageFragment : Fragment() {
+class ChatFragment : Fragment() {
 
-    private var mBinding : FragmentMypageBinding? = null
+    private var mBinding : FragmentChatBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentMypageBinding.inflate(inflater, container, false)
+        val binding = FragmentChatBinding.inflate(inflater, container, false)
 
         mBinding = binding
 

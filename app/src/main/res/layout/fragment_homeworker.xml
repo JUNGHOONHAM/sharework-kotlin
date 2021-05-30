@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.hampson.sharework_kotlin.fragments.HomeWorkerFragment"
+    tools:context=".ui.fragments.HomeWorkerFragment"
     android:id="@+id/homeWorkerFragment">
 
     <com.google.android.gms.maps.MapView
@@ -11,4 +11,11 @@
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="fill_parent" />
-</LinearLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="상세보기" />
+
+</RelativeLayout>

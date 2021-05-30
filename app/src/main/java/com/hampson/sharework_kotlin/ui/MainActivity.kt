@@ -1,9 +1,10 @@
-package com.hampson.sharework_kotlin
+package com.hampson.sharework_kotlin.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

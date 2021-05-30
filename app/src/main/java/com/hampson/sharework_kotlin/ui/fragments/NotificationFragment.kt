@@ -1,4 +1,4 @@
-package com.hampson.sharework_kotlin.fragments
+package com.hampson.sharework_kotlin.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

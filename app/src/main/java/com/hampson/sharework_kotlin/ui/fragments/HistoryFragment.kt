@@ -1,22 +1,22 @@
-package com.hampson.sharework_kotlin.fragments
+package com.hampson.sharework_kotlin.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.hampson.sharework_kotlin.databinding.FragmentChatBinding
+import com.hampson.sharework_kotlin.databinding.FragmentHistoryBinding
 
-class ChatFragment : Fragment() {
+class HistoryFragment : Fragment() {
 
-    private var mBinding : FragmentChatBinding? = null
+    private var mBinding : FragmentHistoryBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentChatBinding.inflate(inflater, container, false)
+        val binding = FragmentHistoryBinding.inflate(inflater, container, false)
 
         mBinding = binding
 

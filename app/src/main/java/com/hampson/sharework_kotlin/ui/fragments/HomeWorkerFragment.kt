@@ -1,5 +1,6 @@
-package com.hampson.sharework_kotlin.fragments
+package com.hampson.sharework_kotlin.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +9,8 @@ import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.databinding.FragmentHomeworkerBinding
+import com.hampson.sharework_kotlin.ui.single_job.SingleJob
 
 class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
 
@@ -28,6 +29,12 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
         mView = binding.map
         mView.onCreate(savedInstanceState)
         mView.getMapAsync(this)
+
+        binding.button.setOnClickListener {
+            val intent = Intent(context, SingleJob::class.java)
+            intent.putExtra("id", 1775)
+            this.startActivity(intent)
+        }
 
         return mBinding?.root
     }

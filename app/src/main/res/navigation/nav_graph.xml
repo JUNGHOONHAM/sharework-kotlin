@@ -7,27 +7,27 @@
 
     <fragment
         android:id="@+id/homeWorkerFragment"
-        android:name="com.hampson.sharework_kotlin.fragments.HomeWorkerFragment"
+        android:name="com.hampson.sharework_kotlin.ui.fragments.HomeWorkerFragment"
         android:label="fragment_homeworker"
         tools:layout="@layout/fragment_homeworker" />
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.hampson.sharework_kotlin.fragments.HistoryFragment"
+        android:name="com.hampson.sharework_kotlin.ui.fragments.HistoryFragment"
         android:label="fragment_history"
         tools:layout="@layout/fragment_history" />
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.hampson.sharework_kotlin.fragments.ChatFragment"
+        android:name="com.hampson.sharework_kotlin.ui.fragments.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" />
     <fragment
         android:id="@+id/notificationFragment"
-        android:name="com.hampson.sharework_kotlin.fragments.NotificationFragment"
+        android:name="com.hampson.sharework_kotlin.ui.fragments.NotificationFragment"
         android:label="fragment_notification"
         tools:layout="@layout/fragment_notification" />
     <fragment
         android:id="@+id/myPageFragment"
-        android:name="com.hampson.sharework_kotlin.fragments.MyPageFragment"
+        android:name="com.hampson.sharework_kotlin.ui.fragments.MyPageFragment"
         android:label="fragment_mypage"
         tools:layout="@layout/fragment_mypage" />
 </navigation>

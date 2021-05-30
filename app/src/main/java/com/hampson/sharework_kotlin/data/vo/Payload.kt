@@ -1,0 +1,33 @@
+package com.hampson.sharework_kotlin.data.vo
+
+data class Payload(
+    val address1: String,
+    val address2: String,
+    val contents: String,
+    val day: Any,
+    val day_nego: Any,
+    val end_date: String,
+    val id: Int,
+    val job_applications: List<JobApplication>,
+    val job_checklists: List<JobChecklists>,
+    val job_date: String,
+    val job_provideds: List<JobProvided>,
+    val job_title: String,
+    val job_type: String,
+    val jobable: Jobable,
+    val jobable_id: Int,
+    val jobable_type: String,
+    val lat: String,
+    val lng: String,
+    val pay: String,
+    val pay_type: String,
+    val period_type: Any,
+    val personnel: String,
+    val start_date: String,
+    val status: String,
+    val tags: List<Tag>,
+    val total_pay: String,
+    val total_time: Any,
+    val total_work_pay: Any,
+    val view_count: Int
+)
