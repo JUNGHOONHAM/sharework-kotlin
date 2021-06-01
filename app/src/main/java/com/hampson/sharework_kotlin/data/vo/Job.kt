@@ -4,11 +4,6 @@ import com.google.gson.annotations.SerializedName
 import java.util.*
 
 data class Job (
-    @SerializedName("response")
-    val response: Object,
-    @SerializedName("payload")
-    val payload: Object,
-
     val id: Int,
     val address1: String,
     val address2: String,

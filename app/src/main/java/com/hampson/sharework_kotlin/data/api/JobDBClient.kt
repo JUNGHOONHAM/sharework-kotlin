@@ -11,6 +11,9 @@ import java.util.concurrent.TimeUnit
 
 const val BASE_URL = "http://3.34.231.112"
 
+const val FIRST_PAGE = 1
+const val POST_PER_PAGE = 20
+
 object JobDBClient {
     fun getClient(): JobDBInterface {
         val requestInterceptor = Interceptor { chain ->

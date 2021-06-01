@@ -29,5 +29,5 @@
         android:paddingLeft="0dp"
         android:paddingEnd="0dp"
         android:paddingRight="0dp"
-        android:src="@drawable/ic_bottom_mypage" />
+        android:src="@drawable/ic_close_black_24dp" />
 </RelativeLayout>

@@ -50,6 +50,7 @@ dependencies {
     def lifecycle_version = "2.3.1"
     def nav_version = "2.3.5"
     def appcompat_version = "1.2.0"
+    def paging_version = "3.0.0"
     
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -83,4 +84,7 @@ dependencies {
     // bottom-sheet
     implementation 'com.github.HeyAlex:BottomDrawer:v1.0.0'
     implementation 'com.github.HeyAlex:ExapandableCardView:-SNAPSHOT'
+
+    // paging
+    implementation "androidx.paging:paging-runtime:$paging_version"
 }

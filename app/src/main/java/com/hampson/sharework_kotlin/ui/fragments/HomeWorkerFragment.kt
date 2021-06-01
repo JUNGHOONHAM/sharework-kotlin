@@ -1,6 +1,5 @@
 package com.hampson.sharework_kotlin.ui.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +9,8 @@ import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.hampson.sharework_kotlin.GoogleTaskExampleDialog
+import com.hampson.sharework_kotlin.ui.cluster_job.GoogleTaskExampleDialog
 import com.hampson.sharework_kotlin.databinding.FragmentHomeworkerBinding
-import com.hampson.sharework_kotlin.ui.single_job.SingleJob
 
 class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
 
