@@ -77,15 +77,13 @@ class ClusterJobPagedListAdapter(public val context: Context) : PagedListAdapter
         fun bind(job: Job?, context: Context) {
             Log.d("job TEST", job?.toString())
             Log.d("job TEST", job?.job_title.toString())
-            textViewTitle.text = "TEST"
-
-            textViewTitle.text
+            textViewTitle.text = job?.job_title
         }
     }
 
     class NetworkStateItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         private val progressBar = itemView.findViewById<ProgressBar>(R.id.progressBar)
-        private val textViewError = itemView.findViewById<TextView>(R.id.textViewError)
+        private val textViewErrorMessage = itemView.findViewById<TextView>(R.id.textViewErrorMessage)
 
         fun bind(networkState: NetworkState?) {
 
@@ -96,13 +94,13 @@ class ClusterJobPagedListAdapter(public val context: Context) : PagedListAdapter
             }
 
             if (networkState != null && networkState == NetworkState.ERROR) {
-                textViewError.visibility = View.VISIBLE
-                textViewError.text = networkState.msg
+                textViewErrorMessage.visibility = View.VISIBLE
+                textViewErrorMessage.text = networkState.msg
             } else if (networkState != null && networkState == NetworkState.ENDOFLIST) {
-                textViewError.visibility = View.VISIBLE
-                textViewError.text = networkState.msg
+                textViewErrorMessage.visibility = View.VISIBLE
+                textViewErrorMessage.text = networkState.msg
             } else {
-                textViewError.visibility = View.GONE
+                textViewErrorMessage.visibility = View.GONE
             }
 
         }

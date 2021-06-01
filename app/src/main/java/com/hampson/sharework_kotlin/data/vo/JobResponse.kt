@@ -6,8 +6,6 @@ data class JobResponse (
     val page: Int,
     @SerializedName("response")
     val payload: Payload,
-    @SerializedName("total_pages")
-    val totalPages: Int,
-    @SerializedName("total_results")
-    val totalResults: Int
+    @SerializedName("optional")
+    val optional: Optional
 )

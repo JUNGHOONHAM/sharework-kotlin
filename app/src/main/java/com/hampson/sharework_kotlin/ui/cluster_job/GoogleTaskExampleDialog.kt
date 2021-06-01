@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.heyalex.bottomdrawer.BottomDrawerDialog
 import com.github.heyalex.bottomdrawer.BottomDrawerFragment
@@ -72,18 +73,8 @@ class GoogleTaskExampleDialog : BottomDrawerFragment() {
 
         val jobAdapter = ClusterJobPagedListAdapter((activity as FragmentActivity))
 
-        val gridLayoutManager = GridLayoutManager((activity as FragmentActivity), 3)
-
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                val viewType = jobAdapter.getItemViewType(position)
-                if (viewType == jobAdapter.JOB_VIEW_TYPE) return 1
-                else return 3
-            }
-        }
-
-        recyclerView.layoutManager = gridLayoutManager
-        recyclerView.setHasFixedSize(true)
+        val layout = LinearLayoutManager((activity as FragmentActivity))
+        recyclerView.layoutManager = layout
         recyclerView.adapter = jobAdapter
 
         viewModel.jobPagedList.observe(this, Observer {

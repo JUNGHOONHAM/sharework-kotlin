@@ -16,6 +16,28 @@ class JobDataSource (private val apiService : JobDBInterface, private val compos
     val networkState: MutableLiveData<NetworkState> = MutableLiveData()
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Job>) {
+        networkState.postValue(NetworkState.LOADING)
+        val arr = arrayListOf<Int>(1775, 1776, 1777, 1778, 1779, 1800)
+        compositeDisposable.add(
+                apiService.getJob(arr.toString(), params.key, 5)
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(
+                                {
+                                    Log.d("loadafter in", "START")
+                                    Log.d("totalPage", it.optional.total_page.toString())
+                                    if (it.optional.total_page >= params.key) {
+                                        Log.d("loadafter in", it.payload.jobList.toString())
+                                        callback.onResult(it.payload.jobList, params.key + 1)
+                                        networkState.postValue(NetworkState.LOADED)
+                                    } else {
+                                        networkState.postValue(NetworkState.ENDOFLIST)
+                                    }
+                                },
+                                {
+                                    networkState.postValue(NetworkState.ERROR)
+                                }
+                        )
+        )
     }
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Job>) {
@@ -27,7 +49,7 @@ class JobDataSource (private val apiService : JobDBInterface, private val compos
         Log.d("loadInitial in", "LOADING")
         val arr = arrayListOf<Int>(1775, 1776, 1777, 1778, 1779, 1800)
         compositeDisposable.add(
-            apiService.getJob(arr.toString(), page, 10)
+            apiService.getJob(arr.toString(), page, 5)
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     {
