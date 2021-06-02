@@ -1,9 +1,9 @@
 package com.hampson.sharework_kotlin.ui.fragments
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,14 +15,19 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.hampson.sharework_kotlin.ui.cluster_job.GoogleTaskExampleDialog
+import com.google.android.gms.maps.model.Marker
+import com.google.maps.android.clustering.ClusterItem
+import com.google.maps.android.clustering.ClusterManager
+import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.hampson.sharework_kotlin.databinding.FragmentHomeworkerBinding
-import java.util.jar.Manifest
+import com.hampson.sharework_kotlin.ui.cluster_job.GoogleTaskExampleDialog
 
-class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterItem {
+class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
 
     private var mBinding : FragmentHomeworkerBinding? = null
     private lateinit var mView : MapView
@@ -32,6 +37,10 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterItem {
     private lateinit var locationCallback: LocationCallback
     private val REQUEST_ACCESS_FINE_LOCATION = 1000
     private lateinit var map: GoogleMap
+
+    // Declare a variable for the cluster manager.
+    private lateinit var clusterManager: ClusterManager<MyItem>
+    private var clusterRenderer: ClusterRenderer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +54,9 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterItem {
         mView = binding.map
         mView.onCreate(savedInstanceState)
         mView.getMapAsync(this)
+        //mView.getMapAsync {
+        //    clusterRenderer = ClusterRenderer(activity as FragmentActivity, it, clusterManager)
+        //}
 
         locationInit()
 
@@ -72,14 +84,64 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterItem {
         val defaultLocation = LatLng(37.715133, 126.734086)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 17f))
 
-        map.addMarker(
-                MarkerOptions()
-                        .position(defaultLocation)
-                        .title("Marker in Sydney")
-        )
-
         locationInit()
         addLocationListener()
+        setUpClusterer()
+    }
+
+    private fun addItems() {
+
+        // Set some lat/lng coordinates to start with.
+        var lat = 37.715133
+        var lng = 126.734086
+
+        // Add ten cluster items in close proximity, for purposes of this example.
+        for (i in 0..9) {
+            val offset = i / 60.0
+            lat += offset
+            lng += offset
+            val offsetItem =
+                    MyItem(lat, lng, "Title $i", "Snippet $i")
+            clusterManager.addItem(offsetItem)
+        }
+    }
+
+    class CustomClusterRenderer(
+            context: Context,
+            map: GoogleMap,
+            clusterManager: ClusterManager<ClusterItem?>
+    ) : DefaultClusterRenderer<ClusterItem?>(context,map, clusterManager)
+    {
+        override fun onClusterItemRendered(clusterItem: ClusterItem, marker: Marker) {
+            minClusterSize = 1
+        }
+    }
+
+    class ClusterRenderer(
+            context: Context?,
+            map: GoogleMap?,
+            clusterManager: ClusterManager<MyItem>?
+    ): DefaultClusterRenderer<MyItem>(context, map, clusterManager) {
+
+        init {
+            clusterManager?.renderer = this
+            minClusterSize = 1
+        }
+    }
+
+    private fun setUpClusterer() {
+        // Initialize the manager with the context and the map.
+        // (Activity extends context, so we can pass 'this' in the constructor.)
+        clusterManager = ClusterManager(context, map)
+        clusterManager.renderer = ClusterRenderer(activity as FragmentActivity, map, clusterManager)
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        map.setOnCameraIdleListener(clusterManager)
+        map.setOnMarkerClickListener(clusterManager)
+
+        // Add cluster items (markers) to the cluster manager.
+        addItems()
     }
 
     inner class MyItem(
