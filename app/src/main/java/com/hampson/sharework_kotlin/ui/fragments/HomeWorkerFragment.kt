@@ -1,21 +1,37 @@
 package com.hampson.sharework_kotlin.ui.fragments
 
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.hampson.sharework_kotlin.ui.cluster_job.GoogleTaskExampleDialog
 import com.hampson.sharework_kotlin.databinding.FragmentHomeworkerBinding
+import java.util.jar.Manifest
 
-class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
+class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterItem {
 
     private var mBinding : FragmentHomeworkerBinding? = null
     private lateinit var mView : MapView
+
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var locationCallback: LocationCallback
+    private val REQUEST_ACCESS_FINE_LOCATION = 1000
+    private lateinit var map: GoogleMap
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,6 +46,8 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
         mView.onCreate(savedInstanceState)
         mView.getMapAsync(this)
 
+        locationInit()
+
         binding.button.setOnClickListener {
             //val intent = Intent(context, SingleJob::class.java)
             //intent.putExtra("id", 1775)
@@ -40,7 +58,6 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
                 ?.commit()
         }
 
-
         return mBinding?.root
     }
 
@@ -50,17 +67,152 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        val myLocation = LatLng(37.654601, 127.060530)
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation))
-        googleMap.moveCamera(CameraUpdateFactory.zoomTo(15f))
+        map = googleMap ?: return
 
-        //마커 출력
-        val marker = MarkerOptions()
-            .position(myLocation)
-            .title("Nowon")
-            .snippet("노원역입니다.")
-        googleMap?.addMarker(marker)
+        val defaultLocation = LatLng(37.715133, 126.734086)
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 17f))
+
+        map.addMarker(
+                MarkerOptions()
+                        .position(defaultLocation)
+                        .title("Marker in Sydney")
+        )
+
+        locationInit()
+        addLocationListener()
     }
+
+    inner class MyItem(
+            lat: Double,
+            lng: Double,
+            title: String,
+            snippet: String
+    ) : ClusterItem {
+
+        private val position: LatLng
+        private val title: String
+        private val snippet: String
+
+        override fun getPosition(): LatLng {
+            return position
+        }
+
+        override fun getTitle(): String? {
+            return title
+        }
+
+        override fun getSnippet(): String? {
+            return snippet
+        }
+
+        init {
+            position = LatLng(lat, lng)
+            this.title = title
+            this.snippet = snippet
+        }
+    }
+
+    private fun locationInit() {
+        fusedLocationProviderClient = FusedLocationProviderClient(activity as FragmentActivity)
+        locationCallback = MyLocationCallBack()
+
+        locationRequest = LocationRequest()   // LocationRequest객체로 위치 정보 요청 세부 설정을 함
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY   // GPS 우선
+        //locationRequest.interval = 10000   // 10초. 상황에 따라 다른 앱에서 더 빨리 위치 정보를 요청하면
+        // 자동으로 더 짧아질 수도 있음
+        //locationRequest.fastestInterval = 5000  // 이보다 더 빈번히 업데이트 하지 않음 (고정된 최소 인터벌)
+    }
+
+    private fun addLocationListener() {
+        if (ActivityCompat.checkSelfPermission(activity as FragmentActivity, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity as FragmentActivity, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+            return
+        }
+
+        map.isMyLocationEnabled = true
+        map.uiSettings.isMyLocationButtonEnabled = false
+
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest,
+                locationCallback,
+                null)  // 혹시 안드로이드 스튜디오에서 비정상적으로 권한 요청 오류를 표시할 경우, 'Alt+Enter'로
+        // 표시되는 제안 중, Suppress: Add @SuppressLint("MissingPermission") annotation
+        // 을 클릭할 것
+        // (에디터가 원래 권한 요청이 필요한 코드 주변에서만 권한 요청 코딩을 허용했었기 때문임.
+        //  현재 우리 코딩처럼 이렇게 별도의 메소드에 권한 요청 코드를 작성하지 못하게 했었음)
+    }
+
+    inner class MyLocationCallBack: LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult?) {
+            super.onLocationResult(locationResult)
+
+            val location = locationResult?.lastLocation   // GPS가 꺼져 있을 경우 Location 객체가
+            // null이 될 수도 있음
+
+            val latLng = location?.latitude?.let { LatLng(it, location.longitude) }   // 위도, 경도
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f))  // 카메라 이동
+
+            //location?.run {
+            //    val latLng = LatLng(latitude, longitude)   // 위도, 경도
+            //    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f))  // 카메라 이동
+
+            //    Log.d("MapsActivity", "위도: $latitude, 경도: $longitude")     // 로그 확인 용
+
+            //}
+        }
+    }
+
+    private fun permissionCheck(cancel: () -> Unit, ok: () -> Unit) {   // 전달인자도, 리턴값도 없는
+        // 두 개의 함수를 받음
+
+        if (ContextCompat.checkSelfPermission(activity as FragmentActivity,                  // 권한이 없는 경우
+                        android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity as FragmentActivity,
+                            ACCESS_FINE_LOCATION)) {       // 권한 거부 이력이 있는 경우
+
+                cancel()
+
+            } else {
+                ActivityCompat.requestPermissions(activity as FragmentActivity,
+                        arrayOf(ACCESS_FINE_LOCATION),
+                        REQUEST_ACCESS_FINE_LOCATION)
+            }
+        } else {                                                    // 권한이 있는 경우
+            ok()
+        }
+    }
+
+    // 권한 요청 결과 처리
+    override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            REQUEST_ACCESS_FINE_LOCATION -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    addLocationListener()
+                } else {
+                    // toast("권한이 거부 됨")
+                }
+                return
+            }
+        }
+    }
+
+    private fun removeLocationListener() {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+    }
+
 
     override fun onStart() {
         super.onStart()
@@ -75,11 +227,18 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         mView.onResume()
+
+        // 권한 요청
+        //permissionCheck(
+        //        cancel = { },   // 권한 필요 안내창
+        //        ok = { addLocationListener()}      // ③   주기적으로 현재 위치를 요청
+        //)
     }
 
     override fun onPause() {
         super.onPause()
         mView.onPause()
+        removeLocationListener()    // 앱이 동작하지 않을 때에는 위치 정보 요청 제거
     }
 
     override fun onLowMemory() {

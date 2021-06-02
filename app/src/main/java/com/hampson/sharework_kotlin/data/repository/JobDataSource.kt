@@ -23,10 +23,7 @@ class JobDataSource (private val apiService : JobDBInterface, private val compos
                         .subscribeOn(Schedulers.io())
                         .subscribe(
                                 {
-                                    Log.d("loadafter in", "START")
-                                    Log.d("totalPage", it.optional.total_page.toString())
                                     if (it.optional.total_page >= params.key) {
-                                        Log.d("loadafter in", it.payload.jobList.toString())
                                         callback.onResult(it.payload.jobList, params.key + 1)
                                         networkState.postValue(NetworkState.LOADED)
                                     } else {
@@ -46,23 +43,17 @@ class JobDataSource (private val apiService : JobDBInterface, private val compos
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Job>) {
         networkState.postValue(NetworkState.LOADING)
-        Log.d("loadInitial in", "LOADING")
         val arr = arrayListOf<Int>(1775, 1776, 1777, 1778, 1779, 1800)
         compositeDisposable.add(
             apiService.getJob(arr.toString(), page, 5)
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     {
-                        Log.d("loadInitial in", "start")
-                        Log.d("loadInitial in", it.payload.jobList.toString())
                         callback.onResult(it.payload.jobList, null, page + 1)
                         networkState.postValue(NetworkState.LOADED)
-                        Log.d("loadInitial in", "LOADED")
                     },
                     {
                         networkState.postValue(NetworkState.ERROR)
-                        Log.d("loadInitial in err", it.message)
-                        Log.d("loadInitial in", "ERROR")
                     }
                 )
         )
