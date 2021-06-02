@@ -4,6 +4,7 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,13 +22,14 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.hampson.sharework_kotlin.databinding.FragmentHomeworkerBinding
 import com.hampson.sharework_kotlin.ui.cluster_job.GoogleTaskExampleDialog
 
-class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
+class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClusterClickListener<HomeWorkerFragment.MyClusterItem> {
 
     private var mBinding : FragmentHomeworkerBinding? = null
     private lateinit var mView : MapView
@@ -39,7 +41,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
 
     // Declare a variable for the cluster manager.
-    private lateinit var clusterManager: ClusterManager<MyItem>
+    private lateinit var clusterManager: ClusterManager<MyClusterItem>
     private var clusterRenderer: ClusterRenderer? = null
 
     override fun onCreateView(
@@ -101,7 +103,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
             lat += offset
             lng += offset
             val offsetItem =
-                    MyItem(lat, lng, "Title $i", "Snippet $i")
+                    MyClusterItem(lat, lng, "Title $i", "Snippet $i")
             clusterManager.addItem(offsetItem)
         }
     }
@@ -120,8 +122,8 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
     class ClusterRenderer(
             context: Context?,
             map: GoogleMap?,
-            clusterManager: ClusterManager<MyItem>?
-    ): DefaultClusterRenderer<MyItem>(context, map, clusterManager) {
+            clusterManager: ClusterManager<MyClusterItem>?
+    ): DefaultClusterRenderer<MyClusterItem>(context, map, clusterManager) {
 
         init {
             clusterManager?.renderer = this
@@ -133,6 +135,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
         clusterManager = ClusterManager(context, map)
+        clusterManager.setOnClusterClickListener(this)
         clusterManager.renderer = ClusterRenderer(activity as FragmentActivity, map, clusterManager)
 
         // Point the map's listeners at the listeners implemented by the cluster
@@ -144,7 +147,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
         addItems()
     }
 
-    inner class MyItem(
+    inner class MyClusterItem(
             lat: Double,
             lng: Double,
             title: String,
@@ -311,6 +314,14 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback {
     override fun onDestroy() {
         mView.onDestroy()
         super.onDestroy()
+    }
+
+    override fun onClusterClick(cluster: Cluster<MyClusterItem>?): Boolean {
+        val item = cluster?.items?.toTypedArray()?.get(0)?.position
+
+        Log.d("cluster item", item.toString())
+
+        return true
     }
 
 }
