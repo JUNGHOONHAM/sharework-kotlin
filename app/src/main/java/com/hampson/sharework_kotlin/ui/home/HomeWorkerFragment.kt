@@ -53,6 +53,8 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     private lateinit var viewModel: ClusterJobInMapViewModel
     private lateinit var jobInMapRepository: JobInMapRepository
 
+    private var myLocation: LatLng? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -69,8 +71,6 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         //    clusterRenderer = ClusterRenderer(activity as FragmentActivity, it, clusterManager)
         //}
 
-        locationInit()
-
         val apiService : JobDBInterface = JobDBClient.getClient()
         jobInMapRepository =
             JobInMapRepository(apiService)
@@ -85,19 +85,12 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         viewModel.networkState.observe(activity as FragmentActivity, Observer {
             // progress_bar
             if (it == NetworkState.LOADING)
-                Log.d("NETWORKSTATE1", "TEST")
             else if (it == NetworkState.ERROR)
                 Log.d("NETWORKSTATE2", "TEST")
         })
 
-        binding.button.setOnClickListener {
-            //val intent = Intent(context, SingleJob::class.java)
-            //intent.putExtra("id", 1775)
-            //this.startActivity(intent)
-
-            (activity as FragmentActivity).supportFragmentManager?.beginTransaction()?.add(
-                GoogleTaskExampleDialog(), "test")
-                ?.commit()
+        binding.floatingMyLocation.setOnClickListener {
+            map.animateCamera(CameraUpdateFactory.newLatLng(myLocation))
         }
 
         return mBinding?.root
@@ -114,13 +107,9 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         val defaultLocation = LatLng(37.715133, 126.734086)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 17f))
 
-
-
         locationInit()
         addLocationListener()
         setUpClusterer()
-
-
     }
 
     private fun addItems(jobList: List<Job>) {
@@ -252,16 +241,12 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
             val location = locationResult?.lastLocation   // GPS가 꺼져 있을 경우 Location 객체가
             // null이 될 수도 있음
 
-            val latLng = location?.latitude?.let { LatLng(it, location.longitude) }   // 위도, 경도
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f))  // 카메라 이동
+            myLocation = location?.latitude?.let { LatLng(it, location.longitude) }!!   // 위도, 경도
+            map.moveCamera(CameraUpdateFactory.newLatLng(myLocation))  // 카메라 이동
 
-            //location?.run {
-            //    val latLng = LatLng(latitude, longitude)   // 위도, 경도
-            //    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f))  // 카메라 이동
-
-            //    Log.d("MapsActivity", "위도: $latitude, 경도: $longitude")     // 로그 확인 용
-
-            //}
+            location?.run {
+                myLocation = LatLng(latitude, longitude)   // 위도, 경도
+            }
         }
     }
 

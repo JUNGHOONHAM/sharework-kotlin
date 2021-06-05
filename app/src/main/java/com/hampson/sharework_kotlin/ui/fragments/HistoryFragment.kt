@@ -36,9 +36,6 @@ class HistoryFragment : Fragment() {
 
         mBinding = binding
 
-
-
-
         val apiService : JobDBInterface = JobDBClient.getClient()
 
         jobRepository =

@@ -90,4 +90,7 @@ dependencies {
 
     // paging
     implementation "androidx.paging:paging-runtime:$paging_version"
+
+    // fab
+    implementation 'io.github.yavski:fab-speed-dial:1.0.6'
 }
