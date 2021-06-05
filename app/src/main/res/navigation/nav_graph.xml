@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeWorkerFragment"
-        android:name="com.hampson.sharework_kotlin.ui.fragments.HomeWorkerFragment"
+        android:name="com.hampson.sharework_kotlin.ui.home.HomeWorkerFragment"
         android:label="fragment_homeworker"
         tools:layout="@layout/fragment_homeworker" />
     <fragment

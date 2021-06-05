@@ -5,6 +5,7 @@ import java.util.*
 
 data class Job (
     val id: Int,
+    val job_id: Int,
     val address1: String,
     val address2: String,
     val contents: String,

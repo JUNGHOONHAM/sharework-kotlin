@@ -16,9 +16,9 @@ import com.hampson.sharework_kotlin.data.api.JobDBClient
 import com.hampson.sharework_kotlin.data.api.JobDBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.databinding.FragmentHistoryBinding
-import com.hampson.sharework_kotlin.ui.cluster_job.ClusterJobPagedListAdapter
-import com.hampson.sharework_kotlin.ui.cluster_job.ClusterJobViewModel
-import com.hampson.sharework_kotlin.ui.cluster_job.JobPagedListRepository
+import com.hampson.sharework_kotlin.ui.home.bottom_sheet.ClusterJobPagedListAdapter
+import com.hampson.sharework_kotlin.ui.home.bottom_sheet.ClusterJobViewModel
+import com.hampson.sharework_kotlin.ui.home.bottom_sheet.JobPagedListRepository
 
 class HistoryFragment : Fragment() {
 
@@ -41,11 +41,17 @@ class HistoryFragment : Fragment() {
 
         val apiService : JobDBInterface = JobDBClient.getClient()
 
-        jobRepository = JobPagedListRepository(apiService)
+        jobRepository =
+            JobPagedListRepository(
+                apiService
+            )
 
         viewModel = getViewModel()
 
-        val jobAdapter = ClusterJobPagedListAdapter((activity as FragmentActivity))
+        val jobAdapter =
+            ClusterJobPagedListAdapter(
+                (activity as FragmentActivity)
+            )
 
         val gridLayoutManager = GridLayoutManager((activity as FragmentActivity), 3)
 
@@ -88,8 +94,11 @@ class HistoryFragment : Fragment() {
     private fun getViewModel(): ClusterJobViewModel {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
+                val jobIdList = ArrayList<Int>()
                 @Suppress("UNCHECKED_CAST")
-                return ClusterJobViewModel(jobRepository) as T
+                return ClusterJobViewModel(
+                    jobRepository, jobIdList
+                ) as T
             }
         }).get(ClusterJobViewModel::class.java)
     }

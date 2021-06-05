@@ -1,4 +1,4 @@
-package com.hampson.sharework_kotlin.ui.cluster_job
+package com.hampson.sharework_kotlin.ui.home.bottom_sheet
 
 import android.net.Network
 import android.util.Log
@@ -20,17 +20,15 @@ class JobPagedListRepository (private val apiService : JobDBInterface) {
     lateinit var jobPagedList: LiveData<PagedList<Job>>
     lateinit var jobDataSourceFactory: JobDataSourceFactory
 
-    fun fetchLiveJobPagedList (compositeDisposable: CompositeDisposable) : LiveData<PagedList<Job>> {
-        jobDataSourceFactory = JobDataSourceFactory(apiService, compositeDisposable)
+    fun fetchLiveJobPagedList (compositeDisposable: CompositeDisposable, jobIdList: ArrayList<Int>) : LiveData<PagedList<Job>> {
+        jobDataSourceFactory = JobDataSourceFactory(apiService, compositeDisposable, jobIdList)
 
         val config = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setPageSize(POST_PER_PAGE)
             .build()
 
-        Log.d("TESTFETCH", "START")
         jobPagedList = LivePagedListBuilder(jobDataSourceFactory, config).build()
-        Log.d("TESTFETCH", "END")
 
         return jobPagedList
     }

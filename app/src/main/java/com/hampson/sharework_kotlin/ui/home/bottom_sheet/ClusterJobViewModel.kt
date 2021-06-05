@@ -1,21 +1,19 @@
-package com.hampson.sharework_kotlin.ui.cluster_job
+package com.hampson.sharework_kotlin.ui.home.bottom_sheet
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
-import com.hampson.sharework_kotlin.ui.single_job.JobRepository
+import com.hampson.sharework_kotlin.ui.home.bottom_sheet.JobPagedListRepository
 import io.reactivex.disposables.CompositeDisposable
 
-class ClusterJobViewModel (private val jobRepository: JobPagedListRepository) : ViewModel() {
+class ClusterJobViewModel (private val jobRepository: JobPagedListRepository, private var jobIdList: ArrayList<Int>) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
     val jobPagedList : LiveData<PagedList<Job>> by lazy {
-        Log.d("TESTjobPagedList", "START")
-        jobRepository.fetchLiveJobPagedList(compositeDisposable)
+        jobRepository.fetchLiveJobPagedList(compositeDisposable, jobIdList)
     }
 
     val networkState : LiveData<NetworkState> by lazy {
@@ -23,9 +21,7 @@ class ClusterJobViewModel (private val jobRepository: JobPagedListRepository) : 
     }
 
     fun listIsEmpty(): Boolean {
-        Log.d("TESTlistIsEmpty", "START")
         return jobPagedList.value?.isEmpty() ?: true
-        Log.d("TESTlistIsEmpty", "START")
     }
 
     override fun onCleared() {

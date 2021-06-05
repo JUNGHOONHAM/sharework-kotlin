@@ -1,7 +1,6 @@
-package com.hampson.sharework_kotlin.ui.cluster_job
+package com.hampson.sharework_kotlin.ui.home.bottom_sheet
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.heyalex.bottomdrawer.BottomDrawerDialog
@@ -22,8 +20,6 @@ import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.api.JobDBClient
 import com.hampson.sharework_kotlin.data.api.JobDBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
-import com.hampson.sharework_kotlin.ui.single_job.JobRepository
-import com.hampson.sharework_kotlin.ui.single_job.SingleJobViewModel
 
 class GoogleTaskExampleDialog : BottomDrawerFragment() {
 
@@ -38,6 +34,8 @@ class GoogleTaskExampleDialog : BottomDrawerFragment() {
 
     private lateinit var viewModel: ClusterJobViewModel
     lateinit var jobRepository: JobPagedListRepository
+
+    private var jobIdList = ArrayList<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,23 +62,31 @@ class GoogleTaskExampleDialog : BottomDrawerFragment() {
         }
         cancelButton.setOnClickListener { dismissWithBehavior() }
 
+        arguments?.let {
+            jobIdList = it.getIntegerArrayList("jobIdList") as ArrayList<Int>
+        }
+
 
         val apiService : JobDBInterface = JobDBClient.getClient()
 
-        jobRepository = JobPagedListRepository(apiService)
+        jobRepository =
+            JobPagedListRepository(
+                apiService
+            )
 
-        viewModel = getViewModel()
+        viewModel = getViewModel(jobIdList)
 
-        val jobAdapter = ClusterJobPagedListAdapter((activity as FragmentActivity))
+        val jobAdapter =
+            ClusterJobPagedListAdapter(
+                (activity as FragmentActivity)
+            )
 
         val layout = LinearLayoutManager((activity as FragmentActivity))
         recyclerView.layoutManager = layout
         recyclerView.adapter = jobAdapter
 
         viewModel.jobPagedList.observe(this, Observer {
-            Log.d("TESTviewModel", "START")
             jobAdapter.submitList(it)
-            Log.d("TESTFviewModel", "END")
         })
 
         viewModel.networkState.observe(this, Observer {
@@ -113,11 +119,11 @@ class GoogleTaskExampleDialog : BottomDrawerFragment() {
     }
 
 
-    private fun getViewModel(): ClusterJobViewModel {
+    private fun getViewModel(jobIdList: ArrayList<Int>): ClusterJobViewModel {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 @Suppress("UNCHECKED_CAST")
-                return ClusterJobViewModel(jobRepository) as T
+                return ClusterJobViewModel(jobRepository, jobIdList) as T
             }
         }).get(ClusterJobViewModel::class.java)
     }

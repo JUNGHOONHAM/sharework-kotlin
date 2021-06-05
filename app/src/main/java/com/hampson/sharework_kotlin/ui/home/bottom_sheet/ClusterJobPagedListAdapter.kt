@@ -1,4 +1,4 @@
-package com.hampson.sharework_kotlin.ui.cluster_job
+package com.hampson.sharework_kotlin.ui.home.bottom_sheet
 
 import android.content.Context
 import android.util.Log
@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.paging.PagedList
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +14,9 @@ import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
 
-class ClusterJobPagedListAdapter(public val context: Context) : PagedListAdapter<Job, RecyclerView.ViewHolder>(JobDiffCallback()) {
+class ClusterJobPagedListAdapter(public val context: Context) : PagedListAdapter<Job, RecyclerView.ViewHolder>(
+    JobDiffCallback()
+) {
 
     val JOB_VIEW_TYPE = 1
     val NETWORK_VIEW_TYPE = 2
@@ -50,14 +51,16 @@ class ClusterJobPagedListAdapter(public val context: Context) : PagedListAdapter
         val layoutInflater = LayoutInflater.from(parent.context)
         val view: View
 
-        Log.d("TETET", viewType.toString())
-
         if (viewType == JOB_VIEW_TYPE) {
             view = layoutInflater.inflate(R.layout.item_job_list, parent, false)
-            return JobItemViewHolder(view)
+            return JobItemViewHolder(
+                view
+            )
         } else {
             view = layoutInflater.inflate(R.layout.network_state_item, parent, false)
-            return NetworkStateItemViewHolder(view)
+            return NetworkStateItemViewHolder(
+                view
+            )
         }
     }
 

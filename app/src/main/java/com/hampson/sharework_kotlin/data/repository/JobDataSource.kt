@@ -9,7 +9,8 @@ import com.hampson.sharework_kotlin.data.vo.Job
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class JobDataSource (private val apiService : JobDBInterface, private val compositeDisposable: CompositeDisposable) : PageKeyedDataSource<Int, Job>() {
+class JobDataSource (private val apiService : JobDBInterface, private val compositeDisposable: CompositeDisposable,
+                     private var jobIdList: ArrayList<Int>) : PageKeyedDataSource<Int, Job>() {
 
     private var page = FIRST_PAGE
 
@@ -17,9 +18,8 @@ class JobDataSource (private val apiService : JobDBInterface, private val compos
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Job>) {
         networkState.postValue(NetworkState.LOADING)
-        val arr = arrayListOf<Int>(1775, 1776, 1777, 1778, 1779, 1800)
         compositeDisposable.add(
-                apiService.getJob(arr.toString(), params.key, 5)
+                apiService.getJob(jobIdList.toString(), params.key, 5)
                         .subscribeOn(Schedulers.io())
                         .subscribe(
                                 {
@@ -43,9 +43,8 @@ class JobDataSource (private val apiService : JobDBInterface, private val compos
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Job>) {
         networkState.postValue(NetworkState.LOADING)
-        val arr = arrayListOf<Int>(1775, 1776, 1777, 1778, 1779, 1800)
         compositeDisposable.add(
-            apiService.getJob(arr.toString(), page, 5)
+            apiService.getJob(jobIdList.toString(), page, 5)
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     {

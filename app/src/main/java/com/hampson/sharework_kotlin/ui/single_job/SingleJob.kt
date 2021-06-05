@@ -64,7 +64,6 @@ class SingleJob : AppCompatActivity() {
         } catch (e: Exception) {
 
         }
-
     }
 
     private fun getViewModel(jobId : Int): SingleJobViewModel {

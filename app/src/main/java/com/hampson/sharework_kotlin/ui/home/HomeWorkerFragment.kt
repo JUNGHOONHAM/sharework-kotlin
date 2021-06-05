@@ -1,4 +1,4 @@
-package com.hampson.sharework_kotlin.ui.fragments
+package com.hampson.sharework_kotlin.ui.home
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
@@ -12,6 +12,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -21,13 +24,16 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
+import com.hampson.sharework_kotlin.data.api.JobDBClient
+import com.hampson.sharework_kotlin.data.api.JobDBInterface
+import com.hampson.sharework_kotlin.data.repository.NetworkState
+import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.databinding.FragmentHomeworkerBinding
-import com.hampson.sharework_kotlin.ui.cluster_job.GoogleTaskExampleDialog
+import com.hampson.sharework_kotlin.ui.home.bottom_sheet.GoogleTaskExampleDialog
 
 class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClusterClickListener<HomeWorkerFragment.MyClusterItem> {
 
@@ -43,6 +49,9 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     // Declare a variable for the cluster manager.
     private lateinit var clusterManager: ClusterManager<MyClusterItem>
     private var clusterRenderer: ClusterRenderer? = null
+
+    private lateinit var viewModel: ClusterJobInMapViewModel
+    private lateinit var jobInMapRepository: JobInMapRepository
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,6 +70,25 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         //}
 
         locationInit()
+
+        val apiService : JobDBInterface = JobDBClient.getClient()
+        jobInMapRepository =
+            JobInMapRepository(apiService)
+
+        //viewModel = getViewModel(jobId)
+        viewModel = getViewModel(0.0, 0.0, 0.0, 0.0)
+
+        viewModel.jobInMapList.observe(activity as FragmentActivity, Observer {
+            bindUI(it)
+        })
+
+        viewModel.networkState.observe(activity as FragmentActivity, Observer {
+            // progress_bar
+            if (it == NetworkState.LOADING)
+                Log.d("NETWORKSTATE1", "TEST")
+            else if (it == NetworkState.ERROR)
+                Log.d("NETWORKSTATE2", "TEST")
+        })
 
         binding.button.setOnClickListener {
             //val intent = Intent(context, SingleJob::class.java)
@@ -86,37 +114,30 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         val defaultLocation = LatLng(37.715133, 126.734086)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 17f))
 
+
+
         locationInit()
         addLocationListener()
         setUpClusterer()
+
+
     }
 
-    private fun addItems() {
+    private fun addItems(jobList: List<Job>) {
+        clusterManager.clearItems()
 
-        // Set some lat/lng coordinates to start with.
-        var lat = 37.715133
-        var lng = 126.734086
-
-        // Add ten cluster items in close proximity, for purposes of this example.
-        for (i in 0..9) {
-            val offset = i / 60.0
-            lat += offset
-            lng += offset
-            val offsetItem =
-                    MyClusterItem(lat, lng, "Title $i", "Snippet $i")
+        var offsetItem: MyClusterItem
+        for (i in 0..(jobList.size - 1)) {
+            offsetItem = MyClusterItem(jobList.get(i).lat.toDouble(), jobList.get(i).lng.toDouble(), jobList.get(i).job_id)
             clusterManager.addItem(offsetItem)
         }
-    }
 
-    class CustomClusterRenderer(
-            context: Context,
-            map: GoogleMap,
-            clusterManager: ClusterManager<ClusterItem?>
-    ) : DefaultClusterRenderer<ClusterItem?>(context,map, clusterManager)
-    {
-        override fun onClusterItemRendered(clusterItem: ClusterItem, marker: Marker) {
-            minClusterSize = 1
-        }
+        clusterManager.renderer =
+            ClusterRenderer(
+                activity as FragmentActivity,
+                map,
+                clusterManager
+            )
     }
 
     class ClusterRenderer(
@@ -136,44 +157,55 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         // (Activity extends context, so we can pass 'this' in the constructor.)
         clusterManager = ClusterManager(context, map)
         clusterManager.setOnClusterClickListener(this)
-        clusterManager.renderer = ClusterRenderer(activity as FragmentActivity, map, clusterManager)
+        clusterManager.renderer =
+            ClusterRenderer(
+                activity as FragmentActivity,
+                map,
+                clusterManager
+            )
 
         // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
         map.setOnCameraIdleListener(clusterManager)
         map.setOnMarkerClickListener(clusterManager)
 
-        // Add cluster items (markers) to the cluster manager.
-        addItems()
+        map.setOnCameraIdleListener {
+            var northeast = map.projection.visibleRegion.latLngBounds.northeast
+            var southwest = map.projection.visibleRegion.latLngBounds.southwest
+
+             viewModel.mapUpdate(northeast.latitude, northeast.longitude, southwest.latitude, southwest.longitude).observe(activity as FragmentActivity, Observer {
+                 addItems(it)
+             })
+        }
     }
 
     inner class MyClusterItem(
             lat: Double,
             lng: Double,
-            title: String,
-            snippet: String
+            job_id: Int
     ) : ClusterItem {
 
         private val position: LatLng
-        private val title: String
-        private val snippet: String
+        private val job_id: Int
+
+        fun getJob_id(): Int {
+            return job_id
+        }
+
+        override fun getSnippet(): String? {
+            TODO("Not yet implemented")
+        }
+
+        override fun getTitle(): String? {
+            TODO("Not yet implemented")
+        }
 
         override fun getPosition(): LatLng {
             return position
         }
 
-        override fun getTitle(): String? {
-            return title
-        }
-
-        override fun getSnippet(): String? {
-            return snippet
-        }
-
         init {
             position = LatLng(lat, lng)
-            this.title = title
-            this.snippet = snippet
+            this.job_id = job_id
         }
     }
 
@@ -317,11 +349,44 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     }
 
     override fun onClusterClick(cluster: Cluster<MyClusterItem>?): Boolean {
-        val item = cluster?.items?.toTypedArray()?.get(0)?.position
+        val item = cluster?.items?.toTypedArray()
+        var jobIdList = ArrayList<Int>()
 
-        Log.d("cluster item", item.toString())
+        if (item != null) {
+            for (i in 0..(item.size - 1)) {
+                jobIdList.add(item.get(i).getJob_id())
+            }
+        }
+
+        val fragment =
+            GoogleTaskExampleDialog()
+        val bundle = Bundle()
+        bundle.putIntegerArrayList("jobIdList", jobIdList)
+        fragment.arguments = bundle
+
+        (activity as FragmentActivity).supportFragmentManager?.beginTransaction()?.add(
+            fragment, "test")
+            ?.commit()
 
         return true
     }
 
+    private fun getViewModel(norteast_lat: Double, northeast_lng: Double, southweast_lat: Double, southweast_lng: Double): ClusterJobInMapViewModel {
+        return ViewModelProvider(this, object : ViewModelProvider.Factory{
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T{
+                @Suppress("UNCHECKED_CAST")
+                return ClusterJobInMapViewModel(
+                    jobInMapRepository,
+                    norteast_lat,
+                    northeast_lng,
+                    southweast_lat,
+                    southweast_lng
+                ) as T
+            }
+        }).get(ClusterJobInMapViewModel::class.java)
+    }
+
+    fun bindUI(it: List<Job>) {
+
+    }
 }
