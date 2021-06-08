@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:text="일거리 리스트"
         android:textColor="#000000"
-        android:paddingTop="8dp"
+        android:paddingTop="4dp"
         android:textStyle="bold" />
 
     <ImageView

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hampson.sharework_kotlin.data.api.DBInterface
+import com.hampson.sharework_kotlin.data.vo.LocationFavorites
 import com.hampson.sharework_kotlin.data.vo.Response
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -14,21 +15,21 @@ class LocationFavoritesNetworkDataSource (private val apiService : DBInterface, 
     val networkState: LiveData<NetworkState>
         get() = _networkState
 
-    private val _downloadedJobResponse = MutableLiveData<Response>()
-    val downlodedJobResponse: LiveData<Response>
+    private val _downloadedJobResponse = MutableLiveData<List<LocationFavorites>>()
+    val downlodedJobResponse: MutableLiveData<List<LocationFavorites>>
         get() = _downloadedJobResponse
 
     fun fetchLocationFavorites(userId: Int) {
         _networkState.postValue(NetworkState.LOADING)
-        Log.d("locationviewmodel1", userId.toString())
+        Log.d("locationviewmodel122", userId.toString())
         try {
             compositeDisposable.add(
                 apiService.getLocationFavorites(userId)
                     .subscribeOn(Schedulers.io())
                     .subscribe(
                         {
-                            Log.d("locationviewmodel1", it.toString())
-                            _downloadedJobResponse.postValue(it)
+                            Log.d("locationviewmodel12222", it.toString())
+                            _downloadedJobResponse.postValue(it.payload.locationFavoritesList)
                             _networkState.postValue(NetworkState.LOADED)
                         },
                         {

@@ -21,11 +21,6 @@
         android:title=""
         android:visible="false"/>
     <item
-        android:id="@+id/item4"
-        android:icon="@drawable/ic_baseline_location_on_24"
-        android:title=""
-        android:visible="false"/>
-    <item
         android:id="@+id/item_add"
         android:icon="@drawable/ic_baseline_add_circle_24"
         android:title="" />

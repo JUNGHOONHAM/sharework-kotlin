@@ -1,6 +1,7 @@
 package com.hampson.sharework_kotlin.ui.home
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -33,10 +34,13 @@ import com.hampson.sharework_kotlin.data.api.DBClient
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
+import com.hampson.sharework_kotlin.data.vo.LocationFavorites
 import com.hampson.sharework_kotlin.databinding.FragmentHomeworkerBinding
 import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.GoogleTaskExampleDialog
 import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.LocationFavoritesRepository
 import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.LocationFavoritesViewModel
+import com.leinardi.android.speeddial.SpeedDialActionItem
+import com.leinardi.android.speeddial.SpeedDialView
 
 class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClusterClickListener<HomeWorkerFragment.MyClusterItem> {
 
@@ -60,6 +64,8 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
     private var myLocation: LatLng? = null
 
+    private lateinit var speedDialView: SpeedDialView
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -68,6 +74,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         val binding = FragmentHomeworkerBinding.inflate(inflater, container, false)
 
         mBinding = binding
+        speedDialView = binding.speedDial
 
         mView = binding.map
         mView.onCreate(savedInstanceState)
@@ -97,11 +104,8 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
         locationViewModel = getViewModelLocation()
         locationViewModel.locationFavorites.observe(activity as FragmentActivity, Observer {
-            Log.d("locationView result", it.toString())
+            initSpeedDial(savedInstanceState == null, it)
         })
-
-        binding.speedDial.inflate(R.menu.favorite_floating_menu)
-
 
         binding.floatingMyLocation.setOnClickListener {
             map.animateCamera(CameraUpdateFactory.newLatLng(myLocation))
@@ -396,5 +400,64 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
     fun bindUI(it: List<Job>) {
 
+    }
+
+    @SuppressLint("ResourceAsColor")
+    private fun initSpeedDial(addActionItems: Boolean, locationList: List<LocationFavorites>) {
+        if (addActionItems) {
+            for (i in locationList.indices) {
+                var id = 0
+                if (i == 0) {
+                    id = R.id.location_favorites_1
+                } else if (i == 1) {
+                    id = R.id.location_favorites_2
+                } else if (i == 2) {
+                    id = R.id.location_favorites_3
+                } else if (i == 3) {
+                    id = R.id.location_favorites_4
+                } else if (i == 4) {
+                    id = R.id.location_favorites_5
+                }
+
+                val location = locationList[i]
+
+                speedDialView.addActionItem(SpeedDialActionItem.Builder(id, R.drawable.ic_baseline_location_on_24)
+                    .setLabel(location.location_name)
+                    .create())
+            }
+
+            speedDialView.addActionItem(SpeedDialActionItem.Builder(R.id.location_favorites_add, R.drawable.ic_baseline_add_circle_24)
+                .create())
+        }
+
+        speedDialView.setOnActionSelectedListener(SpeedDialView.OnActionSelectedListener { actionItem ->
+            when (actionItem.id) {
+                R.id.location_favorites_1 -> {
+                    speedDialView.close() // To close the Speed Dial with animation
+                    map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(locationList[0].lat, locationList[0].lng)))
+                }
+
+                R.id.location_favorites_2 -> {
+                    speedDialView.close() // To close the Speed Dial with animation
+                    map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(locationList[1].lat, locationList[1].lng)))
+                }
+
+                R.id.location_favorites_3 -> {
+                    speedDialView.close() // To close the Speed Dial with animation
+                    map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(locationList[2].lat, locationList[2].lng)))
+                }
+
+                R.id.location_favorites_4 -> {
+                    speedDialView.close() // To close the Speed Dial with animation
+                    map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(locationList[3].lat, locationList[3].lng)))
+                }
+
+                R.id.location_favorites_5 -> {
+                    speedDialView.close() // To close the Speed Dial with animation
+                    map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(locationList[4].lat, locationList[4].lng)))
+                }
+            }
+            true // To keep the Speed Dial open
+        })
     }
 }

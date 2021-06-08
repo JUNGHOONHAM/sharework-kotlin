@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="location_favorites_add" type="id" />
+    <item name="location_favorites_1" type="id" />
+    <item name="location_favorites_2" type="id" />
+    <item name="location_favorites_3" type="id" />
+    <item name="location_favorites_4" type="id" />
+    <item name="location_favorites_5" type="id" />
+</resources>
