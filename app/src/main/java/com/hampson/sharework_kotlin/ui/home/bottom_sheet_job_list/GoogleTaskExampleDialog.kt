@@ -1,6 +1,7 @@
-package com.hampson.sharework_kotlin.ui.home.bottom_sheet
+package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.heyalex.bottomdrawer.BottomDrawerDialog
 import com.github.heyalex.bottomdrawer.BottomDrawerFragment
 import com.hampson.sharework_kotlin.R
-import com.hampson.sharework_kotlin.data.api.JobDBClient
-import com.hampson.sharework_kotlin.data.api.JobDBInterface
+import com.hampson.sharework_kotlin.data.api.DBClient
+import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 
 class GoogleTaskExampleDialog : BottomDrawerFragment() {
@@ -67,7 +68,7 @@ class GoogleTaskExampleDialog : BottomDrawerFragment() {
         }
 
 
-        val apiService : JobDBInterface = JobDBClient.getClient()
+        val apiService : DBInterface = DBClient.getClient()
 
         jobRepository =
             JobPagedListRepository(
@@ -90,6 +91,7 @@ class GoogleTaskExampleDialog : BottomDrawerFragment() {
         })
 
         viewModel.networkState.observe(this, Observer {
+            Log.d("network22 TEST", it.status.toString())
             progressBar.visibility = if (viewModel.listIsEmpty() && it == NetworkState.LOADING) View.VISIBLE else View.GONE
             textViewError.visibility = if (viewModel.listIsEmpty() && it == NetworkState.ERROR) View.VISIBLE else View.GONE
 

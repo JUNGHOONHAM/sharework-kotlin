@@ -4,40 +4,41 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hampson.sharework_kotlin.data.api.DBInterface
-import com.hampson.sharework_kotlin.data.vo.Job
+import com.hampson.sharework_kotlin.data.vo.Response
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
 
-class JobNetworkDataSource (private val apiService : DBInterface, private val compositeDisposable : CompositeDisposable) {
+class LocationFavoritesNetworkDataSource (private val apiService : DBInterface, private val compositeDisposable : CompositeDisposable) {
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState>
         get() = _networkState
 
-    private val _downloadedJobResponse = MutableLiveData<Job>()
-    val downlodedJobResponse: LiveData<Job>
+    private val _downloadedJobResponse = MutableLiveData<Response>()
+    val downlodedJobResponse: LiveData<Response>
         get() = _downloadedJobResponse
 
-    fun fetchJob(jobId: Int) {
+    fun fetchLocationFavorites(userId: Int) {
         _networkState.postValue(NetworkState.LOADING)
-
+        Log.d("locationviewmodel1", userId.toString())
         try {
             compositeDisposable.add(
-                apiService.getJobShow(jobId)
+                apiService.getLocationFavorites(userId)
                     .subscribeOn(Schedulers.io())
                     .subscribe(
                         {
+                            Log.d("locationviewmodel1", it.toString())
                             _downloadedJobResponse.postValue(it)
                             _networkState.postValue(NetworkState.LOADED)
                         },
                         {
                             _networkState.postValue(NetworkState.ERROR)
-                            Log.d("JobDataSource", it.message)
+                            Log.d("locationviewmodel", it.message)
                         }
                     )
             )
         } catch (e: Exception) {
-            Log.d("JobDataSource", e.message)
+            Log.d("DataSource", e.message)
         }
     }
 }

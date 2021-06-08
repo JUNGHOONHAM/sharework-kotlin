@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class Payload(
     @SerializedName("payload")
-    val jobList: List<Job>,
+    val jobList: List<Job>
 )

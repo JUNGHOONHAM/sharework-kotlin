@@ -3,13 +3,13 @@ package com.hampson.sharework_kotlin.data.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.hampson.sharework_kotlin.data.api.JobDBInterface
+import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.vo.Job
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
 
-class JobInMapDataSource (private val apiService : JobDBInterface, private val compositeDisposable : CompositeDisposable) {
+class JobInMapDataSource (private val apiService : DBInterface, private val compositeDisposable : CompositeDisposable) {
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState>
         get() = _networkState

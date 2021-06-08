@@ -1,13 +1,10 @@
-package com.hampson.sharework_kotlin.ui.home.bottom_sheet
+package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list
 
-import android.net.Network
-import android.util.Log
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.hampson.sharework_kotlin.data.api.JobDBInterface
+import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.api.POST_PER_PAGE
 import com.hampson.sharework_kotlin.data.repository.JobDataSource
 import com.hampson.sharework_kotlin.data.repository.JobDataSourceFactory
@@ -15,7 +12,7 @@ import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
 import io.reactivex.disposables.CompositeDisposable
 
-class JobPagedListRepository (private val apiService : JobDBInterface) {
+class JobPagedListRepository (private val apiService : DBInterface) {
 
     lateinit var jobPagedList: LiveData<PagedList<Job>>
     lateinit var jobDataSourceFactory: JobDataSourceFactory

@@ -7,12 +7,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
-import com.hampson.sharework_kotlin.data.api.JobDBClient
-import com.hampson.sharework_kotlin.data.api.JobDBInterface
+import com.hampson.sharework_kotlin.data.api.DBClient
+import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.databinding.ActivitySingleJobBinding
-import org.json.simple.JSONArray
 import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
 
@@ -30,7 +29,7 @@ class SingleJob : AppCompatActivity() {
         Log.d("onCreateStart", "@@@")
         val jobId: Int = intent.getIntExtra("id", 1)
 
-        val apiService : JobDBInterface = JobDBClient.getClient()
+        val apiService : DBInterface = DBClient.getClient()
         jobRepository = JobRepository(apiService)
 
         viewModel = getViewModel(jobId)

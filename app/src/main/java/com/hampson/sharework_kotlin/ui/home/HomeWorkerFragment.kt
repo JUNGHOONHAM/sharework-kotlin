@@ -28,12 +28,15 @@ import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
-import com.hampson.sharework_kotlin.data.api.JobDBClient
-import com.hampson.sharework_kotlin.data.api.JobDBInterface
+import com.hampson.sharework_kotlin.R
+import com.hampson.sharework_kotlin.data.api.DBClient
+import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.databinding.FragmentHomeworkerBinding
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet.GoogleTaskExampleDialog
+import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.GoogleTaskExampleDialog
+import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.LocationFavoritesRepository
+import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.LocationFavoritesViewModel
 
 class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClusterClickListener<HomeWorkerFragment.MyClusterItem> {
 
@@ -51,7 +54,9 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     private var clusterRenderer: ClusterRenderer? = null
 
     private lateinit var viewModel: ClusterJobInMapViewModel
+    private lateinit var locationViewModel: LocationFavoritesViewModel
     private lateinit var jobInMapRepository: JobInMapRepository
+    private lateinit var locationFavoritesRepository: LocationFavoritesRepository
 
     private var myLocation: LatLng? = null
 
@@ -71,9 +76,10 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         //    clusterRenderer = ClusterRenderer(activity as FragmentActivity, it, clusterManager)
         //}
 
-        val apiService : JobDBInterface = JobDBClient.getClient()
-        jobInMapRepository =
-            JobInMapRepository(apiService)
+        val apiService : DBInterface = DBClient.getClient()
+
+        jobInMapRepository = JobInMapRepository(apiService)
+        locationFavoritesRepository = LocationFavoritesRepository(apiService)
 
         //viewModel = getViewModel(jobId)
         viewModel = getViewModel(0.0, 0.0, 0.0, 0.0)
@@ -84,10 +90,18 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
         viewModel.networkState.observe(activity as FragmentActivity, Observer {
             // progress_bar
-            if (it == NetworkState.LOADING)
-            else if (it == NetworkState.ERROR)
-                Log.d("NETWORKSTATE2", "TEST")
+            Log.d("network11 TEST", it.status.toString())
+            binding.progressBar.visibility = if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
+            binding.textViewError.visibility = if (it == NetworkState.ERROR) View.VISIBLE else View.GONE
         })
+
+        locationViewModel = getViewModelLocation()
+        locationViewModel.locationFavorites.observe(activity as FragmentActivity, Observer {
+            Log.d("locationView result", it.toString())
+        })
+
+        binding.speedDial.inflate(R.menu.favorite_floating_menu)
+
 
         binding.floatingMyLocation.setOnClickListener {
             map.animateCamera(CameraUpdateFactory.newLatLng(myLocation))
@@ -369,6 +383,15 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
                 ) as T
             }
         }).get(ClusterJobInMapViewModel::class.java)
+    }
+
+    private fun getViewModelLocation(): LocationFavoritesViewModel {
+        return ViewModelProvider(this, object : ViewModelProvider.Factory{
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T{
+                @Suppress("UNCHECKED_CAST")
+                return LocationFavoritesViewModel(locationFavoritesRepository, 66) as T
+            }
+        }).get(LocationFavoritesViewModel::class.java)
     }
 
     fun bindUI(it: List<Job>) {

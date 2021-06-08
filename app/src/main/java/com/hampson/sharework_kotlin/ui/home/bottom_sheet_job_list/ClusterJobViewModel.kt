@@ -1,11 +1,10 @@
-package com.hampson.sharework_kotlin.ui.home.bottom_sheet
+package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet.JobPagedListRepository
 import io.reactivex.disposables.CompositeDisposable
 
 class ClusterJobViewModel (private val jobRepository: JobPagedListRepository, private var jobIdList: ArrayList<Int>) : ViewModel() {

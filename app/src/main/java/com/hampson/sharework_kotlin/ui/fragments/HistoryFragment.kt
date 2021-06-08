@@ -12,13 +12,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hampson.sharework_kotlin.data.api.JobDBClient
-import com.hampson.sharework_kotlin.data.api.JobDBInterface
+import com.hampson.sharework_kotlin.data.api.DBClient
+import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.databinding.FragmentHistoryBinding
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet.ClusterJobPagedListAdapter
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet.ClusterJobViewModel
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet.JobPagedListRepository
+import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.ClusterJobPagedListAdapter
+import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.ClusterJobViewModel
+import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.JobPagedListRepository
 
 class HistoryFragment : Fragment() {
 
@@ -36,7 +36,7 @@ class HistoryFragment : Fragment() {
 
         mBinding = binding
 
-        val apiService : JobDBInterface = JobDBClient.getClient()
+        val apiService : DBInterface = DBClient.getClient()
 
         jobRepository =
             JobPagedListRepository(

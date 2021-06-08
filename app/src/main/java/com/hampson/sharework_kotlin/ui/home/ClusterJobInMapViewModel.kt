@@ -30,8 +30,6 @@ class ClusterJobInMapViewModel (private val jobRepository: JobInMapRepository, n
     }
 
     fun mapUpdate(northeast_lat: Double, northeast_lng: Double, southwest_lat: Double, southwest_lng: Double): MutableLiveData<List<Job>> {
-        Log.d("좌표@@@", northeast_lat.toString())
-        Log.d("좌표@@@", northeast_lng.toString())
         return jobRepository.fetchSingleJobInMap(compositeDisposable, northeast_lat, northeast_lng, southwest_lat, southwest_lng)
     }
 }

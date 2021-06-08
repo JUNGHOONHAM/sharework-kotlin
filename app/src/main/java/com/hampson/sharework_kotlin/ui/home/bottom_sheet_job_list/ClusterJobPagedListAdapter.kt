@@ -1,4 +1,4 @@
-package com.hampson.sharework_kotlin.ui.home.bottom_sheet
+package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list
 
 import android.content.Context
 import android.util.Log

@@ -14,8 +14,8 @@ const val BASE_URL = "http://3.34.231.112"
 const val FIRST_PAGE = 1
 const val POST_PER_PAGE = 20
 
-object JobDBClient {
-    fun getClient(): JobDBInterface {
+object DBClient {
+    fun getClient(): DBInterface {
         val requestInterceptor = Interceptor { chain ->
             val url : HttpUrl = chain.request()
                 .url()
@@ -41,6 +41,6 @@ object JobDBClient {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(JobDBInterface::class.java)
+            .create(DBInterface::class.java)
     }
 }

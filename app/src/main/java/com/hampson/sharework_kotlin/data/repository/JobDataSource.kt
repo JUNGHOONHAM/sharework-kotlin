@@ -1,15 +1,14 @@
 package com.hampson.sharework_kotlin.data.repository
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.hampson.sharework_kotlin.data.api.FIRST_PAGE
-import com.hampson.sharework_kotlin.data.api.JobDBInterface
+import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.vo.Job
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class JobDataSource (private val apiService : JobDBInterface, private val compositeDisposable: CompositeDisposable,
+class JobDataSource (private val apiService : DBInterface, private val compositeDisposable: CompositeDisposable,
                      private var jobIdList: ArrayList<Int>) : PageKeyedDataSource<Int, Job>() {
 
     private var page = FIRST_PAGE
