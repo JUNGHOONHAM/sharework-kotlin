@@ -2,13 +2,12 @@ package com.hampson.sharework_kotlin.ui.home
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -37,6 +36,7 @@ import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.data.vo.LocationFavorites
 import com.hampson.sharework_kotlin.databinding.FragmentHomeworkerBinding
 import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.GoogleTaskExampleDialog
+import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.DialogLocationFavorites
 import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.LocationFavoritesRepository
 import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.LocationFavoritesViewModel
 import com.leinardi.android.speeddial.SpeedDialActionItem
@@ -97,7 +97,6 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
         viewModel.networkState.observe(activity as FragmentActivity, Observer {
             // progress_bar
-            Log.d("network11 TEST", it.status.toString())
             binding.progressBar.visibility = if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
             binding.textViewError.visibility = if (it == NetworkState.ERROR) View.VISIBLE else View.GONE
         })
@@ -134,8 +133,8 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         clusterManager.clearItems()
 
         var offsetItem: MyClusterItem
-        for (i in 0..(jobList.size - 1)) {
-            offsetItem = MyClusterItem(jobList.get(i).lat.toDouble(), jobList.get(i).lng.toDouble(), jobList.get(i).job_id)
+        for (i in jobList.indices) {
+            offsetItem = MyClusterItem(jobList[i].lat.toDouble(), jobList[i].lng.toDouble(), jobList[i].job_id)
             clusterManager.addItem(offsetItem)
         }
 
@@ -356,8 +355,8 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         var jobIdList = ArrayList<Int>()
 
         if (item != null) {
-            for (i in 0..(item.size - 1)) {
-                jobIdList.add(item.get(i).getJob_id())
+            for (i in item.indices) {
+                jobIdList.add(item[i].getJob_id())
             }
         }
 
@@ -455,6 +454,14 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
                 R.id.location_favorites_5 -> {
                     speedDialView.close() // To close the Speed Dial with animation
                     map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(locationList[4].lat, locationList[4].lng)))
+                }
+
+                R.id.location_favorites_add -> {
+                    speedDialView.close()
+
+                    var dialog = DialogLocationFavorites(activity as FragmentActivity)
+
+                    dialog.show()
                 }
             }
             true // To keep the Speed Dial open

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_gravity="center"
+    android:layout_height="match_parent"
+    tools:context=".ui.home.fab_location_favorites.DialogLocationFavorites">
+
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="위치 즐겨찾기"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewClose"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_baseline_close_24"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="#C6C6C6"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_below="@id/toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:weightSum="10">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextLocationName"
+            android:hint="위치 이름을 입력해 주세요."
+            android:textSize="14sp"
+            android:padding="16dp"
+            android:drawablePadding="16dp"
+            android:drawableLeft="@drawable/ic_baseline_location_on_24"
+            android:gravity="center_vertical"
+            android:background="@android:drawable/editbox_background"
+            android:layout_weight="5"/>
+
+        <Button
+            android:id="@+id/buttonAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_border_search"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:text="추가"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_weight="5"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="현재 지도에 보여지는 위치가 추가됩니다."
+        android:layout_marginLeft="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="20dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:clickable="true">
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+</LinearLayout>
