@@ -460,7 +460,6 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
                     speedDialView.close()
 
                     var dialog = DialogLocationFavorites(activity as FragmentActivity)
-
                     dialog.show()
                 }
             }
