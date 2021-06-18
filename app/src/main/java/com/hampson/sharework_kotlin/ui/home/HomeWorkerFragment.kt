@@ -119,7 +119,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap ?: return
+        map = googleMap
 
         val defaultLocation = LatLng(37.715133, 126.734086)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 17f))
@@ -261,7 +261,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
             myLocation = location?.latitude?.let { LatLng(it, location.longitude) }!!   // 위도, 경도
             map.moveCamera(CameraUpdateFactory.newLatLng(myLocation))  // 카메라 이동
 
-            location?.run {
+            location.run {
                 myLocation = LatLng(latitude, longitude)   // 위도, 경도
             }
         }
@@ -366,9 +366,9 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         bundle.putIntegerArrayList("jobIdList", jobIdList)
         fragment.arguments = bundle
 
-        (activity as FragmentActivity).supportFragmentManager?.beginTransaction()?.add(
+        (activity as FragmentActivity).supportFragmentManager.beginTransaction()?.add(
             fragment, "test")
-            ?.commit()
+            .commit()
 
         return true
     }
@@ -401,7 +401,6 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
     }
 
-    @SuppressLint("ResourceAsColor")
     private fun initSpeedDial(addActionItems: Boolean, locationList: List<LocationFavorites>) {
         if (addActionItems) {
             for (i in locationList.indices) {

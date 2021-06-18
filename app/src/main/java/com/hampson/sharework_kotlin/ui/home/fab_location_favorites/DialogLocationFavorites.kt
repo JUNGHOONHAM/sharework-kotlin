@@ -28,7 +28,7 @@ class DialogLocationFavorites(context: Context): Dialog(context) {
     private fun initDisplaySize() {
         val param = this.window?.attributes
         param!!.width = WindowManager.LayoutParams.MATCH_PARENT
-        param!!.height = WindowManager.LayoutParams.WRAP_CONTENT
+        param.height = WindowManager.LayoutParams.WRAP_CONTENT
 
         this.window?.attributes = param
 

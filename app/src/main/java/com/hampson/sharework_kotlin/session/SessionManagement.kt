@@ -11,17 +11,17 @@ class SessionManagement {
     private val SESSION_KEY = "session_user"
 
 
-    public fun SessionManagement(context: Context) {
+    fun SessionManagement(context: Context) {
         sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
     }
 
-    public fun saveSession(user: User) {
+    fun saveSession(user: User) {
         // 유저가 로그인 할 때 세션 저장
 
     }
 
-    public fun getSession(): Int {
+    fun getSession(): Int {
         return -1
     }
 }

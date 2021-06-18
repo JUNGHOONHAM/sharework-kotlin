@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:theme="@style/Theme.ShareWorkKotlin">
+        android:theme="@style/Theme.AppCompat.NoActionBar">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -31,6 +31,7 @@
         <activity android:name=".ui.MainActivity"></activity>
 
         <activity android:name=".ui.single_job.SingleJob" />
+        <activity android:name=".ui.management_user.AuthenticationPhoneNumber" />
     </application>
 
 </manifest>
