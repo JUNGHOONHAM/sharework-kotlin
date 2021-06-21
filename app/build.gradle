@@ -51,6 +51,7 @@ dependencies {
     def nav_version = "2.3.5"
     def appcompat_version = "1.2.0"
     def paging_version = "3.0.0"
+    ext.anko_version='0.10.8'
     
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -93,4 +94,7 @@ dependencies {
 
     // fab
     implementation "com.leinardi.android:speed-dial:3.2.0"
+
+    // anko
+    implementation "org.jetbrains.anko:anko:$anko_version"
 }

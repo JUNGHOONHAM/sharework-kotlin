@@ -1,5 +1,6 @@
 package com.hampson.sharework_kotlin.ui.home
 
+import android.Manifest
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -8,6 +9,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -41,6 +43,9 @@ import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.LocationFavor
 import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.LocationFavoritesViewModel
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
+import org.jetbrains.anko.noButton
+import org.jetbrains.anko.support.v4.alert
+import org.jetbrains.anko.yesButton
 
 class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClusterClickListener<HomeWorkerFragment.MyClusterItem> {
 
@@ -227,6 +232,8 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     }
 
     private fun addLocationListener() {
+        Log.d("PERMISSIONCHECK", "START")
+
         if (ActivityCompat.checkSelfPermission(activity as FragmentActivity, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity as FragmentActivity, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -235,10 +242,10 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-
+            Log.d("PERMISSIONCHECK", "IN")
             return
         }
-
+        Log.d("PERMISSIONCHECK", "통과")
         map.isMyLocationEnabled = true
         map.uiSettings.isMyLocationButtonEnabled = false
 
@@ -267,25 +274,32 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         }
     }
 
-    private fun permissionCheck(cancel: () -> Unit, ok: () -> Unit) {   // 전달인자도, 리턴값도 없는
+    private fun permissionCheck(cancel: () -> Unit, ok: () -> Unit) { // 전달인자도, 리턴값도 없는
         // 두 개의 함수를 받음
-
-        if (ContextCompat.checkSelfPermission(activity as FragmentActivity,                  // 권한이 없는 경우
+        if (ContextCompat.checkSelfPermission(activity as FragmentActivity, // 권한이 없는 경우
                         android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity as FragmentActivity,
-                            ACCESS_FINE_LOCATION)) {       // 권한 거부 이력이 있는 경우
-
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity as FragmentActivity, ACCESS_FINE_LOCATION)) { // 권한 거부 이력이 있는 경우
                 cancel()
-
             } else {
                 ActivityCompat.requestPermissions(activity as FragmentActivity,
                         arrayOf(ACCESS_FINE_LOCATION),
                         REQUEST_ACCESS_FINE_LOCATION)
             }
-        } else {                                                    // 권한이 있는 경우
+        } else { // 권한이 있는 경우
             ok()
         }
+    }
+
+    private fun showPermissionInfoDialog() {
+
+        alert("위치 권한을 허용하셔야 서비스 이용이 가능합니다.", "권한이 필요한 이유"){
+            yesButton {
+                ActivityCompat.requestPermissions(activity as FragmentActivity,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_ACCESS_FINE_LOCATION)
+            }
+            noButton {  }
+        }.show()
     }
 
     // 권한 요청 결과 처리
@@ -301,7 +315,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     addLocationListener()
                 } else {
-                    // toast("권한이 거부 됨")
+                    Toast.makeText(context, "위치 권한을 허용하셔야 서비스 이용이 가능합니다.", Toast.LENGTH_LONG).show()
                 }
                 return
             }
@@ -328,10 +342,11 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         mView.onResume()
 
         // 권한 요청
-        //permissionCheck(
-        //        cancel = { },   // 권한 필요 안내창
-        //        ok = { addLocationListener()}      // ③   주기적으로 현재 위치를 요청
-        //)
+        permissionCheck(cancel = {
+            showPermissionInfoDialog()
+        }, ok = {
+            addLocationListener()
+        })
     }
 
     override fun onPause() {
