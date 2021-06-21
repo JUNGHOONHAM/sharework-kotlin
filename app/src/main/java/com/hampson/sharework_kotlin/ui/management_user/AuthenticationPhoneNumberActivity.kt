@@ -3,20 +3,41 @@ package com.hampson.sharework_kotlin.ui.management_user
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.google.gson.Gson
 import com.hampson.sharework_kotlin.R
+import com.hampson.sharework_kotlin.data.api.DBClient
+import com.hampson.sharework_kotlin.data.api.DBInterface
+import com.hampson.sharework_kotlin.data.repository.AuthenticationPhoneNumberNetworkDataSource
+import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.databinding.ActivityArthenticationPhoneNumberBinding
+import com.hampson.sharework_kotlin.ui.single_job.JobRepository
+import com.hampson.sharework_kotlin.ui.single_job.SingleJobViewModel
+import io.reactivex.disposables.CompositeDisposable
+import org.json.simple.JSONObject
+import org.json.simple.parser.JSONParser
 
-class AuthenticationPhoneNumber : AppCompatActivity() {
+class AuthenticationPhoneNumberActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityArthenticationPhoneNumberBinding
 
+    private lateinit var viewModel: AuthenticationPhoneNumberViewModel
+    private lateinit var authenticationPhoneNumberRepository: AuthenticationPhoneNumberRepository
+    private val apiService : DBInterface = DBClient.getClient()
+
     private val maxCount = 300
+
+    private lateinit var phoneNumber: String
+    private lateinit var token: String
 
     private val context = this
 
@@ -28,6 +49,14 @@ class AuthenticationPhoneNumber : AppCompatActivity() {
 
         mBinding = ActivityArthenticationPhoneNumberBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+
+
+        authenticationPhoneNumberRepository = AuthenticationPhoneNumberRepository(apiService)
+
+        viewModel = getViewModel()
+        viewModel.getSmsAuth().observe(this, {
+            token = it.token
+        })
 
         mBinding.editTextCertification.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -49,8 +78,16 @@ class AuthenticationPhoneNumber : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            phoneNumber = mBinding.editTextPhoneNumber.text.toString()
+
             setBtnCertificationDisAble()
             startCountDown()
+
+            viewModel.sendPhoneNumber(mBinding.editTextPhoneNumber.text.toString())
+        }
+
+        mBinding.buttonLogin.setOnClickListener {
+            viewModel.sendVerifiedNumber(phoneNumber, token, mBinding.editTextCertification.text.toString())
         }
     }
 
@@ -111,5 +148,14 @@ class AuthenticationPhoneNumber : AppCompatActivity() {
         }
 
         CDT.start()
+    }
+
+    private fun getViewModel(): AuthenticationPhoneNumberViewModel {
+        return ViewModelProvider(this, object : ViewModelProvider.Factory{
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T{
+                @Suppress("UNCHECKED_CAST")
+                return AuthenticationPhoneNumberViewModel(authenticationPhoneNumberRepository, apiService) as T
+            }
+        }).get(AuthenticationPhoneNumberViewModel::class.java)
     }
 }

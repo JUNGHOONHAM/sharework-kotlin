@@ -6,6 +6,13 @@ import retrofit2.http.*
 
 interface DBInterface {
 
+    // sms_auth
+    @POST("api/v2/sms_auth/send_sms")
+    fun sendPhoneNumber(@Query("phone_number") phoneNumber: String): Single<Response>
+
+    @POST("api/v2/sms_auth/verified")
+    fun sendVerifiedNumber(@Query("phone_number") phoneNumber: String, @Query("token") token: String, @Query("verified_number") verifiedNumber: String): Single<Response>
+
     // job
     @GET("api/v1/jobs")
     fun getJob(@Query("job_id") job_id: String, @Query("page") page: Int, @Query("size") size: Int): Single<JobResponse>

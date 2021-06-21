@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.hampson.sharework_kotlin.databinding.ActivitySplashBinding
-import com.hampson.sharework_kotlin.ui.management_user.AuthenticationPhoneNumber
+import com.hampson.sharework_kotlin.ui.management_user.AuthenticationPhoneNumberActivity
 
 class SplashActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivitySplashBinding
@@ -17,7 +17,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(mBinding.root)
 
         Handler().postDelayed({
-            val intent = Intent(this, AuthenticationPhoneNumber::class.java)
+            val intent = Intent(this, AuthenticationPhoneNumberActivity::class.java)
             startActivity(intent)
             finish()
         }, 2000)

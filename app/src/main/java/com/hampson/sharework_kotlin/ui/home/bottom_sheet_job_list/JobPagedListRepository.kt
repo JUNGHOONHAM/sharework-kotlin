@@ -2,7 +2,8 @@ package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import androidx.paging.*
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.api.POST_PER_PAGE
 import com.hampson.sharework_kotlin.data.repository.JobDataSource
@@ -10,7 +11,6 @@ import com.hampson.sharework_kotlin.data.repository.JobDataSourceFactory
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.coroutines.Dispatchers
 
 class JobPagedListRepository (private val apiService : DBInterface) {
 
@@ -25,17 +25,7 @@ class JobPagedListRepository (private val apiService : DBInterface) {
             .setPageSize(POST_PER_PAGE)
             .build()
 
-        jobPagedList = Pager(
-            PagingConfig(
-                config.pageSize,
-                config.prefetchDistance,
-                config.enablePlaceholders,
-                config.initialLoadSizeHint,
-                config.maxSize
-            ),
-            this.initialLoadKey,
-            jobDataSourceFactory.asPagingSourceFactory(Dispatchers.IO)
-        ).liveData.build()
+        jobPagedList = LivePagedListBuilder(jobDataSourceFactory, config).build()
 
         return jobPagedList
     }

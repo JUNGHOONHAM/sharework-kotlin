@@ -4,32 +4,36 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hampson.sharework_kotlin.data.api.DBInterface
-import com.hampson.sharework_kotlin.data.vo.LocationFavorites
+import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.data.vo.Response
+import com.hampson.sharework_kotlin.data.vo.SmsAuth
+import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
+import java.util.logging.Handler
 
-class LocationFavoritesNetworkDataSource (private val apiService : DBInterface, private val compositeDisposable : CompositeDisposable) {
+class AuthenticationPhoneNumberNetworkDataSource (private val apiService : DBInterface, private val compositeDisposable : CompositeDisposable) {
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState>
         get() = _networkState
 
-    private val _downloadedJobResponse = MutableLiveData<List<LocationFavorites>>()
-    val downlodedJobResponse: MutableLiveData<List<LocationFavorites>>
+    private val _downloadedJobResponse = MutableLiveData<SmsAuth>()
+    val downlodedJobResponse: MutableLiveData<SmsAuth>
         get() = _downloadedJobResponse
 
-    fun fetchLocationFavorites(userId: Int) {
+    lateinit var data: SmsAuth
+
+    fun sendPhoneNumber(phoneNumber: String) {
         _networkState.postValue(NetworkState.LOADING)
 
         try {
             compositeDisposable.add(
-                apiService.getLocationFavorites(userId)
+                apiService.sendPhoneNumber(phoneNumber)
                     .subscribeOn(Schedulers.io())
                     .subscribe(
                         {
-                            _downloadedJobResponse.postValue(it.payload.locationFavoritesList)
-                            Log.d("it in downlad", downlodedJobResponse.value.toString())
+                            //_downloadedJobResponse.postValue(it.payload.smsAuth)
                             _networkState.postValue(NetworkState.LOADED)
                         },
                         {

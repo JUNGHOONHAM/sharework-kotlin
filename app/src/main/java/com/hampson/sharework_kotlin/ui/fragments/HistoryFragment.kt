@@ -65,11 +65,6 @@ class HistoryFragment : Fragment() {
         //binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.adapter = jobAdapter
 
-        viewModel.jobPagedList.observe((activity as FragmentActivity), Observer {
-            Log.d("TESTviewModel", "START")
-            jobAdapter.submitList(it)
-            Log.d("TESTFviewModel", "END")
-        })
 
         viewModel.networkState.observe((activity as FragmentActivity), Observer {
             binding.progressBar.visibility = if (viewModel.listIsEmpty() && it == NetworkState.LOADING) View.VISIBLE else View.GONE

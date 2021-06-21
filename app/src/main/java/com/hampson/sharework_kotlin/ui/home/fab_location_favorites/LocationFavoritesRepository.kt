@@ -18,6 +18,7 @@ class LocationFavoritesRepository (private val apiService : DBInterface) {
         locationFaDataSource = LocationFavoritesNetworkDataSource(apiService, compositeDisposable)
         locationFaDataSource.fetchLocationFavorites(userId)
 
+        Log.d("fetchSingleLocationFav", locationFaDataSource.downlodedJobResponse.value.toString())
         return locationFaDataSource.downlodedJobResponse
     }
 
