@@ -1,6 +1,7 @@
 package com.hampson.sharework_kotlin.ui.management_user
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
@@ -20,6 +21,7 @@ import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.AuthenticationPhoneNumberNetworkDataSource
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.databinding.ActivityArthenticationPhoneNumberBinding
+import com.hampson.sharework_kotlin.ui.MainActivity
 import com.hampson.sharework_kotlin.ui.single_job.JobRepository
 import com.hampson.sharework_kotlin.ui.single_job.SingleJobViewModel
 import io.reactivex.disposables.CompositeDisposable
@@ -50,12 +52,18 @@ class AuthenticationPhoneNumberActivity : AppCompatActivity() {
         mBinding = ActivityArthenticationPhoneNumberBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
-
         authenticationPhoneNumberRepository = AuthenticationPhoneNumberRepository(apiService)
 
         viewModel = getViewModel()
+
         viewModel.getSmsAuth().observe(this, {
             token = it.token
+        })
+
+        viewModel.getAction().observe(this, {
+            val intent = Intent(this, it as Class<*>)
+            startActivity(intent)
+            finish()
         })
 
         mBinding.editTextCertification.addTextChangedListener(object : TextWatcher {
@@ -154,7 +162,7 @@ class AuthenticationPhoneNumberActivity : AppCompatActivity() {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 @Suppress("UNCHECKED_CAST")
-                return AuthenticationPhoneNumberViewModel(authenticationPhoneNumberRepository, apiService) as T
+                return AuthenticationPhoneNumberViewModel(authenticationPhoneNumberRepository, apiService, application) as T
             }
         }).get(AuthenticationPhoneNumberViewModel::class.java)
     }

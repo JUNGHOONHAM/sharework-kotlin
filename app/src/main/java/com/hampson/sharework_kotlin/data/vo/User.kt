@@ -1,19 +1,19 @@
 package com.hampson.sharework_kotlin.data.vo
 
 data class User(
-    val address1: Any,
-    val address2: Any,
-    val app_player: String,
-    val app_type: String,
-    val comment: String,
-    val email: String,
-    val gender: String,
-    val id: Int,
-    val name: String,
-    val nickname: String,
-    val phone: String,
-    val profile_img: Any,
-    val push_received_at: Any,
-    val resident_number: String,
-    val uid: String
+    var id: Int,
+    var phone: String,
+    var app_type: String,
+    var email: String,
+    var address1: Any?,
+    var address2: Any?,
+    var comment: String?,
+    var gender: String?,
+    var name: String?,
+    var profile_img: Any?,
+    var resident_number: String?,
+    var uid: String?
+    // var app_player: String,
+    // var nickname: String,
+    // var push_received_at: Any,
 )

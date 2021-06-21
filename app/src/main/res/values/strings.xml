@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">ShareWork-Kotlin</string>
     <string name="url">http://3.34.231.112</string>
+
+    <string name="giver">giver</string>
+    <string name="worker">worker</string>
 </resources>
