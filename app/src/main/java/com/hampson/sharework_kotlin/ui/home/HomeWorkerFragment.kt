@@ -112,7 +112,9 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         })
 
         binding.floatingMyLocation.setOnClickListener {
-            map.animateCamera(CameraUpdateFactory.newLatLng(myLocation))
+            if (myLocation != null) {
+                map.animateCamera(CameraUpdateFactory.newLatLng(myLocation))
+            }
         }
 
         return mBinding?.root
@@ -129,9 +131,14 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         val defaultLocation = LatLng(37.715133, 126.734086)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 17f))
 
-        locationInit()
-        addLocationListener()
-        setUpClusterer()
+        // 권한 요청
+        permissionCheck(cancel = {
+            showPermissionInfoDialog()
+        }, ok = {
+            locationInit()
+            addLocationListener()
+            setUpClusterer()
+        })
     }
 
     private fun addItems(jobList: List<Job>) {
@@ -235,14 +242,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         Log.d("PERMISSIONCHECK", "START")
 
         if (ActivityCompat.checkSelfPermission(activity as FragmentActivity, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity as FragmentActivity, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            Log.d("PERMISSIONCHECK", "IN")
+
             return
         }
         Log.d("PERMISSIONCHECK", "통과")
@@ -323,7 +323,9 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     }
 
     private fun removeLocationListener() {
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+        if (this::fusedLocationProviderClient.isInitialized) {
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+        }
     }
 
 
@@ -341,12 +343,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         super.onResume()
         mView.onResume()
 
-        // 권한 요청
-        permissionCheck(cancel = {
-            showPermissionInfoDialog()
-        }, ok = {
-            addLocationListener()
-        })
+
     }
 
     override fun onPause() {

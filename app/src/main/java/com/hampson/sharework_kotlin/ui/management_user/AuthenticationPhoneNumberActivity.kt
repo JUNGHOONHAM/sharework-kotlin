@@ -58,12 +58,17 @@ class AuthenticationPhoneNumberActivity : AppCompatActivity() {
 
         viewModel.getSmsAuth().observe(this, {
             token = it.token
+            Log.d("testtt", token)
         })
 
         viewModel.getAction().observe(this, {
             val intent = Intent(this, it as Class<*>)
             startActivity(intent)
             finish()
+        })
+
+        viewModel.getToast().observe(this, {
+            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
         })
 
         mBinding.editTextCertification.addTextChangedListener(object : TextWatcher {
@@ -127,6 +132,8 @@ class AuthenticationPhoneNumberActivity : AppCompatActivity() {
         mBinding.buttonCertification.text = "전송 완료"
         mBinding.buttonCertification.isEnabled = false
         mBinding.editTextCertification.clearFocus()
+
+        mBinding.editTextPhoneNumber.requestFocus()
     }
 
     // 휴대폰 번호 유효성 체크

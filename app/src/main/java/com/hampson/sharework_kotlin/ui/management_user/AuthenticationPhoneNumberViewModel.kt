@@ -27,6 +27,7 @@ class AuthenticationPhoneNumberViewModel (private val authenticationPhoneNumberR
 
     private val liveData: MutableLiveData<SmsAuth> = MutableLiveData()
     private val mAction: MutableLiveData<Any> = MutableLiveData()
+    private val mToast: MutableLiveData<String> = MutableLiveData()
 
     private val context = getApplication<Application>().applicationContext
 
@@ -36,6 +37,10 @@ class AuthenticationPhoneNumberViewModel (private val authenticationPhoneNumberR
 
     fun getAction(): LiveData<Any> {
         return mAction
+    }
+
+    fun getToast(): LiveData<String> {
+        return mToast
     }
 
     val networkState : LiveData<NetworkState> by lazy {
@@ -81,11 +86,11 @@ class AuthenticationPhoneNumberViewModel (private val authenticationPhoneNumberR
                                     isNotPhoneNumber()
                                 }
                             } else {
-                                Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+
                             }
                         },
                         {
-
+                            popupToToast("인증번호가 유효하지 않습니다.")
                         }
                     )
             )
@@ -120,5 +125,9 @@ class AuthenticationPhoneNumberViewModel (private val authenticationPhoneNumberR
 
     private fun moveToActivity(activity: Any) {
         mAction.postValue(activity)
+    }
+
+    private fun popupToToast(message: String) {
+        mToast.postValue(message)
     }
 }
