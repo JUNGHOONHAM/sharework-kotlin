@@ -24,7 +24,7 @@ class SessionManagement (context: Context) {
     fun saveSession(user: User) {
         // 유저가 로그인 할 때 세션 저장
         editor.putBoolean(IS_LOGIN, true)
-        editor.putInt(KEY_ID, user.id)
+        editor.putInt(KEY_ID, user.id!!)
         editor.putString(KEY_PHONE_NUMBER, user.phone)
         editor.putString(KEY_EMAAIL, user.email)
         editor.putString(KEY_APP_TYPE, user.app_type)

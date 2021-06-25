@@ -31,7 +31,8 @@
         <activity android:name=".ui.MainActivity"></activity>
 
         <activity android:name=".ui.single_job.SingleJob" />
-        <activity android:name=".ui.management_user.AuthenticationPhoneNumberActivity" />
-    </application>
 
+        <activity android:name=".ui.management_user.authentication_phone_number.AuthenticationPhoneNumberActivity" />
+        <activity android:name=".ui.management_user.sign_up.SignUpActivity" />
+    </application>
 </manifest>

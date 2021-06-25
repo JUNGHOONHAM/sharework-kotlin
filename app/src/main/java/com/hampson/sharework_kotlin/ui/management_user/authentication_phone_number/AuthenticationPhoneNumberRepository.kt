@@ -1,7 +1,5 @@
-package com.hampson.sharework_kotlin.ui.management_user
+package com.hampson.sharework_kotlin.ui.management_user.authentication_phone_number
 
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,8 +16,6 @@ class AuthenticationPhoneNumberRepository (private val apiService : DBInterface)
         authenticationPhoneNumberNetworkDataSource = AuthenticationPhoneNumberNetworkDataSource(apiService, compositeDisposable)
         authenticationPhoneNumberNetworkDataSource.sendPhoneNumber(phoneNumber)
 
-        Log.d("itTEST", "SDFSDF")
-        Log.d("VVVVVVV", authenticationPhoneNumberNetworkDataSource.downlodedJobResponse.toString())
         return authenticationPhoneNumberNetworkDataSource.downlodedJobResponse
     }
 

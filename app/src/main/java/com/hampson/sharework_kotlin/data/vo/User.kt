@@ -1,13 +1,14 @@
 package com.hampson.sharework_kotlin.data.vo
 
 data class User(
-    var id: Int,
+    var id: Int?,
     var phone: String,
     var app_type: String,
     var email: String,
     var address1: Any?,
     var address2: Any?,
     var comment: String?,
+    var birth: String?,
     var gender: String?,
     var name: String?,
     var profile_img: Any?,

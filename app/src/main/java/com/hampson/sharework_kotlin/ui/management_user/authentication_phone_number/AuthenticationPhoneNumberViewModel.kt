@@ -1,9 +1,6 @@
-package com.hampson.sharework_kotlin.ui.management_user
+package com.hampson.sharework_kotlin.ui.management_user.authentication_phone_number
 
 import android.app.Application
-import android.content.Intent
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,8 +12,8 @@ import com.hampson.sharework_kotlin.data.vo.SmsAuth
 import com.hampson.sharework_kotlin.data.vo.User
 import com.hampson.sharework_kotlin.session.SessionManagement
 import com.hampson.sharework_kotlin.ui.MainActivity
+import com.hampson.sharework_kotlin.ui.management_user.sign_up.SignUpActivity
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Action
 import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
 
@@ -112,7 +109,7 @@ class AuthenticationPhoneNumberViewModel (private val authenticationPhoneNumberR
             app_type = context.getString(R.string.worker)
         }
 
-        val user = User(id, phoneNumber, app_type, email, null, null, null,
+        val user = User(id, phoneNumber, app_type, email, null, null, null, null,
             null, null, null, null, null)
 
         val sessionManagement = SessionManagement(context)
@@ -120,7 +117,7 @@ class AuthenticationPhoneNumberViewModel (private val authenticationPhoneNumberR
     }
 
     private fun isNotPhoneNumber() {
-
+        moveToActivity(SignUpActivity::class.java)
     }
 
     private fun moveToActivity(activity: Any) {

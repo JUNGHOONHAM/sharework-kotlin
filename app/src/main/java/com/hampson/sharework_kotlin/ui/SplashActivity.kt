@@ -6,7 +6,7 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.hampson.sharework_kotlin.databinding.ActivitySplashBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
-import com.hampson.sharework_kotlin.ui.management_user.AuthenticationPhoneNumberActivity
+import com.hampson.sharework_kotlin.ui.management_user.authentication_phone_number.AuthenticationPhoneNumberActivity
 
 class SplashActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivitySplashBinding

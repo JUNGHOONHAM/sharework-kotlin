@@ -18,7 +18,6 @@
             android:id="@+id/textViewToolbarTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="로그인/회원가입"
             android:textColor="#000000"
             android:textSize="14sp"
             android:paddingTop="36dp"

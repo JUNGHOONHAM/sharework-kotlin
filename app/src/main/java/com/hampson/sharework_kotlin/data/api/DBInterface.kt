@@ -1,5 +1,6 @@
 package com.hampson.sharework_kotlin.data.api
 
+import com.google.gson.JsonObject
 import com.hampson.sharework_kotlin.data.vo.*
 import io.reactivex.Single
 import retrofit2.http.*
@@ -12,6 +13,12 @@ interface DBInterface {
 
     @POST("api/v2/sms_auth/verified")
     fun sendVerifiedNumber(@Query("phone_number") phoneNumber: String, @Query("token") token: String, @Query("verified_number") verifiedNumber: String): Single<Response>
+
+
+    // user
+    @POST("api/v2/registrations")
+    fun createUser(@Body user: User): Single<Response>
+
 
     // job
     @GET("api/v1/jobs")
