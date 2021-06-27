@@ -8,7 +8,6 @@ data class User(
     var address1: Any?,
     var address2: Any?,
     var comment: String?,
-    var birth: String?,
     var gender: String?,
     var name: String?,
     var profile_img: Any?,

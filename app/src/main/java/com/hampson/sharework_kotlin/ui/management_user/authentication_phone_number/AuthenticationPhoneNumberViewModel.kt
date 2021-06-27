@@ -110,7 +110,7 @@ class AuthenticationPhoneNumberViewModel (private val authenticationPhoneNumberR
         }
 
         val user = User(id, phoneNumber, app_type, email, null, null, null, null,
-            null, null, null, null, null)
+            null, null, null, null)
 
         val sessionManagement = SessionManagement(context)
         sessionManagement.saveSession(user)

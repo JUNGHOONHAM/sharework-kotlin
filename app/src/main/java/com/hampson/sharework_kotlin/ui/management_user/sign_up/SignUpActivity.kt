@@ -66,8 +66,8 @@ class SignUpActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            var user = User(null, phoneNumber, "0", email, null, null, null, birth,
-                genderCheck(), userName, null, null, null)
+            var user = User(null, phoneNumber, "0", email, null, null, null,
+                genderCheck(), userName, null, birth, null)
 
             viewModel.createUser(user)
         }

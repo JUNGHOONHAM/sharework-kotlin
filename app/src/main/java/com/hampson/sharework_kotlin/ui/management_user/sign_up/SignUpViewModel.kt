@@ -45,7 +45,7 @@ class SignUpViewModel (private val apiService : DBInterface, application: Applic
                     .subscribe(
                         {
                             if (it.status == "success") {
-                                saveSession(it)
+                                saveSession(it.payload.user)
                                 moveToActivity(MainActivity::class.java)
                             } else {
 
@@ -61,11 +61,11 @@ class SignUpViewModel (private val apiService : DBInterface, application: Applic
         }
     }
 
-    private fun saveSession(it: Response) {
-        val id = it.payload.smsAuth.user.id
-        val phoneNumber = it.payload.smsAuth.user.phone
-        val email = it.payload.smsAuth.user.email
-        val get_app_type = it.payload.smsAuth.user.app_type
+    private fun saveSession(it: User) {
+        val id = it.id
+        val phoneNumber = it.phone
+        val email = it.email
+        val get_app_type = it.app_type
 
         var app_type: String = context.getString(R.string.worker)
         if (get_app_type == "0") {
@@ -74,7 +74,7 @@ class SignUpViewModel (private val apiService : DBInterface, application: Applic
             app_type = context.getString(R.string.worker)
         }
 
-        val user = User(id, phoneNumber, app_type, email, null, null, null, null,
+        val user = User(id, phoneNumber, app_type, email, null, null, null,
             null, null, null, null, null)
 
         val sessionManagement = SessionManagement(context)

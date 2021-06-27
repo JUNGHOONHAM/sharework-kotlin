@@ -130,15 +130,6 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
         val defaultLocation = LatLng(37.715133, 126.734086)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 17f))
-
-        // 권한 요청
-        permissionCheck(cancel = {
-            showPermissionInfoDialog()
-        }, ok = {
-            locationInit()
-            addLocationListener()
-            setUpClusterer()
-        })
     }
 
     private fun addItems(jobList: List<Job>) {
@@ -343,7 +334,18 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         super.onResume()
         mView.onResume()
 
+        permissionCheck(cancel = {
+            showPermissionInfoDialog()
+        }, ok = {
+            Log.d("permissionIn", "in")
 
+            if (this::map.isInitialized) {
+                locationInit()
+                addLocationListener()
+                setUpClusterer()
+            }
+
+        })
     }
 
     override fun onPause() {

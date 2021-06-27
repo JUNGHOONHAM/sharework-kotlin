@@ -25,7 +25,7 @@ class AuthenticationPhoneNumberNetworkDataSource (private val apiService : DBInt
     lateinit var data: SmsAuth
 
     fun sendPhoneNumber(phoneNumber: String) {
-        _networkState.postValue(NetworkState.LOADING)
+        _networkState.postValue(NetworkState.LOADING)   
 
         try {
             compositeDisposable.add(
