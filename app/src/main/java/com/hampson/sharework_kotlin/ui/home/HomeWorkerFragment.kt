@@ -130,6 +130,9 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
         val defaultLocation = LatLng(37.715133, 126.734086)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 17f))
+
+        locationInit()
+        addLocationListener()
     }
 
     private fun addItems(jobList: List<Job>) {
@@ -230,13 +233,11 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     }
 
     private fun addLocationListener() {
-        Log.d("PERMISSIONCHECK", "START")
-
         if (ActivityCompat.checkSelfPermission(activity as FragmentActivity, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity as FragmentActivity, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return
         }
-        Log.d("PERMISSIONCHECK", "통과")
+
         map.isMyLocationEnabled = true
         map.uiSettings.isMyLocationButtonEnabled = false
 
@@ -282,7 +283,6 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     }
 
     private fun showPermissionInfoDialog() {
-
         alert("위치 권한을 허용하셔야 서비스 이용이 가능합니다.", "권한이 필요한 이유"){
             yesButton {
                 ActivityCompat.requestPermissions(activity as FragmentActivity,
