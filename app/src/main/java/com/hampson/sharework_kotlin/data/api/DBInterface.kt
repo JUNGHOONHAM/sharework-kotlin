@@ -33,8 +33,8 @@ interface DBInterface {
 
 
     // location favorites
-    @POST("location_favorites")
-    fun createLocationFavorites(@Body location: LocationFavorites): Single<LocationFavoritesResponse>
+    @POST("api/v2/users/location_favorites")
+    fun createLocationFavorites(@Body location_favorite: LocationFavorites): Single<Response>
 
     @GET("location_favorites")
     fun getLocationFavorites(@Query("user_id") user_id: Int): Single<LocationFavoritesResponse>

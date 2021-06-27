@@ -7,6 +7,10 @@ data class Payload(
     val smsAuth: SmsAuth,
     @SerializedName("user")
     val user: User,
+    @SerializedName("location_favorites")
+    val locationFavoritesList: List<LocationFavorites>,
+    @SerializedName("location_favorite")
+    val locationFavorites: LocationFavorites,
 
     val meta: Meta
 )

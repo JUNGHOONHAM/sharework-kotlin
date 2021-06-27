@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_gravity="center"
     android:layout_height="match_parent"
+    android:minHeight="320dp"
     tools:context=".ui.home.fab_location_favorites.DialogLocationFavorites">
 
     <LinearLayout
@@ -33,6 +34,7 @@
             android:id="@+id/imageViewClose"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_baseline_close_24"/>
 
     </LinearLayout>
@@ -83,13 +85,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="현재 지도에 보여지는 위치가 추가됩니다."
+        android:textSize="12sp"
         android:layout_marginLeft="20dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="20dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="24dp">
+
+        <TextView
+            android:id="@+id/textViewNoneFavorite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:gravity="center"
+            android:text="즐겨찾기한 위치가 없습니다."
+            android:textSize="14sp"
+            android:textColor="#000000" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

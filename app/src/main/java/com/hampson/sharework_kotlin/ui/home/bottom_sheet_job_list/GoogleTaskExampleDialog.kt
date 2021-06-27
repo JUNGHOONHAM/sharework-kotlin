@@ -91,7 +91,6 @@ class GoogleTaskExampleDialog : BottomDrawerFragment() {
         })
 
         viewModel.networkState.observe(this, Observer {
-            Log.d("network22 TEST", it.status.toString())
             progressBar.visibility = if (viewModel.listIsEmpty() && it == NetworkState.LOADING) View.VISIBLE else View.GONE
             textViewError.visibility = if (viewModel.listIsEmpty() && it == NetworkState.ERROR) View.VISIBLE else View.GONE
 

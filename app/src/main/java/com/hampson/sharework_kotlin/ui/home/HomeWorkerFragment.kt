@@ -2,12 +2,9 @@ package com.hampson.sharework_kotlin.ui.home
 
 import android.Manifest
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -66,6 +63,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     private lateinit var locationViewModel: LocationFavoritesViewModel
     private lateinit var jobInMapRepository: JobInMapRepository
     private lateinit var locationFavoritesRepository: LocationFavoritesRepository
+    private lateinit var apiService: DBInterface
 
     private var myLocation: LatLng? = null
 
@@ -88,7 +86,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         //    clusterRenderer = ClusterRenderer(activity as FragmentActivity, it, clusterManager)
         //}
 
-        val apiService : DBInterface = DBClient.getClient()
+        apiService = DBClient.getClient()
 
         jobInMapRepository = JobInMapRepository(apiService)
         locationFavoritesRepository = LocationFavoritesRepository(apiService)
@@ -107,7 +105,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         })
 
         locationViewModel = getViewModelLocation()
-        locationViewModel.locationFavorites.observe(activity as FragmentActivity, Observer {
+        locationViewModel.locationFavoritesList.observe(activity as FragmentActivity, Observer {
             initSpeedDial(savedInstanceState == null, it)
         })
 
@@ -337,8 +335,6 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         permissionCheck(cancel = {
             showPermissionInfoDialog()
         }, ok = {
-            Log.d("permissionIn", "in")
-
             if (this::map.isInitialized) {
                 locationInit()
                 addLocationListener()
@@ -406,7 +402,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 @Suppress("UNCHECKED_CAST")
-                return LocationFavoritesViewModel(locationFavoritesRepository, 66) as T
+                return LocationFavoritesViewModel(apiService, locationFavoritesRepository, 66) as T
             }
         }).get(LocationFavoritesViewModel::class.java)
     }
@@ -472,7 +468,9 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
                 R.id.location_favorites_add -> {
                     speedDialView.close()
 
-                    var dialog = DialogLocationFavorites(activity as FragmentActivity)
+                    val position = map.projection.visibleRegion.latLngBounds.center
+
+                    var dialog = DialogLocationFavorites(activity as FragmentActivity, locationViewModel, position)
                     dialog.show()
                 }
             }
