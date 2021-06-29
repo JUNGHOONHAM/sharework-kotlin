@@ -42,6 +42,7 @@ import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.LocationFavor
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
 import org.jetbrains.anko.noButton
+import org.jetbrains.anko.support.v4.act
 import org.jetbrains.anko.support.v4.alert
 import org.jetbrains.anko.yesButton
 
@@ -474,8 +475,8 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
                     val position = map.projection.visibleRegion.latLngBounds.center
 
-                    var dialog = DialogLocationFavorites(activity as FragmentActivity, locationViewModel, position)
-                    dialog.show()
+                    var dialog = DialogLocationFavorites(activity as FragmentActivity, position)
+                    dialog.show((activity as FragmentActivity).supportFragmentManager, "")
                 }
             }
             true // To keep the Speed Dial open

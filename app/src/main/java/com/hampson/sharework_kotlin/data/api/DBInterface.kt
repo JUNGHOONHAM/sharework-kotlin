@@ -1,6 +1,5 @@
 package com.hampson.sharework_kotlin.data.api
 
-import com.google.gson.JsonObject
 import com.hampson.sharework_kotlin.data.vo.*
 import io.reactivex.Single
 import retrofit2.http.*
@@ -35,6 +34,9 @@ interface DBInterface {
     // location favorites
     @POST("api/v2/users/location_favorites")
     fun createLocationFavorites(@Body location_favorite: LocationFavorites): Single<Response>
+
+    @DELETE("api/v2/users/location_favorites/{id}")
+    fun deleteLocationFavorites(@Path("id") id: Int?): Single<Response>
 
     @GET("location_favorites")
     fun getLocationFavorites(@Query("user_id") user_id: Int): Single<LocationFavoritesResponse>

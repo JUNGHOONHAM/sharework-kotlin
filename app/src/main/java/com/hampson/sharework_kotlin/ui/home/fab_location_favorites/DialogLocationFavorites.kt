@@ -2,54 +2,65 @@ package com.hampson.sharework_kotlin.ui.home.fab_location_favorites
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.model.LatLng
+import com.hampson.sharework_kotlin.data.api.DBClient
+import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.vo.LocationFavorites
 import com.hampson.sharework_kotlin.databinding.DialogLocationFavoritesBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
+import com.hampson.sharework_kotlin.ui.home.JobInMapRepository
 
-class DialogLocationFavorites(context: FragmentActivity?, locationViewModel: LocationFavoritesViewModel, position: LatLng): Dialog(context!!),
+class DialogLocationFavorites(context: FragmentActivity?, position: LatLng): DialogFragment(),
     LocationFavoritesAdapter.OnItemClickListener {
 
     private lateinit var  mBinding : DialogLocationFavoritesBinding
 
+    private lateinit var locationViewModel: LocationFavoritesViewModel
+    private lateinit var locationFavoritesRepository: LocationFavoritesRepository
+    private lateinit var apiService: DBInterface
+
     private lateinit var locationFavoritesAdapter: LocationFavoritesAdapter
     private lateinit var locationFavoritesList: ArrayList<LocationFavorites>
-
-    private val locationViewModel = locationViewModel
 
     private val context = context
     private var userId: Int = -1
     private val position = position
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        mBinding = DialogLocationFavoritesBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
+        mBinding = DialogLocationFavoritesBinding.inflate(layoutInflater, container, false)
 
-        val sessionManagement = SessionManagement(this.getContext())
+        val sessionManagement = SessionManagement(activity as FragmentActivity)
         userId = sessionManagement.getSessionID()
-
-        initDisplaySize()
 
         setRecyclerView()
 
-        locationViewModel.locationFavoritesList.observe(context as FragmentActivity, Observer {
+        apiService = DBClient.getClient()
+        locationFavoritesRepository = LocationFavoritesRepository(apiService)
+        locationViewModel = getViewModelLocation(userId)
+
+        locationViewModel.locationFavoritesList.observe(activity as FragmentActivity, Observer {
             locationFavoritesList = it as ArrayList<LocationFavorites>
             locationFavoritesAdapter.replaceList(it as MutableList<LocationFavorites>)
         })
 
-        locationViewModel.getLocationFavorites().observe(context as FragmentActivity, Observer {
+        locationViewModel.getLocationFavorites().observe(activity as FragmentActivity, Observer {
             locationFavoritesList.add(it)
             locationFavoritesAdapter.replaceList(locationFavoritesList)
         })
 
-        locationViewModel.getToast().observe(context, {
+        locationViewModel.getToast().observe(activity as FragmentActivity, {
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
         })
 
@@ -72,14 +83,14 @@ class DialogLocationFavorites(context: FragmentActivity?, locationViewModel: Loc
         mBinding.imageViewClose.setOnClickListener {
             dismiss()
         }
+
+        return mBinding.root
     }
 
     private fun initDisplaySize() {
-        val param = this.window?.attributes
-        param!!.width = WindowManager.LayoutParams.MATCH_PARENT
-        param.height = WindowManager.LayoutParams.WRAP_CONTENT
-
-        this.window?.attributes = param
+        var params = dialog?.window?.attributes
+        params?.width = WindowManager.LayoutParams.MATCH_PARENT
+        dialog?.window?.attributes = params
     }
 
     private fun setRecyclerView() {
@@ -91,7 +102,22 @@ class DialogLocationFavorites(context: FragmentActivity?, locationViewModel: Loc
         mBinding.recyclerView.adapter = locationFavoritesAdapter
     }
 
-    override fun onDeleteClick(locationFavorites: LocationFavorites) {
+    private fun getViewModelLocation(userId: Int): LocationFavoritesViewModel {
+        return ViewModelProvider(this, object : ViewModelProvider.Factory{
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T{
+                @Suppress("UNCHECKED_CAST")
+                return LocationFavoritesViewModel(apiService, locationFavoritesRepository, userId) as T
+            }
+        }).get(LocationFavoritesViewModel::class.java)
+    }
 
+    override fun onDeleteClick(locationFavorites: LocationFavorites) {
+        locationViewModel.deleteLocationFavorites(locationFavorites.id)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        initDisplaySize()
     }
 }

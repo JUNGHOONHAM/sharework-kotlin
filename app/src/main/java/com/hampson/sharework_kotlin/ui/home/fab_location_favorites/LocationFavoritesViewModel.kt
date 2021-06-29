@@ -1,13 +1,11 @@
 package com.hampson.sharework_kotlin.ui.home.fab_location_favorites
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.LocationFavorites
-import com.hampson.sharework_kotlin.ui.MainActivity
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
@@ -16,7 +14,8 @@ class LocationFavoritesViewModel (private val apiService : DBInterface,
                                   private val locationFavoritesRepository: LocationFavoritesRepository, userId: Int) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
-    private val locationFavoritesLiveData: MutableLiveData<LocationFavorites> = MutableLiveData()
+    private val locationFavoritesAddLiveData: MutableLiveData<LocationFavorites> = MutableLiveData()
+    private val locationFavoritesDeleteLiveData: MutableLiveData<LocationFavorites> = MutableLiveData()
     private val mToast: MutableLiveData<String> = MutableLiveData()
 
     val locationFavoritesList : MutableLiveData<List<LocationFavorites>> by lazy {
@@ -24,7 +23,11 @@ class LocationFavoritesViewModel (private val apiService : DBInterface,
     }
 
     fun getLocationFavorites(): LiveData<LocationFavorites> {
-        return locationFavoritesLiveData
+        return locationFavoritesAddLiveData
+    }
+
+    fun getDeleteLocationFavorites(): LiveData<LocationFavorites> {
+        return locationFavoritesDeleteLiveData
     }
 
     fun getToast(): LiveData<String> {
@@ -48,11 +51,32 @@ class LocationFavoritesViewModel (private val apiService : DBInterface,
                     .subscribe(
                         {
                             if (it.status == "success") {
-                                this.locationFavoritesLiveData.postValue(it.payload.locationFavorites)
+                                this.locationFavoritesAddLiveData.postValue(it.payload.locationFavorites)
                             }
                         },
                         {
                             popupToToast("5개까지 가능합니다.")
+                        }
+                    )
+            )
+        } catch (e: Exception) {
+
+        }
+    }
+
+    fun deleteLocationFavorites(id: Int?) {
+        try {
+            compositeDisposable.add(
+                apiService.deleteLocationFavorites(id)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(
+                        {
+                            if (it.status == "success") {
+                                this.locationFavoritesDeleteLiveData.postValue(it.payload.locationFavorites)
+                            }
+                        },
+                        {
+
                         }
                     )
             )
