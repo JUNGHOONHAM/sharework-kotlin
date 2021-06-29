@@ -34,6 +34,7 @@ import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.data.vo.LocationFavorites
 import com.hampson.sharework_kotlin.databinding.FragmentHomeworkerBinding
+import com.hampson.sharework_kotlin.session.SessionManagement
 import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.GoogleTaskExampleDialog
 import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.DialogLocationFavorites
 import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.LocationFavoritesRepository
@@ -55,7 +56,6 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     private val REQUEST_ACCESS_FINE_LOCATION = 1000
     private lateinit var map: GoogleMap
 
-    // Declare a variable for the cluster manager.
     private lateinit var clusterManager: ClusterManager<MyClusterItem>
     private var clusterRenderer: ClusterRenderer? = null
 
@@ -68,6 +68,8 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     private var myLocation: LatLng? = null
 
     private lateinit var speedDialView: SpeedDialView
+
+    private var userId: Int = -1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -86,12 +88,14 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         //    clusterRenderer = ClusterRenderer(activity as FragmentActivity, it, clusterManager)
         //}
 
+        val sessionManagement = SessionManagement(activity as FragmentActivity)
+        userId = sessionManagement.getSessionID()
+
         apiService = DBClient.getClient()
 
         jobInMapRepository = JobInMapRepository(apiService)
         locationFavoritesRepository = LocationFavoritesRepository(apiService)
 
-        //viewModel = getViewModel(jobId)
         viewModel = getViewModel(0.0, 0.0, 0.0, 0.0)
 
         viewModel.jobInMapList.observe(activity as FragmentActivity, Observer {
@@ -104,7 +108,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
             binding.textViewError.visibility = if (it == NetworkState.ERROR) View.VISIBLE else View.GONE
         })
 
-        locationViewModel = getViewModelLocation()
+        locationViewModel = getViewModelLocation(userId)
         locationViewModel.locationFavoritesList.observe(activity as FragmentActivity, Observer {
             initSpeedDial(savedInstanceState == null, it)
         })
@@ -398,11 +402,11 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         }).get(ClusterJobInMapViewModel::class.java)
     }
 
-    private fun getViewModelLocation(): LocationFavoritesViewModel {
+    private fun getViewModelLocation(userId: Int): LocationFavoritesViewModel {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 @Suppress("UNCHECKED_CAST")
-                return LocationFavoritesViewModel(apiService, locationFavoritesRepository, 66) as T
+                return LocationFavoritesViewModel(apiService, locationFavoritesRepository, userId) as T
             }
         }).get(LocationFavoritesViewModel::class.java)
     }

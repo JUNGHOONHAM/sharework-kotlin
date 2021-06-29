@@ -16,14 +16,19 @@ class LocationFavoritesViewModel (private val apiService : DBInterface,
                                   private val locationFavoritesRepository: LocationFavoritesRepository, userId: Int) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
-    private val locationFavorites: MutableLiveData<LocationFavorites> = MutableLiveData()
+    private val locationFavoritesLiveData: MutableLiveData<LocationFavorites> = MutableLiveData()
+    private val mToast: MutableLiveData<String> = MutableLiveData()
 
     val locationFavoritesList : MutableLiveData<List<LocationFavorites>> by lazy {
         locationFavoritesRepository.fetchSingleLocationFavorites(compositeDisposable, userId)
     }
 
     fun getLocationFavorites(): LiveData<LocationFavorites> {
-        return locationFavorites
+        return locationFavoritesLiveData
+    }
+
+    fun getToast(): LiveData<String> {
+        return mToast
     }
 
     val networkState : LiveData<NetworkState> by lazy {
@@ -36,28 +41,27 @@ class LocationFavoritesViewModel (private val apiService : DBInterface,
     }
 
     fun createLocationFavorites(locationFavorites: LocationFavorites) {
-        Log.d("skejfklse", locationFavorites.toString())
         try {
-            Log.d("skejfklse", "1")
-            Log.d("skejfklse", apiService.toString())
             compositeDisposable.add(
                 apiService.createLocationFavorites(locationFavorites)
                     .subscribeOn(Schedulers.io())
                     .subscribe(
                         {
                             if (it.status == "success") {
-                                this.locationFavorites.postValue(it.payload.locationFavorites)
-                            } else {
-
+                                this.locationFavoritesLiveData.postValue(it.payload.locationFavorites)
                             }
                         },
                         {
-                            Log.d("sjeklfsef", it.message)
+                            popupToToast("5개까지 가능합니다.")
                         }
                     )
             )
         } catch (e: Exception) {
-            Log.d("sjeklfsef", e.message)
+
         }
+    }
+
+    private fun popupToToast(message: String) {
+        mToast.postValue(message)
     }
 }

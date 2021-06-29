@@ -43,6 +43,7 @@ class LocationFavoritesAdapter(val context: Context?) : RecyclerView.Adapter<Vie
     }
 
     fun replaceList(newList: MutableList<LocationFavorites>) {
+        data.clear()
         data = newList.toMutableList()
         notifyDataSetChanged()
     }

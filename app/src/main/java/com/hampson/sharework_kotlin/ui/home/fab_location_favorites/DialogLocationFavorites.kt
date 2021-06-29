@@ -3,6 +3,7 @@ package com.hampson.sharework_kotlin.ui.home.fab_location_favorites
 import android.app.Dialog
 import android.os.Bundle
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,10 +49,24 @@ class DialogLocationFavorites(context: FragmentActivity?, locationViewModel: Loc
             locationFavoritesAdapter.replaceList(locationFavoritesList)
         })
 
+        locationViewModel.getToast().observe(context, {
+            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+        })
+
         mBinding.buttonAdd.setOnClickListener {
+            mBinding.buttonAdd.isEnabled = false
+
             val locaitionName = mBinding.editTextLocationName.text.toString()
-            val location = LocationFavorites(null, userId, locaitionName, position.latitude, position.longitude)
-            locationViewModel.createLocationFavorites(location)
+            mBinding.editTextLocationName.setText("")
+
+            if (locaitionName.trim() != "") {
+                val location = LocationFavorites(null, userId, locaitionName, position.latitude, position.longitude)
+                locationViewModel.createLocationFavorites(location)
+            } else {
+                Toast.makeText(context, "위치 이름을 입력해 주세요.", Toast.LENGTH_SHORT).show()
+            }
+
+            mBinding.buttonAdd.isEnabled = true
         }
 
         mBinding.imageViewClose.setOnClickListener {
