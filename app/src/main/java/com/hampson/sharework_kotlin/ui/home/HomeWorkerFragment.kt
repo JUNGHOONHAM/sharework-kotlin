@@ -4,7 +4,6 @@ import android.Manifest
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
@@ -50,7 +49,6 @@ import com.leinardi.android.speeddial.SpeedDialView
 import org.jetbrains.anko.noButton
 import org.jetbrains.anko.support.v4.alert
 import org.jetbrains.anko.yesButton
-import java.lang.Exception
 
 class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClusterClickListener<HomeWorkerFragment.MyClusterItem> {
 
@@ -66,7 +64,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     private lateinit var clusterManager: ClusterManager<MyClusterItem>
     private var clusterRenderer: ClusterRenderer? = null
 
-    private lateinit var viewModel: ClusterJobInMapViewModel
+    private lateinit var viewModel: HomeWorkerViewModel
     private lateinit var locationViewModel: LocationFavoritesViewModel
     private lateinit var jobInMapRepository: JobInMapRepository
     private lateinit var locationFavoritesRepository: LocationFavoritesRepository
@@ -107,19 +105,17 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         jobInMapRepository = JobInMapRepository(apiService)
         locationFavoritesRepository = LocationFavoritesRepository(apiService)
 
-        viewModel = getViewModel(0.0, 0.0, 0.0, 0.0)
+        viewModel = getViewModel()
 
-        viewModel.jobInMapList.observe(activity as FragmentActivity, Observer {
-            bindUI(it)
+        viewModel.jobInMapList().observe(activity as FragmentActivity, {
+            addItems(it)
         })
 
         viewModel.getSearchPosition().observe(activity as FragmentActivity, {
             map.moveCamera(CameraUpdateFactory.newLatLng(it))
         })
 
-        viewModel.networkState.observe(activity as FragmentActivity, Observer {
-            // progress_bar
-            binding.progressBar.visibility = if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
+        viewModel.networkState().observe(activity as FragmentActivity, {
             binding.textViewError.visibility = if (it == NetworkState.ERROR) View.VISIBLE else View.GONE
         })
 
@@ -168,6 +164,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
         locationInit()
         addLocationListener()
+        setUpClusterer()
     }
 
     private fun addItems(jobList: List<Job>) {
@@ -219,9 +216,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
             var northeast = map.projection.visibleRegion.latLngBounds.northeast
             var southwest = map.projection.visibleRegion.latLngBounds.southwest
 
-             viewModel.updateMap(northeast.latitude, northeast.longitude, southwest.latitude, southwest.longitude).observe(activity as FragmentActivity, Observer {
-                 addItems(it)
-             })
+             viewModel.getJobList(northeast.latitude, northeast.longitude, southwest.latitude, southwest.longitude)
         }
     }
 
@@ -375,7 +370,6 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
             if (this::map.isInitialized) {
                 locationInit()
                 addLocationListener()
-                setUpClusterer()
             }
 
         })
@@ -420,19 +414,13 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         return true
     }
 
-    private fun getViewModel(norteast_lat: Double, northeast_lng: Double, southweast_lat: Double, southweast_lng: Double): ClusterJobInMapViewModel {
+    private fun getViewModel(): HomeWorkerViewModel {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 @Suppress("UNCHECKED_CAST")
-                return ClusterJobInMapViewModel(
-                    jobInMapRepository,
-                    norteast_lat,
-                    northeast_lng,
-                    southweast_lat,
-                    southweast_lng
-                ) as T
+                return HomeWorkerViewModel(apiService, jobInMapRepository) as T
             }
-        }).get(ClusterJobInMapViewModel::class.java)
+        }).get(HomeWorkerViewModel::class.java)
     }
 
     private fun getViewModelLocation(userId: Int): LocationFavoritesViewModel {
