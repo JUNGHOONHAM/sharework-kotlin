@@ -48,7 +48,7 @@
             android:layout_marginRight="24dp">
 
             <EditText
-                android:id="@+id/shop_editText_search"
+                android:id="@+id/editTextSearch"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:paddingLeft="16dp"

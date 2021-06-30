@@ -4,9 +4,14 @@ import android.Manifest
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -45,6 +50,7 @@ import com.leinardi.android.speeddial.SpeedDialView
 import org.jetbrains.anko.noButton
 import org.jetbrains.anko.support.v4.alert
 import org.jetbrains.anko.yesButton
+import java.lang.Exception
 
 class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClusterClickListener<HomeWorkerFragment.MyClusterItem> {
 
@@ -72,6 +78,8 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
     private var userId: Int = -1
 
+    private lateinit var imm: InputMethodManager
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -89,6 +97,8 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         //    clusterRenderer = ClusterRenderer(activity as FragmentActivity, it, clusterManager)
         //}
 
+        imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
         val sessionManagement = SessionManagement(activity as FragmentActivity)
         userId = sessionManagement.getSessionID()
 
@@ -101,6 +111,10 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
         viewModel.jobInMapList.observe(activity as FragmentActivity, Observer {
             bindUI(it)
+        })
+
+        viewModel.getSearchPosition().observe(activity as FragmentActivity, {
+            map.moveCamera(CameraUpdateFactory.newLatLng(it))
         })
 
         viewModel.networkState.observe(activity as FragmentActivity, Observer {
@@ -119,6 +133,24 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
                 map.animateCamera(CameraUpdateFactory.newLatLng(myLocation))
             }
         }
+
+        binding.editTextSearch.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    val searchName = binding.editTextSearch.text.toString()
+
+                    binding.editTextSearch.setText("")
+                    binding.editTextSearch.clearFocus()
+                    imm.hideSoftInputFromWindow(binding.editTextSearch.windowToken, 0)
+
+                    val geocoder = Geocoder(context)
+                    viewModel.searchMap(searchName, geocoder)
+                }
+
+                return false
+            }
+
+        })
 
         return mBinding?.root
     }
@@ -187,7 +219,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
             var northeast = map.projection.visibleRegion.latLngBounds.northeast
             var southwest = map.projection.visibleRegion.latLngBounds.southwest
 
-             viewModel.mapUpdate(northeast.latitude, northeast.longitude, southwest.latitude, southwest.longitude).observe(activity as FragmentActivity, Observer {
+             viewModel.updateMap(northeast.latitude, northeast.longitude, southwest.latitude, southwest.longitude).observe(activity as FragmentActivity, Observer {
                  addItems(it)
              })
         }
