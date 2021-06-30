@@ -35,7 +35,7 @@ class LocationFavoritesViewModel (private val apiService : DBInterface,
     }
 
     val networkState : LiveData<NetworkState> by lazy {
-        locationFavoritesRepository.getJobNetworkState()
+        locationFavoritesRepository.getLocationFavoritesNetworkState()
     }
 
     override fun onCleared() {

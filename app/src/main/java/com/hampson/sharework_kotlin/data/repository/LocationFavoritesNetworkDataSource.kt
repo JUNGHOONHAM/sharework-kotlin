@@ -15,9 +15,9 @@ class LocationFavoritesNetworkDataSource (private val apiService : DBInterface, 
     val networkState: LiveData<NetworkState>
         get() = _networkState
 
-    private val _downloadedJobResponse = MutableLiveData<List<LocationFavorites>>()
-    val downlodedJobResponse: MutableLiveData<List<LocationFavorites>>
-        get() = _downloadedJobResponse
+    private val _downloadedLocationFavoritesResponse = MutableLiveData<List<LocationFavorites>>()
+    val downlodedLocationFavoritesResponse: MutableLiveData<List<LocationFavorites>>
+        get() = _downloadedLocationFavoritesResponse
 
     fun fetchLocationFavorites(userId: Int) {
         _networkState.postValue(NetworkState.LOADING)
@@ -28,8 +28,7 @@ class LocationFavoritesNetworkDataSource (private val apiService : DBInterface, 
                     .subscribeOn(Schedulers.io())
                     .subscribe(
                         {
-                            _downloadedJobResponse.postValue(it.payload.locationFavoritesList)
-                            Log.d("it in downlad", downlodedJobResponse.value.toString())
+                            _downloadedLocationFavoritesResponse.postValue(it.payload.locationFavoritesList)
                             _networkState.postValue(NetworkState.LOADED)
                         },
                         {

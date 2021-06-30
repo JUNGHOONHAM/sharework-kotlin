@@ -11,18 +11,16 @@ import com.hampson.sharework_kotlin.data.vo.Response
 import io.reactivex.disposables.CompositeDisposable
 
 class LocationFavoritesRepository (private val apiService : DBInterface) {
-    lateinit var locationFaDataSource: LocationFavoritesNetworkDataSource
+    lateinit var locationFavoritesDataSource: LocationFavoritesNetworkDataSource
 
     fun fetchSingleLocationFavorites (compositeDisposable: CompositeDisposable, userId: Int) : MutableLiveData<List<LocationFavorites>> {
-        Log.d("locationviewmodel", userId.toString())
-        locationFaDataSource = LocationFavoritesNetworkDataSource(apiService, compositeDisposable)
-        locationFaDataSource.fetchLocationFavorites(userId)
+        locationFavoritesDataSource = LocationFavoritesNetworkDataSource(apiService, compositeDisposable)
+        locationFavoritesDataSource.fetchLocationFavorites(userId)
 
-        Log.d("fetchSingleLocationFav", locationFaDataSource.downlodedJobResponse.value.toString())
-        return locationFaDataSource.downlodedJobResponse
+        return locationFavoritesDataSource.downlodedLocationFavoritesResponse
     }
 
-    fun getJobNetworkState(): LiveData<NetworkState> {
-        return locationFaDataSource.networkState
+    fun getLocationFavoritesNetworkState(): LiveData<NetworkState> {
+        return locationFavoritesDataSource.networkState
     }
 }

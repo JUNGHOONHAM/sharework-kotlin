@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.model.LatLng
 import com.hampson.sharework_kotlin.data.api.DBClient
 import com.hampson.sharework_kotlin.data.api.DBInterface
+import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.LocationFavorites
 import com.hampson.sharework_kotlin.databinding.DialogLocationFavoritesBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
@@ -53,26 +54,41 @@ class DialogLocationFavorites(context: FragmentActivity?, position: LatLng): Dia
         locationFavoritesRepository = LocationFavoritesRepository(apiService)
         locationViewModel = getViewModelLocation(userId)
 
-        locationViewModel.locationFavoritesList.observe(activity as FragmentActivity, Observer {
+        locationViewModel.locationFavoritesList.observe(this, Observer {
             locationFavoritesList = it as ArrayList<LocationFavorites>
             locationFavoritesAdapter.replaceList(it as MutableList<LocationFavorites>)
+
+            checkLocationFavoritesNone()
         })
 
-        locationViewModel.getAddLocationFavorites().observe(activity as FragmentActivity, Observer {
+        locationViewModel.getAddLocationFavorites().observe(this, Observer {
             locationFavoritesList.add(it)
             locationFavoritesAdapter.replaceList(locationFavoritesList)
+
+            checkLocationFavoritesNone()
 
             if (mDialogResult != null) {
                 mDialogResult.finish(locationFavoritesList)
             }
         })
 
-        locationViewModel.getDeleteLocationFavorites().observe(activity as FragmentActivity, Observer {
+        locationViewModel.getDeleteLocationFavorites().observe(this, Observer {
             locationFavoritesList.remove(it)
             locationFavoritesAdapter.replaceList(locationFavoritesList)
 
+            checkLocationFavoritesNone()
+
             if (mDialogResult != null) {
                 mDialogResult.finish(locationFavoritesList)
+            }
+        })
+
+        locationViewModel.networkState.observe(this, Observer {
+            // progress_bar
+            if (it == NetworkState.ERROR) {
+                mBinding.textViewNetworkError.visibility = View.VISIBLE
+            } else {
+                mBinding.textViewNetworkError.visibility = View.GONE
             }
         })
 
@@ -116,6 +132,14 @@ class DialogLocationFavorites(context: FragmentActivity?, position: LatLng): Dia
 
         mBinding.recyclerView.layoutManager = layout
         mBinding.recyclerView.adapter = locationFavoritesAdapter
+    }
+
+    private fun checkLocationFavoritesNone() {
+        if (locationFavoritesList.isEmpty()) {
+            mBinding.textViewNoneFavorite.visibility = View.VISIBLE
+        } else {
+            mBinding.textViewNoneFavorite.visibility = View.GONE
+        }
     }
 
     private fun getViewModelLocation(userId: Int): LocationFavoritesViewModel {
