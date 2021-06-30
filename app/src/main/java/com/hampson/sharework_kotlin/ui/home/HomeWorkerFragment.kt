@@ -5,6 +5,7 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -42,7 +43,6 @@ import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.LocationFavor
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
 import org.jetbrains.anko.noButton
-import org.jetbrains.anko.support.v4.act
 import org.jetbrains.anko.support.v4.alert
 import org.jetbrains.anko.yesButton
 
@@ -111,7 +111,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
         locationViewModel = getViewModelLocation(userId)
         locationViewModel.locationFavoritesList.observe(activity as FragmentActivity, Observer {
-            initSpeedDial(savedInstanceState == null, it)
+            initSpeedDial(it)
         })
 
         binding.floatingMyLocation.setOnClickListener {
@@ -416,32 +416,32 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
     }
 
-    private fun initSpeedDial(addActionItems: Boolean, locationList: List<LocationFavorites>) {
-        if (addActionItems) {
-            for (i in locationList.indices) {
-                var id = 0
-                if (i == 0) {
-                    id = R.id.location_favorites_1
-                } else if (i == 1) {
-                    id = R.id.location_favorites_2
-                } else if (i == 2) {
-                    id = R.id.location_favorites_3
-                } else if (i == 3) {
-                    id = R.id.location_favorites_4
-                } else if (i == 4) {
-                    id = R.id.location_favorites_5
-                }
+    private fun initSpeedDial(locationList: List<LocationFavorites>) {
+        speedDialView.clearActionItems()
 
-                val location = locationList[i]
-
-                speedDialView.addActionItem(SpeedDialActionItem.Builder(id, R.drawable.ic_baseline_location_on_24)
-                    .setLabel(location.location_name)
-                    .create())
+        for (i in locationList.indices) {
+            var id = 0
+            if (i == 0) {
+                id = R.id.location_favorites_1
+            } else if (i == 1) {
+                id = R.id.location_favorites_2
+            } else if (i == 2) {
+                id = R.id.location_favorites_3
+            } else if (i == 3) {
+                id = R.id.location_favorites_4
+            } else if (i == 4) {
+                id = R.id.location_favorites_5
             }
 
-            speedDialView.addActionItem(SpeedDialActionItem.Builder(R.id.location_favorites_add, R.drawable.ic_baseline_add_circle_24)
+            val location = locationList[i]
+
+            speedDialView.addActionItem(SpeedDialActionItem.Builder(id, R.drawable.ic_baseline_location_on_24)
+                .setLabel(location.location_name)
                 .create())
         }
+
+        speedDialView.addActionItem(SpeedDialActionItem.Builder(R.id.location_favorites_add, R.drawable.ic_baseline_add_circle_24)
+            .create())
 
         speedDialView.setOnActionSelectedListener(SpeedDialView.OnActionSelectedListener { actionItem ->
             when (actionItem.id) {
@@ -477,6 +477,12 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
                     var dialog = DialogLocationFavorites(activity as FragmentActivity, position)
                     dialog.show((activity as FragmentActivity).supportFragmentManager, "")
+
+                    dialog.setDialogResult(object : DialogLocationFavorites.OnDialogResult{
+                        override fun finish(result: ArrayList<LocationFavorites>) {
+                            initSpeedDial(result)
+                        }
+                    })
                 }
             }
             true // To keep the Speed Dial open

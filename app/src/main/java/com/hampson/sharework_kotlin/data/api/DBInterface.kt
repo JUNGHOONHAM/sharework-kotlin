@@ -35,6 +35,7 @@ interface DBInterface {
     @POST("api/v2/users/location_favorites")
     fun createLocationFavorites(@Body location_favorite: LocationFavorites): Single<Response>
 
+    @Headers("user_id: 135")
     @DELETE("api/v2/users/location_favorites/{id}")
     fun deleteLocationFavorites(@Path("id") id: Int?): Single<Response>
 

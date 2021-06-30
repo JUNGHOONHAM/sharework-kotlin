@@ -22,7 +22,7 @@ class LocationFavoritesViewModel (private val apiService : DBInterface,
         locationFavoritesRepository.fetchSingleLocationFavorites(compositeDisposable, userId)
     }
 
-    fun getLocationFavorites(): LiveData<LocationFavorites> {
+    fun getAddLocationFavorites(): LiveData<LocationFavorites> {
         return locationFavoritesAddLiveData
     }
 

@@ -2,6 +2,7 @@ package com.hampson.sharework_kotlin.ui.home.fab_location_favorites
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,8 @@ class DialogLocationFavorites(context: FragmentActivity?, position: LatLng): Dia
     private lateinit var locationFavoritesAdapter: LocationFavoritesAdapter
     private lateinit var locationFavoritesList: ArrayList<LocationFavorites>
 
+    private  lateinit var mDialogResult: OnDialogResult
+
     private val context = context
     private var userId: Int = -1
     private val position = position
@@ -55,9 +58,22 @@ class DialogLocationFavorites(context: FragmentActivity?, position: LatLng): Dia
             locationFavoritesAdapter.replaceList(it as MutableList<LocationFavorites>)
         })
 
-        locationViewModel.getLocationFavorites().observe(activity as FragmentActivity, Observer {
+        locationViewModel.getAddLocationFavorites().observe(activity as FragmentActivity, Observer {
             locationFavoritesList.add(it)
             locationFavoritesAdapter.replaceList(locationFavoritesList)
+
+            if (mDialogResult != null) {
+                mDialogResult.finish(locationFavoritesList)
+            }
+        })
+
+        locationViewModel.getDeleteLocationFavorites().observe(activity as FragmentActivity, Observer {
+            locationFavoritesList.remove(it)
+            locationFavoritesAdapter.replaceList(locationFavoritesList)
+
+            if (mDialogResult != null) {
+                mDialogResult.finish(locationFavoritesList)
+            }
         })
 
         locationViewModel.getToast().observe(activity as FragmentActivity, {
@@ -120,4 +136,13 @@ class DialogLocationFavorites(context: FragmentActivity?, position: LatLng): Dia
 
         initDisplaySize()
     }
+
+    fun setDialogResult(dialogResult: OnDialogResult) {
+        mDialogResult = dialogResult
+    }
+
+    interface OnDialogResult {
+        fun finish(result: ArrayList<LocationFavorites>)
+    }
+
 }
