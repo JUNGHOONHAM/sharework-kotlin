@@ -3,19 +3,6 @@ package com.hampson.sharework_kotlin.data.vo
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
-data class JobResponse(
-    val page: Int,
-    @SerializedName("response")
-    val payload: JobPayload,
-    @SerializedName("optional")
-    val optional: Optional
-)
-
-data class JobPayload(
-    @SerializedName("payload")
-    val jobList: List<Job>,
-)
-
 data class Job (
     val id: Int,
     val job_id: Int,

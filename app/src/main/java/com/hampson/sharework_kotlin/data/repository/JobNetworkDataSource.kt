@@ -27,7 +27,7 @@ class JobNetworkDataSource (private val apiService : DBInterface, private val co
                     .subscribeOn(Schedulers.io())
                     .subscribe(
                         {
-                            _downloadedJobResponse.postValue(it)
+                            _downloadedJobResponse.postValue(it.payload.job)
                             _networkState.postValue(NetworkState.LOADED)
                         },
                         {

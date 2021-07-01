@@ -1,5 +1,6 @@
 package com.hampson.sharework_kotlin.data.repository
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.hampson.sharework_kotlin.data.api.FIRST_PAGE
@@ -18,11 +19,11 @@ class JobDataSource (private val apiService : DBInterface, private val composite
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Job>) {
         networkState.postValue(NetworkState.LOADING)
         compositeDisposable.add(
-            apiService.getJob(jobIdList.toString(), params.key, 5)
+            apiService.getJobs(jobIdList.toString(), params.key, 5)
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     {
-                        if (it.optional.total_page >= params.key) {
+                        if (it.payload.meta.total_page >= params.key) {
                             callback.onResult(it.payload.jobList, params.key + 1)
                             networkState.postValue(NetworkState.LOADED)
                         } else {
@@ -43,7 +44,7 @@ class JobDataSource (private val apiService : DBInterface, private val composite
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Job>) {
         networkState.postValue(NetworkState.LOADING)
         compositeDisposable.add(
-            apiService.getJob(jobIdList.toString(), page, 5)
+            apiService.getJobs(jobIdList.toString(), page, 5)
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     {
