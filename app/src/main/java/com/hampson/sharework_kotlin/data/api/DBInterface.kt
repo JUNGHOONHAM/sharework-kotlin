@@ -1,6 +1,8 @@
 package com.hampson.sharework_kotlin.data.api
 
+import androidx.fragment.app.FragmentActivity
 import com.hampson.sharework_kotlin.data.vo.*
+import com.hampson.sharework_kotlin.session.SessionManagement
 import io.reactivex.Single
 import retrofit2.http.*
 
@@ -35,7 +37,6 @@ interface DBInterface {
     @POST("api/v2/users/location_favorites")
     fun createLocationFavorites(@Body location_favorite: LocationFavorites): Single<Response>
 
-    @Headers("user_id: 135")
     @DELETE("api/v2/users/location_favorites/{id}")
     fun deleteLocationFavorites(@Path("id") id: Int?): Single<Response>
 

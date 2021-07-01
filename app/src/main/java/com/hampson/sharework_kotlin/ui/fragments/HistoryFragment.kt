@@ -1,7 +1,6 @@
 package com.hampson.sharework_kotlin.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,15 +15,15 @@ import com.hampson.sharework_kotlin.data.api.DBClient
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.databinding.FragmentHistoryBinding
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.ClusterJobPagedListAdapter
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.ClusterJobViewModel
+import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.BottomSheetJobPagedListAdapter
+import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.BottomSheetJobViewModel
 import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.JobPagedListRepository
 
 class HistoryFragment : Fragment() {
 
     private var mBinding : FragmentHistoryBinding? = null
 
-    private lateinit var viewModel: ClusterJobViewModel
+    private lateinit var viewModel: BottomSheetJobViewModel
     lateinit var jobRepository: JobPagedListRepository
 
     override fun onCreateView(
@@ -36,7 +35,7 @@ class HistoryFragment : Fragment() {
 
         mBinding = binding
 
-        val apiService : DBInterface = DBClient.getClient()
+        val apiService : DBInterface = DBClient.getClient(activity as FragmentActivity)
 
         jobRepository =
             JobPagedListRepository(
@@ -46,7 +45,7 @@ class HistoryFragment : Fragment() {
         viewModel = getViewModel()
 
         val jobAdapter =
-            ClusterJobPagedListAdapter(
+            BottomSheetJobPagedListAdapter(
                 (activity as FragmentActivity)
             )
 
@@ -83,15 +82,15 @@ class HistoryFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun getViewModel(): ClusterJobViewModel {
+    private fun getViewModel(): BottomSheetJobViewModel {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 val jobIdList = ArrayList<Int>()
                 @Suppress("UNCHECKED_CAST")
-                return ClusterJobViewModel(
+                return BottomSheetJobViewModel(
                     jobRepository, jobIdList
                 ) as T
             }
-        }).get(ClusterJobViewModel::class.java)
+        }).get(BottomSheetJobViewModel::class.java)
     }
 }

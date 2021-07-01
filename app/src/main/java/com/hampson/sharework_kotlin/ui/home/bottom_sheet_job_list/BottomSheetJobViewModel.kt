@@ -7,7 +7,7 @@ import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
 import io.reactivex.disposables.CompositeDisposable
 
-class ClusterJobViewModel (private val jobRepository: JobPagedListRepository, private var jobIdList: ArrayList<Int>) : ViewModel() {
+class BottomSheetJobViewModel (private val jobRepository: JobPagedListRepository, private var jobIdList: ArrayList<Int>) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 

@@ -14,7 +14,7 @@ import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
 
-class ClusterJobPagedListAdapter(public val context: Context) : PagedListAdapter<Job, RecyclerView.ViewHolder>(
+class BottomSheetJobPagedListAdapter(public val context: Context) : PagedListAdapter<Job, RecyclerView.ViewHolder>(
     JobDiffCallback()
 ) {
 

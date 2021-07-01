@@ -50,7 +50,7 @@ class DialogLocationFavorites(context: FragmentActivity?, position: LatLng): Dia
 
         setRecyclerView()
 
-        apiService = DBClient.getClient()
+        apiService = DBClient.getClient(activity as FragmentActivity)
         locationFavoritesRepository = LocationFavoritesRepository(apiService)
         locationViewModel = getViewModelLocation(userId)
 

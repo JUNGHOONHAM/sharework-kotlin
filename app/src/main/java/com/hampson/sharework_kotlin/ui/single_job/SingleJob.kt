@@ -26,10 +26,10 @@ class SingleJob : AppCompatActivity() {
 
         mBinding = ActivitySingleJobBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        Log.d("onCreateStart", "@@@")
+
         val jobId: Int = intent.getIntExtra("id", 1)
 
-        val apiService : DBInterface = DBClient.getClient()
+        val apiService : DBInterface = DBClient.getClient(this)
         jobRepository = JobRepository(apiService)
 
         viewModel = getViewModel(jobId)

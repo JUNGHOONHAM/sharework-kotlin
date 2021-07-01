@@ -1,5 +1,8 @@
 package com.hampson.sharework_kotlin.data.api
 
+import android.content.Context
+import androidx.fragment.app.FragmentActivity
+import com.hampson.sharework_kotlin.session.SessionManagement
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -14,8 +17,13 @@ const val BASE_URL = "http://3.34.231.112"
 const val FIRST_PAGE = 1
 const val POST_PER_PAGE = 20
 
+
+
 object DBClient {
-    fun getClient(): DBInterface {
+    fun getClient(context: Context): DBInterface {
+        val sessionManagement = SessionManagement(context)
+        val userId = sessionManagement.getSessionID()
+
         val requestInterceptor = Interceptor { chain ->
             val url : HttpUrl = chain.request()
                 .url()
@@ -25,6 +33,7 @@ object DBClient {
             val request : Request = chain.request()
                 .newBuilder()
                 .url(url)
+                .addHeader("user_id", userId.toString())
                 .build()
 
             return@Interceptor chain.proceed(request)

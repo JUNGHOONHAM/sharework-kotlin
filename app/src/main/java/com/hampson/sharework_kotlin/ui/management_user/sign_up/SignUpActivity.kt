@@ -17,7 +17,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivitySignUpBinding
 
     private lateinit var viewModel: SignUpViewModel
-    private val apiService : DBInterface = DBClient.getClient()
+    private lateinit var apiService: DBInterface
 
     private lateinit var phoneNumber: String
 
@@ -37,6 +37,8 @@ class SignUpActivity : AppCompatActivity() {
 
         mBinding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+
+        apiService = DBClient.getClient(this)
 
         mBinding.toolbar.textViewToolbarTitle.text = "회원가입"
 

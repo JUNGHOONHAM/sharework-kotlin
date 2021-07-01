@@ -1,7 +1,7 @@
 package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list
 
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,33 +21,36 @@ import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.api.DBClient
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
+import com.hampson.sharework_kotlin.databinding.BottomSheetJobListBinding
 
-class GoogleTaskExampleDialog : BottomDrawerFragment() {
+class BottomSheetJobList : BottomDrawerFragment() {
 
     private var alphaCancelButton = 0f
-    private lateinit var cancelButton: ImageView
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var textViewError: TextView
 
     private lateinit var navigation: AppCompatCheckBox
     private lateinit var statusBar: AppCompatCheckBox
 
-    private lateinit var viewModel: ClusterJobViewModel
+    private lateinit var viewModel: BottomSheetJobViewModel
     lateinit var jobRepository: JobPagedListRepository
 
     private var jobIdList = ArrayList<Int>()
+
+    private lateinit var cancelButton: ImageView
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var textViewError: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.google_task_example_layout, container, false)
+        val view = inflater.inflate(R.layout.bottom_sheet_job_list, container, false)
         cancelButton = view.findViewById(R.id.cancel)
         recyclerView = view.findViewById(R.id.recyclerView)
         progressBar = view.findViewById(R.id.progressBar)
         textViewError = view.findViewById(R.id.textViewError)
+
         val percent = 0.65f
         addBottomSheetCallback {
             onSlide { _, slideOffset ->
@@ -61,14 +64,14 @@ class GoogleTaskExampleDialog : BottomDrawerFragment() {
                 cancelButton.isEnabled = alphaCancelButton > 0
             }
         }
+
         cancelButton.setOnClickListener { dismissWithBehavior() }
 
         arguments?.let {
             jobIdList = it.getIntegerArrayList("jobIdList") as ArrayList<Int>
         }
 
-
-        val apiService : DBInterface = DBClient.getClient()
+        val apiService : DBInterface = DBClient.getClient(activity as FragmentActivity)
 
         jobRepository =
             JobPagedListRepository(
@@ -78,7 +81,7 @@ class GoogleTaskExampleDialog : BottomDrawerFragment() {
         viewModel = getViewModel(jobIdList)
 
         val jobAdapter =
-            ClusterJobPagedListAdapter(
+            BottomSheetJobPagedListAdapter(
                 (activity as FragmentActivity)
             )
 
@@ -120,12 +123,12 @@ class GoogleTaskExampleDialog : BottomDrawerFragment() {
     }
 
 
-    private fun getViewModel(jobIdList: ArrayList<Int>): ClusterJobViewModel {
+    private fun getViewModel(jobIdList: ArrayList<Int>): BottomSheetJobViewModel {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 @Suppress("UNCHECKED_CAST")
-                return ClusterJobViewModel(jobRepository, jobIdList) as T
+                return BottomSheetJobViewModel(jobRepository, jobIdList) as T
             }
-        }).get(ClusterJobViewModel::class.java)
+        }).get(BottomSheetJobViewModel::class.java)
     }
 }

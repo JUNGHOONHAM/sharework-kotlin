@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.hampson.sharework_kotlin.R
@@ -23,7 +24,7 @@ class AuthenticationPhoneNumberActivity : AppCompatActivity() {
 
     private lateinit var viewModel: AuthenticationPhoneNumberViewModel
     private lateinit var authenticationPhoneNumberRepository: AuthenticationPhoneNumberRepository
-    private val apiService : DBInterface = DBClient.getClient()
+    private lateinit var apiService : DBInterface
 
     private val maxCount = 300
 
@@ -43,6 +44,7 @@ class AuthenticationPhoneNumberActivity : AppCompatActivity() {
 
         mBinding.toolbar.textViewToolbarTitle.text = "로그인/회원가입"
 
+        apiService = DBClient.getClient(context)
         authenticationPhoneNumberRepository = AuthenticationPhoneNumberRepository(apiService)
 
         viewModel = getViewModel()

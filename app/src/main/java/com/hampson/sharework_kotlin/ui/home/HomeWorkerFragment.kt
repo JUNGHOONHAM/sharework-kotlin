@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -40,7 +39,7 @@ import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.data.vo.LocationFavorites
 import com.hampson.sharework_kotlin.databinding.FragmentHomeworkerBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.GoogleTaskExampleDialog
+import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.BottomSheetJobList
 import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.DialogLocationFavorites
 import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.LocationFavoritesRepository
 import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.LocationFavoritesViewModel
@@ -100,7 +99,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         val sessionManagement = SessionManagement(activity as FragmentActivity)
         userId = sessionManagement.getSessionID()
 
-        apiService = DBClient.getClient()
+        apiService = DBClient.getClient(activity as FragmentActivity)
 
         jobInMapRepository = JobInMapRepository(apiService)
         locationFavoritesRepository = LocationFavoritesRepository(apiService)
@@ -402,7 +401,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         }
 
         val fragment =
-            GoogleTaskExampleDialog()
+            BottomSheetJobList()
         val bundle = Bundle()
         bundle.putIntegerArrayList("jobIdList", jobIdList)
         fragment.arguments = bundle
