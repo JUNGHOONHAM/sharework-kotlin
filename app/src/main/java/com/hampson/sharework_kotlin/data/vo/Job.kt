@@ -20,6 +20,7 @@ data class Job (
     val pay_type: String,
     val personnel: String,
     val status: String,
+    val profile_img: String,
 
     val job_applications: List<JobApplication>,
     val job_checklists: List<JobChecklists>,

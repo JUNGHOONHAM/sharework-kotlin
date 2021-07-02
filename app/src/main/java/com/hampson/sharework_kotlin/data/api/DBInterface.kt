@@ -40,6 +40,6 @@ interface DBInterface {
     @DELETE("api/v2/users/location_favorites/{id}")
     fun deleteLocationFavorites(@Path("id") id: Int?): Single<Response>
 
-    @GET("location_favorites")
-    fun getLocationFavorites(@Query("user_id") user_id: Int): Single<LocationFavoritesResponse>
+    @GET("api/v2/users/location_favorites")
+    fun getLocationFavorites(@Query("user_id") user_id: Int): Single<Response>
 }
