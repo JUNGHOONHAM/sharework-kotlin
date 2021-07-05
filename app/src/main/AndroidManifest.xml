@@ -34,5 +34,7 @@
 
         <activity android:name=".ui.management_user.authentication_phone_number.AuthenticationPhoneNumberActivity" />
         <activity android:name=".ui.management_user.sign_up.SignUpActivity" />
+
+        <activity android:name=".ui.home.bottom_sheet_job_list.job_info.JobInfoActivity" />
     </application>
 </manifest>

@@ -23,7 +23,7 @@ class JobNetworkDataSource (private val apiService : DBInterface, private val co
 
         try {
             compositeDisposable.add(
-                apiService.getJobShow(jobId)
+                apiService.getJobShow(jobId, 135)
                     .subscribeOn(Schedulers.io())
                     .subscribe(
                         {

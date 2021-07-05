@@ -2,6 +2,8 @@ package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +20,9 @@ import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.data.vo.Tag
+import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.job_info.JobInfoActivity
 import org.jetbrains.anko.backgroundResource
+import java.io.Serializable
 
 class BottomSheetJobPagedListAdapter(public val context: Context) : PagedListAdapter<Job, RecyclerView.ViewHolder>(
     JobDiffCallback()
@@ -111,21 +115,27 @@ class BottomSheetJobPagedListAdapter(public val context: Context) : PagedListAda
                     bindTag(tag, context)
                 }
             }
+
+            itemView.setOnClickListener {
+                Intent(context, JobInfoActivity::class.java).apply {
+                    putExtra("jobId", job?.id)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }.run { context.startActivity(this) }
+            }
         }
 
-        @SuppressLint("ResourceAsColor")
         private fun bindTag(tag: Tag, context: Context) {
-            val tv = TextView(context)
-            tv.text = "#" + tag.tag_name
-            tv.backgroundResource = R.drawable.background_fill_gray
-            tv.setTextColor(R.color.black)
-            tv.textSize = 14.0F
-            tv.setPadding(20, 10, 20, 10)
+            val textView = TextView(context)
+            textView.text = "#" + tag.tag_name
+            textView.backgroundResource = R.drawable.background_fill_gray
+            textView.setTextColor(Color.rgb(0, 0, 0))
+            textView.textSize = 14.0F
+            textView.setPadding(20, 10, 20, 10)
 
-            val lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            lp.setMargins(0, 0, 8, 0)
-            tv.layoutParams = lp
-            layoutTag.addView(tv)
+            val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            layoutParams.setMargins(0, 0, 8, 0)
+            textView.layoutParams = layoutParams
+            layoutTag.addView(textView)
         }
     }
 

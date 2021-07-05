@@ -21,14 +21,10 @@ import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.api.DBClient
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
-import com.hampson.sharework_kotlin.databinding.BottomSheetJobListBinding
 
 class BottomSheetJobList : BottomDrawerFragment() {
 
     private var alphaCancelButton = 0f
-
-    private lateinit var navigation: AppCompatCheckBox
-    private lateinit var statusBar: AppCompatCheckBox
 
     private lateinit var viewModel: BottomSheetJobViewModel
     lateinit var jobRepository: JobPagedListRepository

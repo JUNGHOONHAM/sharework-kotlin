@@ -30,8 +30,12 @@ interface DBInterface {
                     @Query("southwest_lat") southwest_lat: Double, @Query("southwest_lng") southwest_lng: Double): Single<Response>
 
     @GET("api/v2/users/jobs/{id}")
-    fun getJobShow(@Path("id") job_id: Int): Single<Response>
+    fun getJobShow(@Path("id") job_id: Int, @Query("user_id") user_id: Int): Single<Response>
 
+
+    // application
+    @POST("api/v2/users/job_applications")
+    fun createApplication(@Body application: JobApplication): Single<Response>
 
     // location favorites
     @POST("api/v2/users/location_favorites")

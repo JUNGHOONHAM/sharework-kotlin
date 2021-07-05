@@ -1,8 +1,5 @@
 package com.hampson.sharework_kotlin.data.vo
 
-import com.google.gson.annotations.SerializedName
-import java.util.*
-
 data class Job (
     val id: Int,
     val job_id: Int,
