@@ -20,6 +20,9 @@ interface DBInterface {
     @POST("api/v2/registrations")
     fun createUser(@Body user: User): Single<Response>
 
+    @GET("api/v2/users/users/{id}")
+    fun getUser(@Path("id") user_id: Int): Single<Response>
+
 
     // job
     @GET("api/v2/users/jobs")

@@ -27,7 +27,7 @@
         tools:layout="@layout/fragment_notification" />
     <fragment
         android:id="@+id/myPageFragment"
-        android:name="com.hampson.sharework_kotlin.ui.fragments.MyPageFragment"
+        android:name="com.hampson.sharework_kotlin.ui.mypage.MyPageFragment"
         android:label="fragment_mypage"
         tools:layout="@layout/fragment_mypage" />
 </navigation>
