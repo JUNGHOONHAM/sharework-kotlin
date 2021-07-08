@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,10 +28,10 @@ import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.User
 import com.hampson.sharework_kotlin.databinding.FragmentMypageBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
+import com.hampson.sharework_kotlin.ui.mypage.profile_update.UserInfoUpdateActivity
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.jetbrains.anko.support.v4.toast
 import java.io.File
 
 
@@ -94,7 +93,8 @@ class MyPageFragment : Fragment() {
         }
 
         binding.textViewProfileUpdate.setOnClickListener {
-
+            val intent = Intent(context, UserInfoUpdateActivity::class.java)
+            startActivity(intent)
         }
 
         binding.textViewAppTypeChange.setOnClickListener {

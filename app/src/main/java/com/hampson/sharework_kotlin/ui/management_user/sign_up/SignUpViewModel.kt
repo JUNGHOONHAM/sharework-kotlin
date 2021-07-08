@@ -6,8 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.api.DBInterface
-import com.hampson.sharework_kotlin.data.vo.Response
-import com.hampson.sharework_kotlin.data.vo.SmsAuth
 import com.hampson.sharework_kotlin.data.vo.User
 import com.hampson.sharework_kotlin.session.SessionManagement
 import com.hampson.sharework_kotlin.ui.MainActivity
