@@ -1,14 +1,27 @@
 package com.hampson.sharework_kotlin.ui.mypage
 
+import android.Manifest.permission
+import android.app.Activity
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.database.Cursor
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.github.drjacky.imagepicker.ImagePicker
 import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.api.DBClient
 import com.hampson.sharework_kotlin.data.api.DBInterface
@@ -16,6 +29,11 @@ import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.User
 import com.hampson.sharework_kotlin.databinding.FragmentMypageBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import org.jetbrains.anko.support.v4.toast
+import java.io.File
 
 
 class MyPageFragment : Fragment() {
@@ -26,6 +44,8 @@ class MyPageFragment : Fragment() {
     private lateinit var apiService: DBInterface
 
     private var userId: Int = -1
+
+    private val PICK_FROM_ALBUM = 10
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,6 +76,16 @@ class MyPageFragment : Fragment() {
         })
 
         binding.imageViewProfile.setOnClickListener {
+            if (isStoragePermissionGranted()) {
+                //ImagePicker.with(activity as FragmentActivity)
+                //    .crop()
+                //    .cropOval()
+                //    .createIntentFromDialog { launcher.launch(it) }
+
+                val intent = Intent(Intent.ACTION_PICK)
+                intent.type = MediaStore.Images.Media.CONTENT_TYPE
+                startActivityForResult(intent, PICK_FROM_ALBUM)
+            }
 
         }
 
@@ -112,4 +142,72 @@ class MyPageFragment : Fragment() {
         }
     }
 
+    private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val uri = it.data?.data!!
+        }
+    }
+
+    private fun getPathFromUri(uri: Uri?): String? {
+        val projection: Array<String> = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor: Cursor? =
+            activity?.contentResolver?.query(uri!!, projection, null, null, null)
+        cursor?.moveToNext()
+        val index = cursor?.getColumnIndex(MediaStore.MediaColumns.DATA)
+        val path = cursor?.getString(index!!)
+
+        cursor?.close()
+
+        return path
+    }
+
+    private fun isStoragePermissionGranted(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if ((activity as FragmentActivity).checkSelfPermission(permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                && (activity as FragmentActivity).checkSelfPermission(permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                return true
+            } else {
+                ActivityCompat.requestPermissions(activity as FragmentActivity, arrayOf(permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE), 1)
+                return false
+            }
+        } else {
+            return true
+        }
+    }
+
+    @Override
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            ImagePicker.with(activity as FragmentActivity)
+                .crop()
+                .cropOval()
+                .createIntentFromDialog { launcher.launch(it) }
+        }
+    }
+
+    @Override
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == PICK_FROM_ALBUM && resultCode == RESULT_OK) {
+            val file = File(getPathFromUri(data?.data))
+
+            val requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file)
+            val imageFile = MultipartBody.Part.createFormData("img_file", file.name, requestFile)
+            val requestBodyUserId = RequestBody.create(MediaType.parse("text/plain"), userId.toString())
+
+            viewModel.updateProfileImage(imageFile, requestBodyUserId)
+
+            Glide.with(this)
+                .load(data?.data)
+                .circleCrop()
+                .placeholder(R.drawable.ic_baseline_account_circle_24)
+                .into(mBinding?.imageViewProfile!!)
+
+            //toast("이미지 업로드 성공")
+        }
+    }
 }

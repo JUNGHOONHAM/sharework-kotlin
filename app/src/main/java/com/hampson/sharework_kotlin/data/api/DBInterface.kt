@@ -4,6 +4,8 @@ import androidx.fragment.app.FragmentActivity
 import com.hampson.sharework_kotlin.data.vo.*
 import com.hampson.sharework_kotlin.session.SessionManagement
 import io.reactivex.Single
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.*
 
 interface DBInterface {
@@ -22,6 +24,10 @@ interface DBInterface {
 
     @GET("api/v2/users/users/{id}")
     fun getUser(@Path("id") user_id: Int): Single<Response>
+
+    @Multipart
+    @POST("api/v1/profile/upsert")
+    fun updateProfileImage(@Part img_file: MultipartBody.Part, @Part("user_id") user_id: RequestBody): Single<Response>
 
 
     // job

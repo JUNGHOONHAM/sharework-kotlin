@@ -12,6 +12,8 @@ import com.hampson.sharework_kotlin.data.vo.Response
 import com.hampson.sharework_kotlin.data.vo.User
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.lang.Exception
 
 class MyPageViewModel (private val apiService : DBInterface) : ViewModel() {
@@ -47,6 +49,25 @@ class MyPageViewModel (private val apiService : DBInterface) : ViewModel() {
                         },
                         {
                             networkStateLiveData.postValue(NetworkState.ERROR)
+                        }
+                    )
+            )
+        } catch (e: Exception) {
+
+        }
+    }
+
+    fun updateProfileImage(profileImage: MultipartBody.Part, user_id: RequestBody) {
+        try {
+            compositeDisposable.add(
+                apiService.updateProfileImage(profileImage, user_id)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(
+                        {
+
+                        },
+                        {
+
                         }
                     )
             )
