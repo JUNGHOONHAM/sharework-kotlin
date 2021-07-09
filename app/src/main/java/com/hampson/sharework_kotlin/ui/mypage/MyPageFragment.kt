@@ -28,7 +28,10 @@ import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.User
 import com.hampson.sharework_kotlin.databinding.FragmentMypageBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
+import com.hampson.sharework_kotlin.ui.management_user.authentication_phone_number.AuthenticationPhoneNumberActivity
 import com.hampson.sharework_kotlin.ui.mypage.profile_update.UserInfoUpdateActivity
+import ir.androidexception.andexalertdialog.AndExAlertDialog
+import ir.androidexception.andexalertdialog.AndExAlertDialogListener
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -42,6 +45,7 @@ class MyPageFragment : Fragment() {
     private lateinit var viewModel: MyPageViewModel
     private lateinit var apiService: DBInterface
 
+    private lateinit var sessionManagement: SessionManagement
     private var userId: Int = -1
 
     private val PICK_FROM_ALBUM = 10
@@ -57,7 +61,7 @@ class MyPageFragment : Fragment() {
 
         mBinding = binding
 
-        val sessionManagement = SessionManagement(activity as FragmentActivity)
+        sessionManagement = SessionManagement(activity as FragmentActivity)
         userId = sessionManagement.getSessionID()
 
         apiService = DBClient.getClient(activity as FragmentActivity)
@@ -102,7 +106,18 @@ class MyPageFragment : Fragment() {
         }
 
         binding.textViewLogout.setOnClickListener {
+            AndExAlertDialog.Builder(context)
+                .setMessage("정말로 로그아웃 하시겠습니까?")
+                .setPositiveBtnText("로그아웃")
+                .setNegativeBtnText("닫기")
+                .setCancelableOnTouchOutside(true)
+                .OnPositiveClicked {
+                    logout()
+                }
+                .OnNegativeClicked {
 
+                }
+                .build()
         }
 
         binding.textViewPayment.setOnClickListener {
@@ -209,5 +224,13 @@ class MyPageFragment : Fragment() {
 
             //toast("이미지 업로드 성공")
         }
+    }
+
+    private fun logout() {
+        (activity as FragmentActivity).finishAffinity() // 현재 activity의 모든 fragment를 제거
+        sessionManagement.removeSession()
+
+        val intent = Intent(activity as FragmentActivity, AuthenticationPhoneNumberActivity::class.java)
+        startActivity(intent)
     }
 }
