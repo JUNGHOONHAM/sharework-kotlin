@@ -3,7 +3,6 @@ package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.job_info
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -198,7 +197,7 @@ class JobInfoActivity : AppCompatActivity(), OnMapReadyCallback {
             userChecklistList.add(userChecklist)
         }
 
-        val jobApplication = JobApplication(null, job.id, null, null, null, "open", userId, userChecklistList)
+        val jobApplication = JobApplication(null, job.id, null, null, null, "open", userId, userChecklistList, null)
         viewModel.createApplication(jobApplication)
     }
 

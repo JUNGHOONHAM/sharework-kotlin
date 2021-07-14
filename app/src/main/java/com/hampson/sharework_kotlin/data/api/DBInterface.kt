@@ -49,6 +49,14 @@ interface DBInterface {
     @POST("api/v2/users/job_applications")
     fun createApplication(@Body application: JobApplication): Single<Response>
 
+    @GET("api/v2/users/job_applications/index_payment")
+    fun getApplications(@Query("user_id") user_id: Int, @Query("start_date") start_date: String, @Query("end_date") end_date: String,
+                        @Query("page") page: Int, @Query("size") size: Int): Single<Response>
+
+    @GET("api/v2/users/job_applications/show_payment")
+    fun getPaymentHistory(@Query("user_id") user_id: Int, @Query("start_date") start_date: String, @Query("end_date") end_date: String): Single<Response>
+
+
     // location favorites
     @POST("api/v2/users/location_favorites")
     fun createLocationFavorites(@Body location_favorite: LocationFavorites): Single<Response>

@@ -18,6 +18,11 @@ data class Payload(
     @SerializedName("job")
     val job: Job,
 
+    @SerializedName("job_applications")
+    val jobApplicationlist: List<JobApplication>,
+    @SerializedName("job_application")
+    val jobApplication: JobApplication,
+
     @SerializedName("meta")
     val meta: Meta
 )

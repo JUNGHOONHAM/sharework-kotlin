@@ -9,5 +9,6 @@ data class JobApplication(
     val status: String,
     val user_id: Int,
 
-    val user_checklists: List<UserChecklist>
+    val user_checklists: List<UserChecklist>,
+    val job: Job?
 )

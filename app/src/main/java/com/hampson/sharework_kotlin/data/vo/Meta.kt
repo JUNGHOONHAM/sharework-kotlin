@@ -10,5 +10,10 @@ data class Meta(
     val page: Any,
     val size: Any,
     val time: Any,
-    val total_page: Int
+    val total_page: Int,
+
+    val total_work_pay: String,
+    val total_work_time: String,
+    val start_date: String,
+    val end_date: String
 )

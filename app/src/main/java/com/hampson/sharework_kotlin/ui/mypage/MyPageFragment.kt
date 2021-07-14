@@ -29,6 +29,7 @@ import com.hampson.sharework_kotlin.data.vo.User
 import com.hampson.sharework_kotlin.databinding.FragmentMypageBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
 import com.hampson.sharework_kotlin.ui.management_user.authentication_phone_number.AuthenticationPhoneNumberActivity
+import com.hampson.sharework_kotlin.ui.mypage.payment_history.PaymentHistoryWorkerActivity
 import com.hampson.sharework_kotlin.ui.mypage.profile_update.UserInfoUpdateActivity
 import ir.androidexception.andexalertdialog.AndExAlertDialog
 import ir.androidexception.andexalertdialog.AndExAlertDialogListener
@@ -116,12 +117,12 @@ class MyPageFragment : Fragment() {
                 }
                 .OnNegativeClicked {
 
-                }
-                .build()
+                }.build()
         }
 
         binding.textViewPayment.setOnClickListener {
-
+            val intent = Intent(context, PaymentHistoryWorkerActivity::class.java)
+            startActivity(intent)
         }
 
         return mBinding?.root
@@ -135,7 +136,7 @@ class MyPageFragment : Fragment() {
     private fun getViewModel(): MyPageViewModel {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
-                @Suppress("UNCHECKED_CAST")
+                @Suppress("UNCHECKED_CAS T")
                 return MyPageViewModel(apiService) as T
             }
         }).get(MyPageViewModel::class.java)

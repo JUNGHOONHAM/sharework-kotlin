@@ -140,6 +140,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:textSize="14sp"
+                        android:text="0건"
                         android:textColor="#ffffff" />
                 </LinearLayout>
 
@@ -175,6 +176,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:textSize="14sp"
+                        android:text="0건"
                         android:textColor="#ffffff" />
                 </LinearLayout>
             </LinearLayout>
