@@ -54,7 +54,6 @@ class PaymentHistoryWorkerActivity : AppCompatActivity() {
 
         viewModel.getMeta().observe(this, {
             bindUI(it)
-            Log.d("TEST", "TEST")
         })
 
         viewModel.networkState().observe(this, {
