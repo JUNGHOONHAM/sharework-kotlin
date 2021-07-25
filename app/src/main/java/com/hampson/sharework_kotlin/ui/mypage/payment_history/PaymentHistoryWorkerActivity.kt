@@ -1,5 +1,6 @@
 package com.hampson.sharework_kotlin.ui.mypage.payment_history
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -46,10 +47,8 @@ class PaymentHistoryWorkerActivity : AppCompatActivity() {
 
         viewModel = getViewModel()
 
-        val startDateStr = getDate("week")
-        val endDateStr = getDate("today")
-
-        viewModel.getPaymentHistory(userId, startDateStr, endDateStr)
+        setDate(1)
+        setDateUI(1)
 
         val applicationAdapter = PaymentHistoryWorkerPagedListAdapter(this)
 
@@ -80,24 +79,18 @@ class PaymentHistoryWorkerActivity : AppCompatActivity() {
         })
 
         mBinding.textViewBtn1.setOnClickListener {
-            val startDateStr = getDate("week")
-            val endDateStr = getDate("today")
-
-            viewModel.getPaymentHistory(userId, startDateStr, endDateStr)
+            setDate(1)
+            setDateUI(1)
         }
 
         mBinding.textViewBtn2.setOnClickListener {
-            val startDateStr = getDate("1month")
-            val endDateStr = getDate("today")
-
-            viewModel.getPaymentHistory(userId, startDateStr, endDateStr)
+            setDate(2)
+            setDateUI(2)
         }
 
         mBinding.textViewBtn3.setOnClickListener {
-            val startDateStr = getDate("3month")
-            val endDateStr = getDate("today")
-
-            viewModel.getPaymentHistory(userId, startDateStr, endDateStr)
+            setDate(3)
+            setDateUI(3)
         }
 
     }
@@ -133,6 +126,47 @@ class PaymentHistoryWorkerActivity : AppCompatActivity() {
         val dayStr = decimalFormat.format(currentCalendar.get(Calendar.DATE))
 
         return "$yearStr-$monthStr-$dayStr"
+    }
+
+    private fun setDate(type: Int) {
+        var startDateStr = ""
+        var endDateStr = getDate("today")
+
+        when (type) {
+            1 -> {
+                startDateStr = getDate("week")
+            }
+            2 -> {
+                startDateStr = getDate("1month")
+            }
+            3 -> {
+                startDateStr = getDate("3month")
+            }
+        }
+
+        viewModel.getPaymentHistory(userId, startDateStr, endDateStr)
+    }
+
+    private fun setDateUI(type: Int) {
+        mBinding.textViewBtn1.setTextColor(Color.rgb(153, 153, 153))
+        mBinding.textViewBtn2.setTextColor(Color.rgb(153, 153, 153))
+        mBinding.textViewBtn3.setTextColor(Color.rgb(153, 153, 153))
+        mBinding.textViewEndDate.text = getDate("today")
+
+        when (type) {
+            1 -> {
+                mBinding.textViewStartDate.text = getDate("week")
+                mBinding.textViewBtn1.setTextColor(Color.rgb(100, 216, 209))
+            }
+            2 -> {
+                mBinding.textViewStartDate.text = getDate("1month")
+                mBinding.textViewBtn2.setTextColor(Color.rgb(100, 216, 209))
+            }
+            3 -> {
+                mBinding.textViewStartDate.text = getDate("3month")
+                mBinding.textViewBtn3.setTextColor(Color.rgb(100, 216, 209))
+            }
+        }
     }
 
     private fun getViewModel(): PaymentHistoryWorkerViewModel {
