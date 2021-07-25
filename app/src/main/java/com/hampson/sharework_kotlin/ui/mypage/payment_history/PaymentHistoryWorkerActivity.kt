@@ -44,7 +44,12 @@ class PaymentHistoryWorkerActivity : AppCompatActivity() {
         apiService = DBClient.getClient(this)
         applicationRepository = ApplicationPagedListRepository(apiService)
 
-        viewModel = getViewModel(userId, getDate("week"), getDate("today"))
+        viewModel = getViewModel()
+
+        val startDateStr = getDate("week")
+        val endDateStr = getDate("today")
+
+        viewModel.getPaymentHistory(userId, startDateStr, endDateStr)
 
         val applicationAdapter = PaymentHistoryWorkerPagedListAdapter(this)
 
@@ -61,7 +66,7 @@ class PaymentHistoryWorkerActivity : AppCompatActivity() {
             mBinding.textViewError.visibility = if (viewModel.listIsEmpty() && it == NetworkState.ERROR) View.VISIBLE else View.GONE
         })
 
-        viewModel.applicationPagedList.observe(this, {
+        viewModel.getPageLiveData().observe(this, {
             applicationAdapter.submitList(it)
         })
 
@@ -74,34 +79,27 @@ class PaymentHistoryWorkerActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.getPage().observe(this, {
-            Log.d("getPage", it[0].toString())
-        })
-
         mBinding.textViewBtn1.setOnClickListener {
-            //val startDateStr = getDate("week")
-            //val endDateStr = getDate("today")
+            val startDateStr = getDate("week")
+            val endDateStr = getDate("today")
 
-            //viewModel = getViewModel(userId, startDateStr, endDateStr)
-            //viewModel.getPaymentHistory()
-            val test = viewModel.test()
+            viewModel.getPaymentHistory(userId, startDateStr, endDateStr)
         }
 
         mBinding.textViewBtn2.setOnClickListener {
             val startDateStr = getDate("1month")
             val endDateStr = getDate("today")
 
-            viewModel = getViewModel(userId, startDateStr, endDateStr)
-            viewModel.getPaymentHistory()
+            viewModel.getPaymentHistory(userId, startDateStr, endDateStr)
         }
 
         mBinding.textViewBtn3.setOnClickListener {
             val startDateStr = getDate("3month")
             val endDateStr = getDate("today")
 
-            viewModel = getViewModel(userId, startDateStr, endDateStr)
-            viewModel.getPaymentHistory()
+            viewModel.getPaymentHistory(userId, startDateStr, endDateStr)
         }
+
     }
 
     private fun bindUI(meta: Meta) {
@@ -137,11 +135,11 @@ class PaymentHistoryWorkerActivity : AppCompatActivity() {
         return "$yearStr-$monthStr-$dayStr"
     }
 
-    private fun getViewModel(userId: Int, startDateStr: String, endDateStr: String): PaymentHistoryWorkerViewModel {
+    private fun getViewModel(): PaymentHistoryWorkerViewModel {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 @Suppress("UNCHECKED_CAST")
-                return PaymentHistoryWorkerViewModel(applicationRepository, apiService, userId, startDateStr, endDateStr) as T
+                return PaymentHistoryWorkerViewModel(applicationRepository) as T
             }
         }).get(PaymentHistoryWorkerViewModel::class.java)
     }

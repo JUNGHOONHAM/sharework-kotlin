@@ -1,38 +1,24 @@
 package com.hampson.sharework_kotlin.ui.mypage.payment_history
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.paging.LivePagedListBuilder
+import androidx.lifecycle.*
 import androidx.paging.PagedList
 import com.hampson.sharework_kotlin.data.api.DBInterface
-import com.hampson.sharework_kotlin.data.api.POST_PER_PAGE
-import com.hampson.sharework_kotlin.data.repository.ApplicationDataSource
-import com.hampson.sharework_kotlin.data.repository.ApplicationDataSourceFactory
 import com.hampson.sharework_kotlin.data.repository.NetworkState
-import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.data.vo.JobApplication
 import com.hampson.sharework_kotlin.data.vo.Meta
-import com.hampson.sharework_kotlin.data.vo.User
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import java.lang.Exception
 
-class PaymentHistoryWorkerViewModel (private val applicationRepository: ApplicationPagedListRepository,
-                                     private val apiService: DBInterface, userId: Int, startDate: String, endDate: String) : ViewModel() {
+
+class PaymentHistoryWorkerViewModel (private val applicationRepository: ApplicationPagedListRepository) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val pageLiveData: MutableLiveData<PagedList<JobApplication>> = MutableLiveData()
     private val metaLiveData: MutableLiveData<Meta> = MutableLiveData()
     private val networkStateLiveData: MutableLiveData<NetworkState> = MutableLiveData()
 
-    private val userId = userId
-    private val startDate = startDate
-    private val endDate = endDate
+    private val pageLiveData: MediatorLiveData<PagedList<JobApplication>> = MediatorLiveData<PagedList<JobApplication>>()
 
-    fun getPage() : LiveData<PagedList<JobApplication>> {
+    fun getPageLiveData() : LiveData<PagedList<JobApplication>> {
         return pageLiveData
     }
 
@@ -44,16 +30,12 @@ class PaymentHistoryWorkerViewModel (private val applicationRepository: Applicat
         return networkStateLiveData
     }
 
-    val applicationPagedList : LiveData<PagedList<JobApplication>> by lazy {
-        applicationRepository.fetchLiveApplicationPagedList(compositeDisposable)
-    }
-
     val networkStatePagedList : LiveData<NetworkState> by lazy {
         applicationRepository.getNetworkState()
     }
 
     fun listIsEmpty(): Boolean {
-        return applicationPagedList.value?.isEmpty() ?: true
+        return pageLiveData.value?.isEmpty() ?: true
     }
 
     override fun onCleared() {
@@ -61,19 +43,16 @@ class PaymentHistoryWorkerViewModel (private val applicationRepository: Applicat
         compositeDisposable.dispose()
     }
 
-    fun test() {
-        val applicationDataSourceFactory = ApplicationDataSourceFactory(apiService, compositeDisposable)
+    fun getPaymentHistory(userId: Int, startDate: String, endDate: String) {
+        val repositoryLiveData: LiveData<PagedList<JobApplication>> =
+            applicationRepository.fetchLiveApplicationPagedList(compositeDisposable, userId, startDate, endDate)
 
-        val config = PagedList.Config.Builder()
-            .setEnablePlaceholders(true)
-            .setPageSize(POST_PER_PAGE)
-            .build()
-
-        val ApplicationPagedList = LivePagedListBuilder(applicationDataSourceFactory, config).build()
-
-        pageLiveData.postValue(ApplicationPagedList.value)
+        pageLiveData.addSource(repositoryLiveData) { value: PagedList<JobApplication> ->
+            pageLiveData.setValue(value)
+        }
     }
 
+    /**
     fun getPaymentHistory() {
         networkStateLiveData.postValue(NetworkState.LOADING)
 
@@ -95,4 +74,5 @@ class PaymentHistoryWorkerViewModel (private val applicationRepository: Applicat
             networkStateLiveData.postValue(NetworkState.ERROR)
         }
     }
+    **/
 }

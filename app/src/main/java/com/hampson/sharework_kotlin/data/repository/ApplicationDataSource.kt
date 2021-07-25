@@ -10,7 +10,8 @@ import com.hampson.sharework_kotlin.data.vo.JobApplication
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class ApplicationDataSource (private val apiService : DBInterface, private val compositeDisposable: CompositeDisposable) : PageKeyedDataSource<Int, JobApplication>() {
+class ApplicationDataSource (private val apiService : DBInterface, private val compositeDisposable: CompositeDisposable,
+                        private val userId: Int, private val startDate: String, private val endDate: String) : PageKeyedDataSource<Int, JobApplication>() {
 
     private var page = FIRST_PAGE
 
@@ -19,7 +20,7 @@ class ApplicationDataSource (private val apiService : DBInterface, private val c
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, JobApplication>) {
         networkState.postValue(NetworkState.LOADING)
         compositeDisposable.add(
-            apiService.getApplications(66, "2020-01-01", "2021-09-09", params.key, 5)
+            apiService.getApplications(userId, startDate, endDate, params.key, 5)
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     {
@@ -44,7 +45,7 @@ class ApplicationDataSource (private val apiService : DBInterface, private val c
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, JobApplication>) {
         networkState.postValue(NetworkState.LOADING)
         compositeDisposable.add(
-            apiService.getApplications(66, "2020-01-01", "2021-09-09", page, 5)
+            apiService.getApplications(userId, startDate, endDate, page, 5)
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     {

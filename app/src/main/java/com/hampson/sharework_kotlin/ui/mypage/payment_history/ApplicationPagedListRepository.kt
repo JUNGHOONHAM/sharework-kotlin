@@ -16,8 +16,8 @@ class ApplicationPagedListRepository (private val apiService : DBInterface) {
     lateinit var ApplicationPagedList: LiveData<PagedList<JobApplication>>
     lateinit var applicationDataSourceFactory: ApplicationDataSourceFactory
 
-    fun fetchLiveApplicationPagedList (compositeDisposable: CompositeDisposable) : LiveData<PagedList<JobApplication>> {
-        applicationDataSourceFactory = ApplicationDataSourceFactory(apiService, compositeDisposable)
+    fun fetchLiveApplicationPagedList (compositeDisposable: CompositeDisposable, userId: Int, startDate: String, endDate: String) : LiveData<PagedList<JobApplication>> {
+        applicationDataSourceFactory = ApplicationDataSourceFactory(apiService, compositeDisposable, userId, startDate, endDate)
 
         val config = PagedList.Config.Builder()
             .setEnablePlaceholders(true)
