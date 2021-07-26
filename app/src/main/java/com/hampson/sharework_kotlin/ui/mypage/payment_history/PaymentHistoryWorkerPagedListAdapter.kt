@@ -21,6 +21,9 @@ import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.data.vo.JobApplication
 import com.hampson.sharework_kotlin.data.vo.Tag
+import com.hampson.sharework_kotlin.databinding.ActivityPaymentHistoryWorkerBinding
+import com.hampson.sharework_kotlin.databinding.ItemPaymentHistoryWorkerBinding
+import com.hampson.sharework_kotlin.databinding.NetworkStateItemBinding
 import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.job_info.JobInfoActivity
 import org.jetbrains.anko.backgroundResource
 import java.io.Serializable
@@ -60,17 +63,16 @@ class PaymentHistoryWorkerPagedListAdapter(public val context: Context) : PagedL
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val view: View
 
         if (viewType == APPLICATION_VIEW_TYPE) {
-            view = layoutInflater.inflate(R.layout.item_payment_history_worker, parent, false)
+            val binding = ItemPaymentHistoryWorkerBinding.inflate(layoutInflater)
             return ApplicationItemViewHolder(
-                view
+                binding
             )
         } else {
-            view = layoutInflater.inflate(R.layout.network_state_item, parent, false)
+            val binding = NetworkStateItemBinding.inflate(layoutInflater)
             return NetworkStateItemViewHolder(
-                view
+                binding
             )
         }
     }
@@ -86,14 +88,9 @@ class PaymentHistoryWorkerPagedListAdapter(public val context: Context) : PagedL
 
     }
 
-    class ApplicationItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-        private val textViewJobTitle = itemView.findViewById<TextView>(R.id.textViewJobTitle)
-        private val textViewWorkDate = itemView.findViewById<TextView>(R.id.textViewWorkDate)
-        private val textViewWorkTime = itemView.findViewById<TextView>(R.id.textViewWorkTime)
-        private val textViewWorkPay = itemView.findViewById<TextView>(R.id.textViewWorkPay)
-
+    class ApplicationItemViewHolder(private val binding: ItemPaymentHistoryWorkerBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(application: JobApplication?, context: Context) {
-            textViewJobTitle.text = application?.job?.job_title
+            binding.textViewJobTitle.text = application?.job?.job_title
 
             itemView.setOnClickListener {
                 //Intent(context, JobInfoActivity::class.java).apply {
@@ -104,28 +101,24 @@ class PaymentHistoryWorkerPagedListAdapter(public val context: Context) : PagedL
         }
     }
 
-    class NetworkStateItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-        private val progressBar = itemView.findViewById<ProgressBar>(R.id.progressBar)
-        private val textViewErrorMessage = itemView.findViewById<TextView>(R.id.textViewErrorMessage)
-
+    class NetworkStateItemViewHolder (private val binding: NetworkStateItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(networkState: NetworkState?) {
 
             if (networkState != null && networkState == NetworkState.LOADING) {
-                progressBar.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.VISIBLE
             } else {
-                progressBar.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
             }
 
             if (networkState != null && networkState == NetworkState.ERROR) {
-                textViewErrorMessage.visibility = View.VISIBLE
-                textViewErrorMessage.text = networkState.msg
+                binding.textViewErrorMessage.visibility = View.VISIBLE
+                binding.textViewErrorMessage.text = networkState.msg
             } else if (networkState != null && networkState == NetworkState.ENDOFLIST) {
-                textViewErrorMessage.visibility = View.GONE
+                binding.textViewErrorMessage.visibility = View.GONE
                 // textViewErrorMessage.text = networkState.msg
             } else {
-                textViewErrorMessage.visibility = View.GONE
+                binding.textViewErrorMessage.visibility = View.GONE
             }
-
         }
     }
 

@@ -25,7 +25,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingTop="24dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
@@ -172,32 +172,32 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
+    </LinearLayout>
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progressBarRecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textViewErrorRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:text="연결에 실패했습니다."
+            android:visibility="gone" />
 
-            <ProgressBar
-                android:id="@+id/progressBarRecyclerView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/textViewErrorRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="연결에 실패했습니다."
-                android:visibility="gone" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical" />
-        </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
     </LinearLayout>
 </LinearLayout>
