@@ -85,7 +85,6 @@ class PaymentHistoryWorkerPagedListAdapter(public val context: Context) : PagedL
         override fun areContentsTheSame(oldItem: JobApplication, newItem: JobApplication): Boolean {
             return oldItem == newItem
         }
-
     }
 
     class ApplicationItemViewHolder(private val binding: ItemPaymentHistoryWorkerBinding) : RecyclerView.ViewHolder(binding.root) {

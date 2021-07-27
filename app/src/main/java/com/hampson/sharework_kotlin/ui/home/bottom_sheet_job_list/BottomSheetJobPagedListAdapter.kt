@@ -1,6 +1,5 @@
 package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -8,9 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -20,6 +17,8 @@ import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.data.vo.Tag
+import com.hampson.sharework_kotlin.databinding.ItemJobListBinding
+import com.hampson.sharework_kotlin.databinding.NetworkStateItemBinding
 import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.job_info.JobInfoActivity
 import org.jetbrains.anko.backgroundResource
 import java.io.Serializable
@@ -59,17 +58,16 @@ class BottomSheetJobPagedListAdapter(public val context: Context) : PagedListAda
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val view: View
 
         if (viewType == JOB_VIEW_TYPE) {
-            view = layoutInflater.inflate(R.layout.item_job_list, parent, false)
+            val binding = ItemJobListBinding.inflate(layoutInflater)
             return JobItemViewHolder(
-                view
+                binding
             )
         } else {
-            view = layoutInflater.inflate(R.layout.network_state_item, parent, false)
+            val binding = NetworkStateItemBinding.inflate(layoutInflater)
             return NetworkStateItemViewHolder(
-                view
+                binding
             )
         }
     }
@@ -85,29 +83,20 @@ class BottomSheetJobPagedListAdapter(public val context: Context) : PagedListAda
 
     }
 
-    class JobItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-        private val textViewTitle = itemView.findViewById<TextView>(R.id.textViewTitle)
-        private val textViewJobDate = itemView.findViewById<TextView>(R.id.textViewJobDate)
-        private val textViewJobTime = itemView.findViewById<TextView>(R.id.textViewJobTime)
-        private val textViewPay = itemView.findViewById<TextView>(R.id.textViewPay)
-        private val textViewJobType = itemView.findViewById<TextView>(R.id.textViewJobType)
-        private val textViewPayType = itemView.findViewById<TextView>(R.id.textViewPayType)
-        private val imageViewProfile = itemView.findViewById<ImageView>(R.id.imageViewProfile)
-        private val layoutTag = itemView.findViewById<LinearLayout>(R.id.layoutTag)
-
+    class JobItemViewHolder (private val binding: ItemJobListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(job: Job?, context: Context) {
-            textViewTitle.text = job?.job_title
-            textViewJobDate.text = job?.job_date
-            textViewJobTime.text = job?.start_date + " ~ " + job?.end_date
-            textViewPay.text = job?.pay
-            textViewJobType.text = job?.job_type
-            textViewPayType.text = job?.pay_type
+            binding.textViewTitle.text = job?.job_title
+            binding.textViewJobDate.text = job?.job_date
+            binding.textViewJobTime.text = job?.start_date + " ~ " + job?.end_date
+            binding.textViewPay.text = job?.pay
+            binding.textViewJobType.text = job?.job_type
+            binding.textViewPayType.text = job?.pay_type
 
             Glide.with(context)
                 .load(job?.jobable?.user?.profile_img)
                 .circleCrop()
                 .placeholder(R.drawable.ic_baseline_account_circle_24)
-                .into(imageViewProfile)
+                .into(binding.imageViewProfile)
 
             val tagList = job?.tags
             if (tagList != null) {
@@ -135,30 +124,27 @@ class BottomSheetJobPagedListAdapter(public val context: Context) : PagedListAda
             val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             layoutParams.setMargins(0, 0, 8, 0)
             textView.layoutParams = layoutParams
-            layoutTag.addView(textView)
+            binding.layoutTag.addView(textView)
         }
     }
 
-    class NetworkStateItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-        private val progressBar = itemView.findViewById<ProgressBar>(R.id.progressBar)
-        private val textViewErrorMessage = itemView.findViewById<TextView>(R.id.textViewErrorMessage)
-
+    class NetworkStateItemViewHolder (private val binding: NetworkStateItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(networkState: NetworkState?) {
 
             if (networkState != null && networkState == NetworkState.LOADING) {
-                progressBar.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.VISIBLE
             } else {
-                progressBar.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
             }
 
             if (networkState != null && networkState == NetworkState.ERROR) {
-                textViewErrorMessage.visibility = View.VISIBLE
-                textViewErrorMessage.text = networkState.msg
+                binding.textViewErrorMessage.visibility = View.VISIBLE
+                binding.textViewErrorMessage.text = networkState.msg
             } else if (networkState != null && networkState == NetworkState.ENDOFLIST) {
-                textViewErrorMessage.visibility = View.GONE
+                binding.textViewErrorMessage.visibility = View.GONE
                 // textViewErrorMessage.text = networkState.msg
             } else {
-                textViewErrorMessage.visibility = View.GONE
+                binding.textViewErrorMessage.visibility = View.GONE
             }
 
         }
