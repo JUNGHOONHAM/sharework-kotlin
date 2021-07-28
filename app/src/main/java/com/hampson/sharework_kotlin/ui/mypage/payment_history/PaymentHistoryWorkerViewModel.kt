@@ -17,13 +17,14 @@ class PaymentHistoryWorkerViewModel (private val applicationRepository: Applicat
     private val networkStateLiveData: MutableLiveData<NetworkState> = MutableLiveData()
 
     private val pageLiveData: MediatorLiveData<PagedList<JobApplication>> = MediatorLiveData<PagedList<JobApplication>>()
+    private val paymentMetaLiveData: MediatorLiveData<Meta> = MediatorLiveData()
 
     fun getPageLiveData() : LiveData<PagedList<JobApplication>> {
         return pageLiveData
     }
 
-    fun getMeta() : LiveData<Meta> {
-        return metaLiveData
+    fun getMetaLiveData() : LiveData<Meta> {
+        return paymentMetaLiveData
     }
 
     fun networkState() : LiveData<NetworkState> {
@@ -49,6 +50,15 @@ class PaymentHistoryWorkerViewModel (private val applicationRepository: Applicat
 
         pageLiveData.addSource(repositoryLiveData) { value: PagedList<JobApplication> ->
             pageLiveData.setValue(value)
+        }
+    }
+
+    fun getPaymentMeta(startDate: String, endDate: String) {
+        val repositoryLiveData: LiveData<Meta> =
+            applicationRepository.fetchPaymentMeta(compositeDisposable, startDate, endDate)
+
+        paymentMetaLiveData.addSource(repositoryLiveData) { value: Meta ->
+            paymentMetaLiveData.setValue(value)
         }
     }
 

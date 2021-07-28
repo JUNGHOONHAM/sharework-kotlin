@@ -54,7 +54,7 @@ interface DBInterface {
                         @Query("page") page: Int, @Query("size") size: Int): Single<Response>
 
     @GET("api/v2/users/job_applications/show_payment")
-    fun getPaymentHistory(@Query("user_id") user_id: Int, @Query("start_date") start_date: String, @Query("end_date") end_date: String): Single<Response>
+    fun getPaymentMeta(@Query("start_date") start_date: String, @Query("end_date") end_date: String): Single<Response>
 
 
     // location favorites

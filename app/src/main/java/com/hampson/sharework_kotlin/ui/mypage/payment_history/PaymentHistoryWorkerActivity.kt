@@ -56,7 +56,7 @@ class PaymentHistoryWorkerActivity : AppCompatActivity() {
         mBinding.recyclerView.layoutManager = layout
         mBinding.recyclerView.adapter = applicationAdapter
 
-        viewModel.getMeta().observe(this, {
+        viewModel.getMetaLiveData().observe(this, {
             bindUI(it)
         })
 
@@ -145,6 +145,7 @@ class PaymentHistoryWorkerActivity : AppCompatActivity() {
         }
 
         viewModel.getPaymentHistory(userId, startDateStr, endDateStr)
+        viewModel.getPaymentMeta(startDateStr, endDateStr)
     }
 
     private fun setDateUI(type: Int) {

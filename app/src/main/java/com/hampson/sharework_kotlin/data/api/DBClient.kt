@@ -33,7 +33,7 @@ object DBClient {
             val request : Request = chain.request()
                 .newBuilder()
                 .url(url)
-                .addHeader("user_id", userId.toString())
+                .addHeader("user-id", userId.toString())
                 .build()
 
             return@Interceptor chain.proceed(request)
