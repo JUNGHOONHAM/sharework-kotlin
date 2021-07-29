@@ -19,6 +19,10 @@ class LocationFavoritesNetworkDataSource (private val apiService : DBInterface, 
     val downlodedLocationFavoritesResponse: MutableLiveData<List<LocationFavorites>>
         get() = _downloadedLocationFavoritesResponse
 
+    private val _downloadedLocationFavoriteResponse = MutableLiveData<LocationFavorites>()
+    val downlodedLocationFavoriteResponse: MutableLiveData<LocationFavorites>
+        get() = _downloadedLocationFavoriteResponse
+
     fun fetchLocationFavorites(userId: Int) {
         _networkState.postValue(NetworkState.LOADING)
 
@@ -33,6 +37,48 @@ class LocationFavoritesNetworkDataSource (private val apiService : DBInterface, 
                         },
                         {
                             _networkState.postValue(NetworkState.ERROR)
+                        }
+                    )
+            )
+        } catch (e: Exception) {
+
+        }
+    }
+
+    fun createLocationFavorites(locationFavorites: LocationFavorites) {
+        try {
+            compositeDisposable.add(
+                apiService.createLocationFavorites(locationFavorites)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(
+                        {
+                            if (it.status == "success") {
+                                _downloadedLocationFavoriteResponse.postValue(it.payload.locationFavorites)
+                            }
+                        },
+                        {
+
+                        }
+                    )
+            )
+        } catch (e: Exception) {
+
+        }
+    }
+
+    fun deleteLocationFavorites(id: Int) {
+        try {
+            compositeDisposable.add(
+                apiService.deleteLocationFavorites(id)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(
+                        {
+                            if (it.status == "success") {
+                                _downloadedLocationFavoriteResponse.postValue(it.payload.locationFavorites)
+                            }
+                        },
+                        {
+
                         }
                     )
             )

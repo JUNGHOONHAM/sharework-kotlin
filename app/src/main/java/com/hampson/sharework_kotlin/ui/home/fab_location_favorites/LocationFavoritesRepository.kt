@@ -20,6 +20,20 @@ class LocationFavoritesRepository (private val apiService : DBInterface) {
         return locationFavoritesDataSource.downlodedLocationFavoritesResponse
     }
 
+    fun createLocationFavorites (compositeDisposable: CompositeDisposable, locationFavorites: LocationFavorites) : MutableLiveData<LocationFavorites> {
+        locationFavoritesDataSource = LocationFavoritesNetworkDataSource(apiService, compositeDisposable)
+        locationFavoritesDataSource.createLocationFavorites(locationFavorites)
+
+        return locationFavoritesDataSource.downlodedLocationFavoriteResponse
+    }
+
+    fun deleteLocationFavorites (compositeDisposable: CompositeDisposable, id: Int) : MutableLiveData<LocationFavorites> {
+        locationFavoritesDataSource = LocationFavoritesNetworkDataSource(apiService, compositeDisposable)
+        locationFavoritesDataSource.deleteLocationFavorites(id)
+
+        return locationFavoritesDataSource.downlodedLocationFavoriteResponse
+    }
+
     fun getLocationFavoritesNetworkState(): LiveData<NetworkState> {
         return locationFavoritesDataSource.networkState
     }

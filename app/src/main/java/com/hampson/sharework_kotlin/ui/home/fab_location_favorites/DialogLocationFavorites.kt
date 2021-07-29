@@ -143,13 +143,13 @@ class DialogLocationFavorites(context: FragmentActivity?, position: LatLng): Dia
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 @Suppress("UNCHECKED_CAST")
-                return LocationFavoritesViewModel(apiService, locationFavoritesRepository, userId) as T
+                return LocationFavoritesViewModel(locationFavoritesRepository, userId) as T
             }
         }).get(LocationFavoritesViewModel::class.java)
     }
 
     override fun onDeleteClick(locationFavorites: LocationFavorites) {
-        locationViewModel.deleteLocationFavorites(locationFavorites.id)
+        locationViewModel.deleteLocationFavorites(locationFavorites.id!!)
     }
 
     override fun onResume() {
