@@ -18,6 +18,7 @@ class UserInfoUpdateActivity : AppCompatActivity() {
 
     private  lateinit var apiService: DBInterface
     private lateinit var viewModel: UserInfoUpdateViewModel
+    private lateinit var userInfoUpdateRepository: UserInfoUpdateRepository
 
     private var userId: Int = -1
 
@@ -33,12 +34,11 @@ class UserInfoUpdateActivity : AppCompatActivity() {
         userId = sessionManagement.getSessionID()
 
         apiService = DBClient.getClient(this)
+        userInfoUpdateRepository = UserInfoUpdateRepository(apiService)
 
         viewModel = getViewModel()
 
-        viewModel.getUser(userId)
-
-        viewModel.getUserInfo().observe(this, {
+        viewModel.userInfoLiveData.observe(this, {
             bindUI(it)
         })
 
@@ -59,7 +59,7 @@ class UserInfoUpdateActivity : AppCompatActivity() {
         mBinding.buttonUpdateProfile.setOnClickListener {
             val user = User(null, null, null, null, null, null, mBinding.editTextContents.text.toString(), null,
                 null, null, null, null)
-            viewModel.updateUser(userId, user)
+            viewModel.updateUser(user)
         }
     }
 
@@ -83,7 +83,7 @@ class UserInfoUpdateActivity : AppCompatActivity() {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 @Suppress("UNCHECKED_CAST")
-                return UserInfoUpdateViewModel(apiService) as T
+                return UserInfoUpdateViewModel(userInfoUpdateRepository, userId) as T
             }
         }).get(UserInfoUpdateViewModel::class.java)
     }

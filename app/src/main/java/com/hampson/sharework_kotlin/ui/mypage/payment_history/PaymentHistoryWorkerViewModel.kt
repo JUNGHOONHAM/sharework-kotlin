@@ -62,27 +62,4 @@ class PaymentHistoryWorkerViewModel (private val applicationRepository: Applicat
         }
     }
 
-    /**
-    fun getPaymentHistory() {
-        networkStateLiveData.postValue(NetworkState.LOADING)
-
-        try {
-            compositeDisposable.add(
-                apiService.getPaymentHistory(userId, startDate, endDate)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(
-                        {
-                            metaLiveData.postValue(it.payload.meta)
-                            networkStateLiveData.postValue(NetworkState.LOADED)
-                        },
-                        {
-                            networkStateLiveData.postValue(NetworkState.ERROR)
-                        }
-                    )
-            )
-        } catch (e: Exception) {
-            networkStateLiveData.postValue(NetworkState.ERROR)
-        }
-    }
-    **/
 }
