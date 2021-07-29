@@ -4,9 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hampson.sharework_kotlin.data.api.DBInterface
-import com.hampson.sharework_kotlin.data.vo.Job
-import com.hampson.sharework_kotlin.data.vo.Response
-import com.hampson.sharework_kotlin.data.vo.SmsAuth
+import com.hampson.sharework_kotlin.data.vo.*
+import com.hampson.sharework_kotlin.ui.MainActivity
 import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -18,9 +17,13 @@ class AuthenticationPhoneNumberNetworkDataSource (private val apiService : DBInt
     val networkState: LiveData<NetworkState>
         get() = _networkState
 
-    private val _downloadedJobResponse = MutableLiveData<SmsAuth>()
-    val downlodedJobResponse: MutableLiveData<SmsAuth>
-        get() = _downloadedJobResponse
+    private val _downloadedSmsAuthResponse = MutableLiveData<SmsAuth>()
+    val downlodedSmsAuthResponse: MutableLiveData<SmsAuth>
+        get() = _downloadedSmsAuthResponse
+
+    private val _smsAuthMeta = MutableLiveData<Response?>()
+    val smsAuthMeta: MutableLiveData<Response?>
+        get() = _smsAuthMeta
 
     lateinit var data: SmsAuth
 
@@ -33,11 +36,30 @@ class AuthenticationPhoneNumberNetworkDataSource (private val apiService : DBInt
                     .subscribeOn(Schedulers.io())
                     .subscribe(
                         {
-                            //_downloadedJobResponse.postValue(it.payload.smsAuth)
+                            _downloadedSmsAuthResponse.postValue(it.payload.smsAuth)
                             _networkState.postValue(NetworkState.LOADED)
                         },
                         {
                             _networkState.postValue(NetworkState.ERROR)
+                        }
+                    )
+            )
+        } catch (e: Exception) {
+
+        }
+    }
+
+    fun sendVerifiedNumber(phoneNumber: String, token: String, verifiedNumber: String) {
+        try {
+            compositeDisposable.add(
+                apiService.sendVerifiedNumber(phoneNumber, token, verifiedNumber)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(
+                        {
+                            _smsAuthMeta.postValue(it)
+                        },
+                        {
+                            _smsAuthMeta.postValue(null)
                         }
                     )
             )

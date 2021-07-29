@@ -1,15 +1,15 @@
 package com.hampson.sharework_kotlin.ui.management_user.authentication_phone_number
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
-import com.hampson.sharework_kotlin.data.vo.Response
-import com.hampson.sharework_kotlin.data.vo.SmsAuth
-import com.hampson.sharework_kotlin.data.vo.User
+import com.hampson.sharework_kotlin.data.vo.*
 import com.hampson.sharework_kotlin.session.SessionManagement
 import com.hampson.sharework_kotlin.ui.MainActivity
 import com.hampson.sharework_kotlin.ui.management_user.sign_up.SignUpActivity
@@ -18,18 +18,24 @@ import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
 
 class AuthenticationPhoneNumberViewModel (private val authenticationPhoneNumberRepository : AuthenticationPhoneNumberRepository,
-                                          private val apiService : DBInterface, application: Application) : AndroidViewModel(application) {
+                                          application: Application) : AndroidViewModel(application) {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val liveData: MutableLiveData<SmsAuth> = MutableLiveData()
+    private val smsAuthLiveData: MediatorLiveData<SmsAuth> = MediatorLiveData()
+    private val smsAuthMetaLiveData: MediatorLiveData<Response> = MediatorLiveData()
+
     private val mAction: MutableLiveData<Any> = MutableLiveData()
     private val mToast: MutableLiveData<String> = MutableLiveData()
 
     private val context = getApplication<Application>().applicationContext
 
     fun getSmsAuth(): LiveData<SmsAuth> {
-        return liveData
+        return smsAuthLiveData
+    }
+
+    fun getSmsAuthMeta(): LiveData<Response> {
+        return smsAuthMetaLiveData
     }
 
     fun getAction(): LiveData<Any> {
@@ -50,49 +56,30 @@ class AuthenticationPhoneNumberViewModel (private val authenticationPhoneNumberR
     }
 
     fun sendPhoneNumber(phoneNumber: String) {
-        try {
-            compositeDisposable.add(
-                apiService.sendPhoneNumber(phoneNumber)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(
-                        {
-                            liveData.postValue(it.payload.smsAuth)
-                        },
-                        {
+        val repositoryLiveData: LiveData<SmsAuth> =
+            authenticationPhoneNumberRepository.sendPhoneNumber(compositeDisposable, phoneNumber)
 
-                        }
-                    )
-            )
-        } catch (e: Exception) {
-
+        smsAuthLiveData.addSource(repositoryLiveData) { value: SmsAuth ->
+            smsAuthLiveData.setValue(value)
         }
     }
 
     fun sendVerifiedNumber(phoneNumber: String, token: String, verifiedNumber: String) {
-        try {
-            compositeDisposable.add(
-                apiService.sendVerifiedNumber(phoneNumber, token, verifiedNumber)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(
-                        {
-                            if (it.status == "success") {
-                                if (it.payload.meta.is_already_auth_phone_number) {
-                                    saveSession(it)
-                                    moveToActivity(MainActivity::class.java)
-                                } else {
-                                    isNotPhoneNumber()
-                                }
-                            } else {
+        val repositoryLiveData: LiveData<Response?> =
+            authenticationPhoneNumberRepository.sendVerifiedNumber(compositeDisposable, phoneNumber, token, verifiedNumber)
 
-                            }
-                        },
-                        {
-                            popupToToast("인증번호가 유효하지 않습니다.")
-                        }
-                    )
-            )
-        } catch (e: Exception) {
-
+        smsAuthMetaLiveData.addSource(repositoryLiveData) { value: Response? ->
+            smsAuthMetaLiveData.value = value
+            if (value != null) {
+                if (value.payload.meta.is_already_auth_phone_number) {
+                    saveSession(value)
+                    moveToActivity(MainActivity::class.java)
+                } else {
+                    isNotPhoneNumber()
+                }
+            } else {
+                popupToToast("인증번호가 유효하지 않습니다.")
+            }
         }
     }
 

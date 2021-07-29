@@ -53,6 +53,10 @@ class AuthenticationPhoneNumberActivity : AppCompatActivity() {
             token = it.token
         })
 
+        viewModel.getSmsAuthMeta().observe(this, {
+
+        })
+
         viewModel.getAction().observe(this, {
             val intent = Intent(this, it as Class<*>)
 
@@ -166,7 +170,7 @@ class AuthenticationPhoneNumberActivity : AppCompatActivity() {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 @Suppress("UNCHECKED_CAST")
-                return AuthenticationPhoneNumberViewModel(authenticationPhoneNumberRepository, apiService, application) as T
+                return AuthenticationPhoneNumberViewModel(authenticationPhoneNumberRepository, application) as T
             }
         }).get(AuthenticationPhoneNumberViewModel::class.java)
     }
