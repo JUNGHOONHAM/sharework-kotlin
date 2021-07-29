@@ -36,6 +36,7 @@ import ir.androidexception.andexalertdialog.AndExAlertDialogListener
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.jetbrains.anko.support.v4.toast
 import java.io.File
 
 
@@ -44,6 +45,7 @@ class MyPageFragment : Fragment() {
     private var mBinding : FragmentMypageBinding? = null
 
     private lateinit var viewModel: MyPageViewModel
+    private lateinit var myPageRepository: MyPageRepository
     private lateinit var apiService: DBInterface
 
     private lateinit var sessionManagement: SessionManagement
@@ -66,12 +68,19 @@ class MyPageFragment : Fragment() {
         userId = sessionManagement.getSessionID()
 
         apiService = DBClient.getClient(activity as FragmentActivity)
+        myPageRepository = MyPageRepository(apiService)
         viewModel = getViewModel()
-
-        viewModel.getUser(userId)
-
-        viewModel.getUserInfo().observe(activity as FragmentActivity, {
+        
+        viewModel.userInfoLiveData.observe(activity as FragmentActivity, {
             bindUI(it)
+        })
+        
+        viewModel.updateProfileLiveData().observe(activity as FragmentActivity, {
+            if (it) {
+                toast("이미지 변경 완료")
+            } else {
+                toast("이미지 변경 실패")
+            }
         })
 
         viewModel.networkState().observe(activity as FragmentActivity, {
@@ -137,7 +146,7 @@ class MyPageFragment : Fragment() {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 @Suppress("UNCHECKED_CAS T")
-                return MyPageViewModel(apiService) as T
+                return MyPageViewModel(myPageRepository, userId) as T
             }
         }).get(MyPageViewModel::class.java)
     }

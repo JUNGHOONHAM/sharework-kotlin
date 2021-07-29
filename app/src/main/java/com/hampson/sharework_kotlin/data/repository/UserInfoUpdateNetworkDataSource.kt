@@ -7,6 +7,8 @@ import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.vo.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.lang.Exception
 
 class UserInfoUpdateNetworkDataSource (private val apiService : DBInterface, private val compositeDisposable : CompositeDisposable) {
@@ -21,6 +23,10 @@ class UserInfoUpdateNetworkDataSource (private val apiService : DBInterface, pri
     private val _updateResult = MutableLiveData<Boolean>()
     val updateResult: MutableLiveData<Boolean>
         get() = _updateResult
+
+    private val _updateProfileImageResult = MutableLiveData<Boolean>()
+    val updateProfileImageResult: MutableLiveData<Boolean>
+        get() = _updateProfileImageResult
 
     fun getUser(userId: Int) {
         _networkState.postValue(NetworkState.LOADING)
@@ -60,6 +66,25 @@ class UserInfoUpdateNetworkDataSource (private val apiService : DBInterface, pri
             )
         } catch (e: Exception) {
             _updateResult.postValue(false)
+        }
+    }
+
+    fun updateProfileImage(profileImage: MultipartBody.Part, user_id: RequestBody) {
+        try {
+            compositeDisposable.add(
+                apiService.updateProfileImage(profileImage, user_id)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(
+                        {
+                            _updateProfileImageResult.postValue(true)
+                        },
+                        {
+                            _updateProfileImageResult.postValue(false)
+                        }
+                    )
+            )
+        } catch (e: Exception) {
+            _updateProfileImageResult.postValue(false)
         }
     }
 }

@@ -2,6 +2,7 @@ package com.hampson.sharework_kotlin.ui.mypage
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.hampson.sharework_kotlin.data.api.DBInterface
@@ -16,14 +17,18 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.lang.Exception
 
-class MyPageViewModel (private val apiService : DBInterface) : ViewModel() {
+class MyPageViewModel (private val myPageRepository: MyPageRepository, private val userId: Int) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
-    private val userLiveData: MutableLiveData<User> = MutableLiveData()
     private val networkStateLiveData: MutableLiveData<NetworkState> = MutableLiveData()
+    private val updateProfileLiveData: MediatorLiveData<Boolean> = MediatorLiveData()
 
-    fun getUserInfo() : LiveData<User> {
-        return userLiveData
+    val userInfoLiveData : LiveData<User> by lazy {
+        myPageRepository.getUser(compositeDisposable, userId)
+    }
+
+    fun updateProfileLiveData() : LiveData<Boolean> {
+        return updateProfileLiveData
     }
 
     fun networkState() : LiveData<NetworkState> {
@@ -35,44 +40,14 @@ class MyPageViewModel (private val apiService : DBInterface) : ViewModel() {
         compositeDisposable.dispose()
     }
 
-    fun getUser(userId: Int) {
-        networkStateLiveData.postValue(NetworkState.LOADING)
-
-        try {
-            compositeDisposable.add(
-                apiService.getUser(userId)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(
-                        {
-                            userLiveData.postValue(it.payload.user)
-                            networkStateLiveData.postValue(NetworkState.LOADED)
-                        },
-                        {
-                            networkStateLiveData.postValue(NetworkState.ERROR)
-                        }
-                    )
-            )
-        } catch (e: Exception) {
-
-        }
-    }
-
     fun updateProfileImage(profileImage: MultipartBody.Part, user_id: RequestBody) {
-        try {
-            compositeDisposable.add(
-                apiService.updateProfileImage(profileImage, user_id)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(
-                        {
+        val repositoryLiveData: LiveData<Boolean> =
+            myPageRepository.updateProfileImage(compositeDisposable, profileImage, user_id)
 
-                        },
-                        {
-
-                        }
-                    )
-            )
-        } catch (e: Exception) {
-
+        updateProfileLiveData.addSource(repositoryLiveData) { value: Boolean ->
+            updateProfileLiveData.setValue(value)
         }
+
+
     }
 }
