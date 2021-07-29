@@ -65,7 +65,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
     private lateinit var viewModel: HomeWorkerViewModel
     private lateinit var locationViewModel: LocationFavoritesViewModel
-    private lateinit var jobInMapRepository: JobInMapRepository
+    private lateinit var homeWorkerRepository: HomeWorkerRepository
     private lateinit var locationFavoritesRepository: LocationFavoritesRepository
     private lateinit var apiService: DBInterface
 
@@ -101,7 +101,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
         apiService = DBClient.getClient(activity as FragmentActivity)
 
-        jobInMapRepository = JobInMapRepository(apiService)
+        homeWorkerRepository = HomeWorkerRepository(apiService)
         locationFavoritesRepository = LocationFavoritesRepository(apiService)
 
         viewModel = getViewModel()
@@ -417,7 +417,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 @Suppress("UNCHECKED_CAST")
-                return HomeWorkerViewModel(apiService, jobInMapRepository) as T
+                return HomeWorkerViewModel(homeWorkerRepository) as T
             }
         }).get(HomeWorkerViewModel::class.java)
     }

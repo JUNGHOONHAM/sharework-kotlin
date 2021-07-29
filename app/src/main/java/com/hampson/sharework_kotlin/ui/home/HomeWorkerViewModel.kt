@@ -2,24 +2,25 @@ package com.hampson.sharework_kotlin.ui.home
 
 import android.location.Address
 import android.location.Geocoder
-import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.paging.PagedList
 import com.google.android.gms.maps.model.LatLng
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
-import com.hampson.sharework_kotlin.data.vo.LocationFavorites
+import com.hampson.sharework_kotlin.data.vo.JobApplication
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
 
-class HomeWorkerViewModel (private val apiService : DBInterface, private val jobRepository: JobInMapRepository) : ViewModel() {
+class HomeWorkerViewModel (private val homeWorkerRepository: HomeWorkerRepository) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val jobListLiveData: MutableLiveData<List<Job>> = MutableLiveData()
+    private val jobListLiveData: MediatorLiveData<List<Job>> = MediatorLiveData()
     private val jobListNetworkState: MutableLiveData<NetworkState> = MutableLiveData()
     private val searchPositionLiveData: MutableLiveData<LatLng> = MutableLiveData()
 
@@ -36,7 +37,7 @@ class HomeWorkerViewModel (private val apiService : DBInterface, private val job
     }
 
     val networkState : LiveData<NetworkState> by lazy {
-        jobRepository.getJobNetworkState()
+        homeWorkerRepository.getJobNetworkState()
     }
 
     fun listIsEmpty(): Boolean {
@@ -49,22 +50,11 @@ class HomeWorkerViewModel (private val apiService : DBInterface, private val job
     }
 
     fun getJobList(northeast_lat: Double, northeast_lng: Double, southwest_lat: Double, southwest_lng: Double) {
-        try {
-            compositeDisposable.add(
-                apiService.getOpenJobs(northeast_lat, northeast_lng, southwest_lat, southwest_lng)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(
-                        {
-                            jobListLiveData.postValue(it.payload.jobList)
-                            jobListNetworkState.postValue(NetworkState.LOADED)
-                        },
-                        {
-                            jobListNetworkState.postValue(NetworkState.ERROR)
-                        }
-                    )
-            )
-        } catch (e: Exception) {
+        val repositoryLiveData: LiveData<List<Job>> =
+            homeWorkerRepository.getjobList(compositeDisposable, northeast_lat, northeast_lng, southwest_lat, southwest_lng)
 
+        jobListLiveData.addSource(repositoryLiveData) { value: List<Job> ->
+            jobListLiveData.setValue(value)
         }
     }
 

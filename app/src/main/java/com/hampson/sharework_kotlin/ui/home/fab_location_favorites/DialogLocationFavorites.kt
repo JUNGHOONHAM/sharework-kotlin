@@ -1,8 +1,6 @@
 package com.hampson.sharework_kotlin.ui.home.fab_location_favorites
 
-import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +19,6 @@ import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.LocationFavorites
 import com.hampson.sharework_kotlin.databinding.DialogLocationFavoritesBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
-import com.hampson.sharework_kotlin.ui.home.JobInMapRepository
 
 class DialogLocationFavorites(context: FragmentActivity?, position: LatLng): DialogFragment(),
     LocationFavoritesAdapter.OnItemClickListener {
