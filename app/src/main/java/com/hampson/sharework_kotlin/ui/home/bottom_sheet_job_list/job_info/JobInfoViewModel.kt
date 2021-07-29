@@ -2,23 +2,24 @@ package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.job_info
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.data.vo.JobApplication
+import com.hampson.sharework_kotlin.data.vo.LocationFavorites
 import com.hampson.sharework_kotlin.data.vo.Response
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
 
-class JobInfoViewModel (private val apiService : DBInterface) : ViewModel() {
+class JobInfoViewModel (private val jobInfoRepository: JobInfoRepository) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
-    private val jobLiveData: MutableLiveData<Response> = MutableLiveData()
-    private val jobApplied: MutableLiveData<Boolean> = MutableLiveData()
-    private val networkStateLiveData: MutableLiveData<NetworkState> = MutableLiveData()
+    private val jobLiveData: MediatorLiveData<Response> = MediatorLiveData()
+    private val jobApplied: MediatorLiveData<Boolean> = MediatorLiveData()
 
     fun getJobInfo() : LiveData<Response> {
         return jobLiveData
@@ -28,8 +29,8 @@ class JobInfoViewModel (private val apiService : DBInterface) : ViewModel() {
         return jobApplied
     }
 
-    fun networkState() : LiveData<NetworkState> {
-        return networkStateLiveData
+    val networkState : LiveData<NetworkState> by lazy {
+        jobInfoRepository.getJobNetworkState()
     }
 
     override fun onCleared() {
@@ -38,43 +39,20 @@ class JobInfoViewModel (private val apiService : DBInterface) : ViewModel() {
     }
 
     fun getJobShow(jobId: Int) {
-        networkStateLiveData.postValue(NetworkState.LOADING)
+        val repositoryLiveData: LiveData<Response> =
+            jobInfoRepository.getJobShow(compositeDisposable, jobId)
 
-        try {
-            compositeDisposable.add(
-                apiService.getJobShow(jobId, 135)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(
-                        {
-                            jobLiveData.postValue(it)
-                            networkStateLiveData.postValue(NetworkState.LOADED)
-                        },
-                        {
-                            networkStateLiveData.postValue(NetworkState.ERROR)
-                        }
-                    )
-            )
-        } catch (e: Exception) {
-
+        jobLiveData.addSource(repositoryLiveData) { value: Response ->
+            jobLiveData.setValue(value)
         }
     }
 
     fun createApplication(jobApplication: JobApplication) {
-        try {
-            compositeDisposable.add(
-                apiService.createApplication(jobApplication)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(
-                        {
-                            jobApplied.postValue(true)
-                        },
-                        {
-                            jobApplied.postValue(true)
-                        }
-                    )
-            )
-        } catch (e: Exception) {
+        val repositoryLiveData: LiveData<Boolean> =
+            jobInfoRepository.createApplication(compositeDisposable, jobApplication)
 
+        jobApplied.addSource(repositoryLiveData) { value: Boolean ->
+            jobApplied.setValue(value)
         }
     }
 }

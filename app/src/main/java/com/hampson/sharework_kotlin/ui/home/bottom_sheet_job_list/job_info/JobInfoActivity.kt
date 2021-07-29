@@ -29,6 +29,7 @@ class JobInfoActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mBinding: ActivityJobInfoBinding
 
     private lateinit var viewModel: JobInfoViewModel
+    private lateinit var jobInfoRepository: JobInfoRepository
     private lateinit var apiService: DBInterface
 
     private var jobId = -1
@@ -52,6 +53,7 @@ class JobInfoActivity : AppCompatActivity(), OnMapReadyCallback {
         jobId = intent.getIntExtra("jobId", -1)
 
         apiService = DBClient.getClient(this)
+        jobInfoRepository = JobInfoRepository(apiService)
         viewModel = getViewModel()
 
         viewModel.getJobShow(jobId)
@@ -71,7 +73,7 @@ class JobInfoActivity : AppCompatActivity(), OnMapReadyCallback {
             checkApplied(it)
         })
 
-        viewModel.networkState().observe(this, {
+        viewModel.networkState.observe(this, {
             mBinding.progressBar.visibility = if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
             mBinding.textViewError.visibility = if (it == NetworkState.ERROR) View.VISIBLE else View.GONE
         })
@@ -96,7 +98,7 @@ class JobInfoActivity : AppCompatActivity(), OnMapReadyCallback {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 @Suppress("UNCHECKED_CAST")
-                return JobInfoViewModel(apiService) as T
+                return JobInfoViewModel(jobInfoRepository) as T
             }
         }).get(JobInfoViewModel::class.java)
     }
