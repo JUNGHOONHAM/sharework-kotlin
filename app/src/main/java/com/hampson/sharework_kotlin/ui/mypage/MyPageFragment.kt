@@ -28,9 +28,11 @@ import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.User
 import com.hampson.sharework_kotlin.databinding.FragmentMypageBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
+import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.job_info.JobInfoActivity
 import com.hampson.sharework_kotlin.ui.management_user.authentication_phone_number.AuthenticationPhoneNumberActivity
 import com.hampson.sharework_kotlin.ui.mypage.payment_history.PaymentHistoryWorkerActivity
 import com.hampson.sharework_kotlin.ui.mypage.profile_update.UserInfoUpdateActivity
+import com.hampson.sharework_kotlin.ui.user_profile.ProfileActivity
 import ir.androidexception.andexalertdialog.AndExAlertDialog
 import ir.androidexception.andexalertdialog.AndExAlertDialogListener
 import okhttp3.MediaType
@@ -103,7 +105,10 @@ class MyPageFragment : Fragment() {
         }
 
         binding.layoutMyProfile.setOnClickListener {
-
+            Intent(context, ProfileActivity::class.java).apply {
+                putExtra("userId", userId)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }.run { context?.startActivity(this) }
         }
 
         binding.textViewProfileUpdate.setOnClickListener {

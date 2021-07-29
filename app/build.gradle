@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -107,4 +108,7 @@ dependencies {
 
     // alert dialog
     implementation 'com.github.salehyarahmadi:AndExAlertDialog:v1.0.1'
+
+    // viewpager2
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
 }
