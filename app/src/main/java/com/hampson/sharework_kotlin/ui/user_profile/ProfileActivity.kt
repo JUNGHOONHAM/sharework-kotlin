@@ -2,16 +2,38 @@ package com.hampson.sharework_kotlin.ui.user_profile
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hampson.sharework_kotlin.R
+import com.hampson.sharework_kotlin.data.api.DBClient
+import com.hampson.sharework_kotlin.data.api.DBInterface
+import com.hampson.sharework_kotlin.data.vo.User
 import com.hampson.sharework_kotlin.databinding.ActivityMainBinding
 import com.hampson.sharework_kotlin.databinding.ActivityProfileBinding
+import com.hampson.sharework_kotlin.session.SessionManagement
+import com.hampson.sharework_kotlin.ui.mypage.MyPageRepository
+import com.hampson.sharework_kotlin.ui.mypage.MyPageViewModel
 
 class ProfileActivity : AppCompatActivity() {
 
     private lateinit var  mBinding : ActivityProfileBinding
+
+    private lateinit var profileRepository: ProfileRepository
+    private lateinit var viewModel: ProfileViewModel
+    private lateinit var apiService: DBInterface
+
+    private lateinit var sessionManagement: SessionManagement
+    private var myUserId: Int = -1
+    private lateinit var appType: String
+
+    private var userId: Int = -1
+
+    private lateinit var subject: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +43,24 @@ class ProfileActivity : AppCompatActivity() {
 
         mBinding.toolbar.textViewToolbarTitle.text = "프로필"
 
-        val adapter = ViewPagerAdapter(supportFragmentManager, lifecycle)
+        sessionManagement = SessionManagement(this)
+        myUserId = sessionManagement.getSessionID()
+        appType = sessionManagement.getAppType()!!
+
+        userId = intent.getIntExtra("userId", -1)
+
+        // 프로필 type check
+        checkProfileType()
+
+        apiService = DBClient.getClient(this)
+        profileRepository = ProfileRepository(apiService)
+        viewModel = getViewModel()
+
+        viewModel.userInfoLiveData.observe(this, {
+            bindUI(it)
+        })
+
+        val adapter = ViewPagerAdapter(supportFragmentManager, lifecycle, viewModel)
 
         mBinding.viewPager.adapter = adapter
 
@@ -35,5 +74,36 @@ class ProfileActivity : AppCompatActivity() {
                 }
             }
         }.attach()
+    }
+
+    private fun bindUI(user: User) {
+        mBinding.textViewName.text = user.name
+
+        Glide.with(this)
+            .load(user.profile_img)
+            .circleCrop()
+            .placeholder(R.drawable.ic_baseline_account_circle_24)
+            .into(mBinding.imageViewProfile)
+    }
+
+    private fun checkProfileType() {
+        if (userId == myUserId) {
+            subject = appType
+        } else {
+            if (appType == "giver") {
+                subject = "worker"
+            } else {
+                subject = "giver"
+            }
+        }
+    }
+
+    private fun getViewModel(): ProfileViewModel {
+        return ViewModelProvider(this, object : ViewModelProvider.Factory{
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T{
+                @Suppress("UNCHECKED_CAS T")
+                return ProfileViewModel(profileRepository, userId, subject) as T
+            }
+        }).get(ProfileViewModel::class.java)
     }
 }

@@ -15,5 +15,7 @@ data class Meta(
     val total_work_pay: String,
     val total_work_time: String,
     val start_date: String,
-    val end_date: String
+    val end_date: String,
+
+    val subject: String
 )

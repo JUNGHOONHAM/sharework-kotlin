@@ -35,6 +35,10 @@ class SessionManagement (context: Context) {
         return sharedPreferences.getInt(KEY_ID, -1)
     }
 
+    fun getAppType(): String? {
+        return sharedPreferences.getString(KEY_APP_TYPE, null)
+    }
+
     fun removeSession() {
         editor.clear()
         editor.commit()

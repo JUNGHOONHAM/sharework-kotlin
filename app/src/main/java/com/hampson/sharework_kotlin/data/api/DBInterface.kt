@@ -66,4 +66,9 @@ interface DBInterface {
 
     @GET("api/v2/users/location_favorites")
     fun getLocationFavorites(@Query("user_id") user_id: Int): Single<Response>
+
+
+    // tag
+    @GET("api/v2/users/tags/index_user_tag_history")
+    fun getUserTagHistory(@Query("user_id") user_id: Int, @Query("subject") subject: String): Single<Response>
 }
