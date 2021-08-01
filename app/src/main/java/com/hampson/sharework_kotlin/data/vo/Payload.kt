@@ -23,6 +23,9 @@ data class Payload(
     @SerializedName("job_application")
     val jobApplication: JobApplication,
 
+    @SerializedName("tags")
+    val tags: HashMap<String, Int>,
+
     @SerializedName("meta")
     val meta: Meta
 )
