@@ -15,7 +15,9 @@ class ProfileRepository (private val apiService : DBInterface) {
 
     lateinit var userInfoUpdateNetworkDataSource: UserInfoUpdateNetworkDataSource
     lateinit var tagNetworkDataSource: TagNetworkDataSource
+    lateinit var userJobRateReviewNetworkDataSource: UserJobRateReviewNetworkDataSource
 
+    // introduce
     fun getUser (compositeDisposable: CompositeDisposable, userId: Int) : LiveData<User> {
         userInfoUpdateNetworkDataSource = UserInfoUpdateNetworkDataSource(apiService, compositeDisposable)
         userInfoUpdateNetworkDataSource.getUser(userId)
@@ -28,6 +30,14 @@ class ProfileRepository (private val apiService : DBInterface) {
         tagNetworkDataSource.getUserTagHistory(userId, subject)
 
         return tagNetworkDataSource.downloadedTagResponse
+    }
+
+    // review
+    fun getRateReview (compositeDisposable: CompositeDisposable, userId: Int, reviewCategory: String) : LiveData<UserJobRateReview> {
+        userJobRateReviewNetworkDataSource = UserJobRateReviewNetworkDataSource(apiService, compositeDisposable)
+        userJobRateReviewNetworkDataSource.getRateReview(userId, reviewCategory)
+
+        return userJobRateReviewNetworkDataSource.downloadedRateReviewResponse
     }
 
     fun getNetworkState(): LiveData<NetworkState> {

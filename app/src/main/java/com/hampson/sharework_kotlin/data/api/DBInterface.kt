@@ -71,4 +71,9 @@ interface DBInterface {
     // tag
     @GET("api/v2/users/tags/index_user_tag_history")
     fun getUserTagHistory(@Query("user_id") user_id: Int, @Query("subject") subject: String): Single<Response>
+
+
+    // user job rate review
+    @GET("api/v2/users/user_job_rate_reviews")
+    fun getRateReview(@Query("user_id") user_id: Int, @Query("review_category") reviewCategory: String): Single<Response>
 }

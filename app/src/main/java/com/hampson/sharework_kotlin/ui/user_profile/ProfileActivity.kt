@@ -102,7 +102,7 @@ class ProfileActivity : AppCompatActivity() {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 @Suppress("UNCHECKED_CAS T")
-                return ProfileViewModel(profileRepository, userId, subject) as T
+                return ProfileViewModel(profileRepository, userId, subject, "user_job_owner") as T
             }
         }).get(ProfileViewModel::class.java)
     }
