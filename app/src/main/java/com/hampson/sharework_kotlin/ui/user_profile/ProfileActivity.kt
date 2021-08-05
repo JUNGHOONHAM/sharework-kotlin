@@ -2,6 +2,7 @@ package com.hampson.sharework_kotlin.ui.user_profile
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -12,6 +13,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.api.DBClient
 import com.hampson.sharework_kotlin.data.api.DBInterface
+import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.User
 import com.hampson.sharework_kotlin.databinding.ActivityMainBinding
 import com.hampson.sharework_kotlin.databinding.ActivityProfileBinding
@@ -58,6 +60,11 @@ class ProfileActivity : AppCompatActivity() {
 
         viewModel.userInfoLiveData.observe(this, {
             bindUI(it)
+        })
+
+        viewModel.networkState().observe(this, {
+            mBinding.progressBar.visibility = if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
+            mBinding.textViewError.visibility = if (it == NetworkState.ERROR) View.VISIBLE else View.GONE
         })
 
         val adapter = ViewPagerAdapter(supportFragmentManager, lifecycle, viewModel)
