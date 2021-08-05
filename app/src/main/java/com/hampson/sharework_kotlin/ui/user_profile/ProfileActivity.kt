@@ -62,7 +62,7 @@ class ProfileActivity : AppCompatActivity() {
             bindUI(it)
         })
 
-        viewModel.networkState().observe(this, {
+        viewModel.networkState.observe(this, {
             mBinding.progressBar.visibility = if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
             mBinding.textViewError.visibility = if (it == NetworkState.ERROR) View.VISIBLE else View.GONE
         })

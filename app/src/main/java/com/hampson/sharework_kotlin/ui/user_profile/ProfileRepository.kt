@@ -1,6 +1,5 @@
 package com.hampson.sharework_kotlin.ui.user_profile
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
@@ -16,6 +15,9 @@ class ProfileRepository (private val apiService : DBInterface) {
     lateinit var userInfoUpdateNetworkDataSource: UserInfoUpdateNetworkDataSource
     lateinit var tagNetworkDataSource: TagNetworkDataSource
     lateinit var userJobRateReviewNetworkDataSource: UserJobRateReviewNetworkDataSource
+    lateinit var reviewDataSourceFactory: UserJobRateReviewDataSourceFactory
+
+    lateinit var reviewPagedList: LiveData<PagedList<UserJobRateReview>>
 
     // introduce
     fun getUser (compositeDisposable: CompositeDisposable, userId: Int) : LiveData<User> {
@@ -38,6 +40,25 @@ class ProfileRepository (private val apiService : DBInterface) {
         userJobRateReviewNetworkDataSource.getRateReview(userId, reviewCategory)
 
         return userJobRateReviewNetworkDataSource.downloadedRateReviewResponse
+    }
+
+    fun getReviewPagedList (compositeDisposable: CompositeDisposable, userId: Int, sendTo: String) : LiveData<PagedList<UserJobRateReview>> {
+        reviewDataSourceFactory = UserJobRateReviewDataSourceFactory(apiService, compositeDisposable, userId, sendTo)
+
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setPageSize(POST_PER_PAGE)
+            .build()
+
+        reviewPagedList = LivePagedListBuilder(reviewDataSourceFactory, config).build()
+
+        return reviewPagedList
+    }
+
+    fun getPagedNetworkState(): LiveData<NetworkState> {
+        return Transformations.switchMap<UserJobRateReviewDataSource, NetworkState>(
+            reviewDataSourceFactory.reviewLiveDataSource, UserJobRateReviewDataSource::networkState
+        )
     }
 
     fun getNetworkState(): LiveData<NetworkState> {

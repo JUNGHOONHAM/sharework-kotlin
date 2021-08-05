@@ -76,4 +76,8 @@ interface DBInterface {
     // user job rate review
     @GET("api/v2/users/user_job_rate_reviews")
     fun getRateReview(@Query("user_id") user_id: Int, @Query("review_category") reviewCategory: String): Single<Response>
+
+    @GET("api/v2/users/user_job_rate_reviews")
+    fun getReviewPagedList(@Query("user_id") user_id: Int, @Query("send_to") send_to: String,
+                           @Query("page") page: Int, @Query("size") size: Int): Single<Response>
 }

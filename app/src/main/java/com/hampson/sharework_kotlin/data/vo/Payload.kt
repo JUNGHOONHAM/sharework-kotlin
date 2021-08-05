@@ -26,6 +26,8 @@ data class Payload(
     @SerializedName("tags")
     val tags: HashMap<String, Int>,
 
+    @SerializedName("user_job_rate_reviews")
+    val userJobRateReviewList: List<UserJobRateReview>,
     @SerializedName("user_job_rate_review")
     val userJobRateReview: UserJobRateReview,
 

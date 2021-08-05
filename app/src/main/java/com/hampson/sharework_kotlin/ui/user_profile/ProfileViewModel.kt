@@ -19,9 +19,7 @@ class ProfileViewModel (private val profileRepository: ProfileRepository, privat
                         private val subject: String, private val reviewCategory: String) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
-    private val networkStateLiveData: MutableLiveData<NetworkState> = MutableLiveData()
-
-    // introduce
+    // introduce fragment
     val userInfoLiveData : LiveData<User> by lazy {
         profileRepository.getUser(compositeDisposable, userId)
     }
@@ -30,13 +28,26 @@ class ProfileViewModel (private val profileRepository: ProfileRepository, privat
         profileRepository.getUserTagHistory(compositeDisposable, userId, subject)
     }
 
-    // review
+    // review fragment
     val rateReviewLiveData : LiveData<UserJobRateReview> by lazy {
         profileRepository.getRateReview(compositeDisposable, userId, reviewCategory)
     }
 
-    fun networkState() : LiveData<NetworkState> {
-        return networkStateLiveData
+    val reviewPagedList : LiveData<PagedList<UserJobRateReview>> by lazy {
+        profileRepository.getReviewPagedList(compositeDisposable, userId, "user")
+    }
+
+    val networkState : LiveData<NetworkState> by lazy {
+        profileRepository.getNetworkState()
+    }
+
+    // profile activity
+    val getPagedNetworkState : LiveData<NetworkState> by lazy {
+        profileRepository.getPagedNetworkState()
+    }
+
+    fun listIsEmpty(): Boolean {
+        return reviewPagedList.value?.isEmpty() ?: true
     }
 
     override fun onCleared() {
