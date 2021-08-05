@@ -1,4 +1,4 @@
-package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list
+package com.hampson.sharework_kotlin.ui.application_history.applied
 
 import android.content.Context
 import android.content.Intent
@@ -16,25 +16,28 @@ import com.bumptech.glide.Glide
 import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
+import com.hampson.sharework_kotlin.data.vo.JobApplication
 import com.hampson.sharework_kotlin.data.vo.Tag
+import com.hampson.sharework_kotlin.data.vo.UserJobRateReview
 import com.hampson.sharework_kotlin.databinding.ItemJobListBinding
+import com.hampson.sharework_kotlin.databinding.ItemReviewListBinding
 import com.hampson.sharework_kotlin.databinding.NetworkStateItemBinding
 import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.job_info.JobInfoActivity
 import org.jetbrains.anko.backgroundResource
 import java.io.Serializable
 
-class BottomSheetJobPagedListAdapter(public val context: Context) : PagedListAdapter<Job, RecyclerView.ViewHolder>(
-    JobDiffCallback()
+class AppliedPagedListAdapter(public val context: Context) : PagedListAdapter<JobApplication, RecyclerView.ViewHolder>(
+    ApplicationDiffCallback()
 ) {
 
-    val JOB_VIEW_TYPE = 1
+    val APPLICATION_VIEW_TYPE = 1
     val NETWORK_VIEW_TYPE = 2
 
     private var networkState: NetworkState? = null
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (getItemViewType(position) == JOB_VIEW_TYPE) {
-            (holder as JobItemViewHolder).bind(getItem(position), context)
+        if (getItemViewType(position) == APPLICATION_VIEW_TYPE) {
+            (holder as ApplicationItemViewHolder).bind(getItem(position), context)
         } else {
             (holder as NetworkStateItemViewHolder).bind(networkState)
         }
@@ -52,16 +55,16 @@ class BottomSheetJobPagedListAdapter(public val context: Context) : PagedListAda
         return if (hasExtraRow() && position == itemCount - 1) {
             NETWORK_VIEW_TYPE
         } else {
-            JOB_VIEW_TYPE
+            APPLICATION_VIEW_TYPE
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
 
-        if (viewType == JOB_VIEW_TYPE) {
+        if (viewType == APPLICATION_VIEW_TYPE) {
             val binding = ItemJobListBinding.inflate(layoutInflater)
-            return JobItemViewHolder(
+            return ApplicationItemViewHolder(
                 binding
             )
         } else {
@@ -72,33 +75,33 @@ class BottomSheetJobPagedListAdapter(public val context: Context) : PagedListAda
         }
     }
 
-    class JobDiffCallback : DiffUtil.ItemCallback<Job>() {
-        override fun areItemsTheSame(oldItem: Job, newItem: Job): Boolean {
+    class ApplicationDiffCallback : DiffUtil.ItemCallback<JobApplication>() {
+        override fun areItemsTheSame(oldItem: JobApplication, newItem: JobApplication): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Job, newItem: Job): Boolean {
+        override fun areContentsTheSame(oldItem: JobApplication, newItem: JobApplication): Boolean {
             return oldItem == newItem
         }
 
     }
 
-    class JobItemViewHolder (private val binding: ItemJobListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(job: Job?, context: Context) {
-            binding.textViewTitle.text = job?.job_title
-            binding.textViewJobDate.text = job?.job_date
-            binding.textViewJobTime.text = job?.start_date + " ~ " + job?.end_date
-            binding.textViewPay.text = job?.pay
-            binding.textViewJobType.text = job?.job_type
-            binding.textViewPayType.text = job?.pay_type
+    class ApplicationItemViewHolder (private val binding: ItemJobListBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(application: JobApplication?, context: Context) {
+            binding.textViewTitle.text = application?.job?.job_title
+            binding.textViewJobDate.text = application?.job?.job_date
+            binding.textViewJobTime.text = application?.job?.start_date + " ~ " + application?.job?.end_date
+            binding.textViewPay.text = application?.job?.pay
+            binding.textViewJobType.text = application?.job?.job_type
+            binding.textViewPayType.text = application?.job?.pay_type
 
             Glide.with(context)
-                .load(job?.jobable?.user?.profile_img)
+                .load(application?.job?.jobable?.user?.profile_img)
                 .circleCrop()
                 .placeholder(R.drawable.ic_baseline_account_circle_24)
                 .into(binding.imageViewProfile)
 
-            val tagList = job?.tags
+            val tagList = application?.job?.tags
             if (tagList != null) {
                 for (tag in tagList) {
                     bindTag(tag, context)
@@ -107,7 +110,7 @@ class BottomSheetJobPagedListAdapter(public val context: Context) : PagedListAda
 
             itemView.setOnClickListener {
                 Intent(context, JobInfoActivity::class.java).apply {
-                    putExtra("jobId", job?.id)
+                    putExtra("jobId", application?.job?.id)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }.run { context.startActivity(this) }
             }

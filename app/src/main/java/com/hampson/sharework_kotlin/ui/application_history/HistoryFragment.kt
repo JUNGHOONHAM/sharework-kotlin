@@ -83,7 +83,7 @@ class HistoryFragment : Fragment() {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
                 @Suppress("UNCHECKED_CAST")
-                return HistoryViewModel(historyRepository, userId) as T
+                return HistoryViewModel(historyRepository) as T
             }
         }).get(HistoryViewModel::class.java)
     }

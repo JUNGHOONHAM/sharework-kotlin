@@ -20,10 +20,6 @@ class ProfileViewModel (private val profileRepository: ProfileRepository, privat
     private val compositeDisposable = CompositeDisposable()
 
     // introduce fragment
-    val userInfoLiveData : LiveData<User> by lazy {
-        profileRepository.getUser(compositeDisposable, userId)
-    }
-
     val tagLiveData : LiveData<Response> by lazy {
         profileRepository.getUserTagHistory(compositeDisposable, userId, subject)
     }
@@ -37,13 +33,17 @@ class ProfileViewModel (private val profileRepository: ProfileRepository, privat
         profileRepository.getReviewPagedList(compositeDisposable, userId, "user")
     }
 
-    val networkState : LiveData<NetworkState> by lazy {
-        profileRepository.getNetworkState()
+    val getPagedNetworkState : LiveData<NetworkState> by lazy {
+        profileRepository.getPagedNetworkState()
     }
 
     // profile activity
-    val getPagedNetworkState : LiveData<NetworkState> by lazy {
-        profileRepository.getPagedNetworkState()
+    val userInfoLiveData : LiveData<User> by lazy {
+        profileRepository.getUser(compositeDisposable, userId)
+    }
+
+    val networkState : LiveData<NetworkState> by lazy {
+        profileRepository.getNetworkState()
     }
 
     fun listIsEmpty(): Boolean {

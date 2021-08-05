@@ -16,9 +16,19 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.lang.Exception
 
-class HistoryViewModel (private val historyRepository: HistoryRepository, private val userId: Int) : ViewModel() {
+class HistoryViewModel (private val historyRepository: HistoryRepository) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
+    // applied
+    val appliedLiveData : LiveData<PagedList<JobApplication>> by lazy {
+        historyRepository.getReviewPagedList(compositeDisposable, "completed")
+    }
+
+    // hired
+
+
+
+    // completed
 
 
     override fun onCleared() {

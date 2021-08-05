@@ -51,7 +51,7 @@ class ReviewFragment(private val viewModel: ProfileViewModel) : Fragment() {
             reviewAdapter.submitList(it)
         })
 
-        viewModel.networkState.observe(activity as FragmentActivity, {
+        viewModel.getPagedNetworkState.observe(activity as FragmentActivity, {
             binding.progressBar.visibility = if (viewModel.listIsEmpty() && it == NetworkState.LOADING) View.VISIBLE else View.GONE
             binding.textViewError.visibility = if (viewModel.listIsEmpty() && it == NetworkState.ERROR) View.VISIBLE else View.GONE
 

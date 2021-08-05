@@ -56,6 +56,9 @@ interface DBInterface {
     @GET("api/v2/users/job_applications/show_payment")
     fun getPaymentMeta(@Query("start_date") start_date: String, @Query("end_date") end_date: String): Single<Response>
 
+    @GET("api/v2/users/job_applications")
+    fun getApplications(@Query("status") status: String, @Query("page") page: Int, @Query("size") size: Int): Single<Response>
+
 
     // location favorites
     @POST("api/v2/users/location_favorites")
