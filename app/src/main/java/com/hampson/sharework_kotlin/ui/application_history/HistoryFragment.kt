@@ -11,20 +11,29 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.tabs.TabLayoutMediator
 import com.hampson.sharework_kotlin.data.api.DBClient
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.databinding.FragmentHistoryBinding
+import com.hampson.sharework_kotlin.session.SessionManagement
 import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.BottomSheetJobPagedListAdapter
 import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.BottomSheetJobViewModel
 import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.JobPagedListRepository
+import com.hampson.sharework_kotlin.ui.user_profile.ProfileRepository
+import com.hampson.sharework_kotlin.ui.user_profile.ProfileViewModel
+import com.hampson.sharework_kotlin.ui.user_profile.ViewPagerAdapter
 
 class HistoryFragment : Fragment() {
 
     private var mBinding : FragmentHistoryBinding? = null
 
-    private lateinit var viewModel: BottomSheetJobViewModel
-    lateinit var jobRepository: JobPagedListRepository
+    private lateinit var historyRepository: HistoryRepository
+    private lateinit var viewModel: HistoryViewModel
+    private lateinit var apiService: DBInterface
+
+    private lateinit var sessionManagement: SessionManagement
+    private var userId: Int = -1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,44 +44,32 @@ class HistoryFragment : Fragment() {
 
         mBinding = binding
 
+        binding.toolbar.textViewToolbarTitle.text = "프로필"
+
+        sessionManagement = SessionManagement(activity as FragmentActivity)
+        userId = sessionManagement.getSessionID()
+
         val apiService : DBInterface = DBClient.getClient(activity as FragmentActivity)
-
-        jobRepository =
-            JobPagedListRepository(
-                apiService
-            )
-
+        historyRepository = HistoryRepository(apiService)
         viewModel = getViewModel()
 
-        val jobAdapter =
-            BottomSheetJobPagedListAdapter(
-                (activity as FragmentActivity)
-            )
+        val adapter = ViewPagerAdapter((activity as FragmentActivity).supportFragmentManager, lifecycle, viewModel)
 
-        val gridLayoutManager = GridLayoutManager((activity as FragmentActivity), 3)
+        binding.viewPager.adapter = adapter
 
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                val viewType = jobAdapter.getItemViewType(position)
-                if (viewType == jobAdapter.JOB_VIEW_TYPE) return 1
-                else return 3
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            when(position) {
+                0 -> {
+                    tab.text = "지원한 업무"
+                }
+                1 -> {
+                    tab.text = "채택된 업무"
+                }
+                2 -> {
+                    tab.text = "완료한 업무"
+                }
             }
-        }
-
-        val layout = LinearLayoutManager((activity as FragmentActivity))
-        binding.recyclerView.layoutManager = layout
-        //binding.recyclerView.setHasFixedSize(true)
-        binding.recyclerView.adapter = jobAdapter
-
-
-        viewModel.networkState.observe((activity as FragmentActivity), Observer {
-            binding.progressBar.visibility = if (viewModel.listIsEmpty() && it == NetworkState.LOADING) View.VISIBLE else View.GONE
-            binding.textViewError.visibility = if (viewModel.listIsEmpty() && it == NetworkState.ERROR) View.VISIBLE else View.GONE
-
-            if (!viewModel.listIsEmpty()) {
-                jobAdapter.setNetworkState(it)
-            }
-        })
+        }.attach()
 
         return mBinding?.root
     }
@@ -82,15 +79,12 @@ class HistoryFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun getViewModel(): BottomSheetJobViewModel {
+    private fun getViewModel(): HistoryViewModel {
         return ViewModelProvider(this, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T{
-                val jobIdList = ArrayList<Int>()
                 @Suppress("UNCHECKED_CAST")
-                return BottomSheetJobViewModel(
-                    jobRepository, jobIdList
-                ) as T
+                return HistoryViewModel(historyRepository, userId) as T
             }
-        }).get(BottomSheetJobViewModel::class.java)
+        }).get(HistoryViewModel::class.java)
     }
 }
