@@ -21,14 +21,19 @@ class HistoryViewModel (private val historyRepository: HistoryRepository) : View
 
     // applied
     val appliedLiveData : LiveData<PagedList<JobApplication>> by lazy {
-        historyRepository.getReviewPagedList(compositeDisposable, "completed")
+        historyRepository.getReviewPagedList(compositeDisposable, "applied")
     }
 
     // hired
-
+    val hiredLiveData : LiveData<PagedList<JobApplication>> by lazy {
+        historyRepository.getReviewPagedList(compositeDisposable, "hired")
+    }
 
 
     // completed
+    val completedLiveData : LiveData<PagedList<JobApplication>> by lazy {
+        historyRepository.getReviewPagedList(compositeDisposable, "completed")
+    }
 
 
     override fun onCleared() {

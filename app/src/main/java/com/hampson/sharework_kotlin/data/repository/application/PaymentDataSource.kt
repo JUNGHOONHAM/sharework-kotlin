@@ -1,17 +1,16 @@
-package com.hampson.sharework_kotlin.data.repository
+package com.hampson.sharework_kotlin.data.repository.application
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.hampson.sharework_kotlin.data.api.FIRST_PAGE
 import com.hampson.sharework_kotlin.data.api.DBInterface
-import com.hampson.sharework_kotlin.data.vo.Job
+import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.JobApplication
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class ApplicationDataSource (private val apiService : DBInterface, private val compositeDisposable: CompositeDisposable,
-                        private val userId: Int, private val startDate: String, private val endDate: String) : PageKeyedDataSource<Int, JobApplication>() {
+class PaymentDataSource (private val apiService : DBInterface, private val compositeDisposable: CompositeDisposable,
+                         private val userId: Int, private val startDate: String, private val endDate: String) : PageKeyedDataSource<Int, JobApplication>() {
 
     private var page = FIRST_PAGE
 
