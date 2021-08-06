@@ -83,4 +83,9 @@ interface DBInterface {
     @GET("api/v2/users/user_job_rate_reviews")
     fun getReviewPagedList(@Query("user_id") user_id: Int, @Query("send_to") send_to: String,
                            @Query("page") page: Int, @Query("size") size: Int): Single<Response>
+
+
+    // notification
+    @GET("api/v2/users/notifications")
+    fun getNotifications(@Query("user_type") user_type: String, @Query("page") page: Int, @Query("size") size: Int): Single<Response>
 }

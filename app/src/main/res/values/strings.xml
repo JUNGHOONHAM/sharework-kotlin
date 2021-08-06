@@ -6,4 +6,13 @@
     <string name="giver">giver</string>
     <string name="worker">worker</string>
 
+    // status
+    <string name="applied">applied</string>
+    <string name="hired">hired</string>
+    <string name="approved">approved</string>
+    <string name="completed">completed</string>
+    <string name="rejected">rejected</string>
+    <string name="extended">extended</string>
+    <string name="review">review</string>
+    <string name="failed">failed</string>
 </resources>

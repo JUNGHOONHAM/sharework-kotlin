@@ -31,6 +31,9 @@ data class Payload(
     @SerializedName("user_job_rate_review")
     val userJobRateReview: UserJobRateReview,
 
+    @SerializedName("notifications")
+    val notificationList: List<Notification>,
+
     @SerializedName("meta")
     val meta: Meta
 )
