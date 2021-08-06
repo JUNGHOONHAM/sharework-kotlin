@@ -20,6 +20,8 @@ class ChatFragment : Fragment() {
 
         mBinding = binding
 
+        binding.toolbar.textViewToolbarTitle.text = "채팅 내역"
+
         return mBinding?.root
     }
 

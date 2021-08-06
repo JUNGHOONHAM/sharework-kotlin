@@ -20,6 +20,8 @@ class NotificationFragment : Fragment() {
 
         mBinding = binding
 
+        binding.toolbar.textViewToolbarTitle.text = "알림"
+
         return mBinding?.root
     }
 

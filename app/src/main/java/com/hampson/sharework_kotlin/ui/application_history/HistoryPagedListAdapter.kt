@@ -1,9 +1,8 @@
-package com.hampson.sharework_kotlin.ui.application_history.applied
+package com.hampson.sharework_kotlin.ui.application_history
 
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,18 +14,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.repository.NetworkState
-import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.data.vo.JobApplication
 import com.hampson.sharework_kotlin.data.vo.Tag
-import com.hampson.sharework_kotlin.data.vo.UserJobRateReview
 import com.hampson.sharework_kotlin.databinding.ItemJobListBinding
-import com.hampson.sharework_kotlin.databinding.ItemReviewListBinding
 import com.hampson.sharework_kotlin.databinding.NetworkStateItemBinding
 import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.job_info.JobInfoActivity
 import org.jetbrains.anko.backgroundResource
-import java.io.Serializable
 
-class AppliedPagedListAdapter(public val context: Context) : PagedListAdapter<JobApplication, RecyclerView.ViewHolder>(
+class HistoryPagedListAdapter(public val context: Context) : PagedListAdapter<JobApplication, RecyclerView.ViewHolder>(
     ApplicationDiffCallback()
 ) {
 
@@ -103,6 +98,8 @@ class AppliedPagedListAdapter(public val context: Context) : PagedListAdapter<Jo
 
             val tagList = application?.job?.tags
             if (tagList != null) {
+                binding.layoutTag.removeAllViews()
+
                 for (tag in tagList) {
                     bindTag(tag, context)
                 }
@@ -117,8 +114,6 @@ class AppliedPagedListAdapter(public val context: Context) : PagedListAdapter<Jo
         }
 
         private fun bindTag(tag: Tag, context: Context) {
-            binding.layoutTag.removeAllViews()
-
             val textView = TextView(context)
             textView.text = "#" + tag.tag_name
             textView.backgroundResource = R.drawable.background_fill_gray

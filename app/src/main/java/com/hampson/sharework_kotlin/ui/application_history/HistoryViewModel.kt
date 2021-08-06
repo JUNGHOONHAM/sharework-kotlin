@@ -29,12 +29,10 @@ class HistoryViewModel (private val historyRepository: HistoryRepository) : View
         historyRepository.getReviewPagedList(compositeDisposable, "hired")
     }
 
-
     // completed
     val completedLiveData : LiveData<PagedList<JobApplication>> by lazy {
         historyRepository.getReviewPagedList(compositeDisposable, "completed")
     }
-
 
     override fun onCleared() {
         super.onCleared()

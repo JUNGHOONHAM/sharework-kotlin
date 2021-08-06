@@ -100,6 +100,8 @@ class BottomSheetJobPagedListAdapter(public val context: Context) : PagedListAda
 
             val tagList = job?.tags
             if (tagList != null) {
+                binding.layoutTag.removeAllViews()
+
                 for (tag in tagList) {
                     bindTag(tag, context)
                 }
@@ -114,8 +116,6 @@ class BottomSheetJobPagedListAdapter(public val context: Context) : PagedListAda
         }
 
         private fun bindTag(tag: Tag, context: Context) {
-            binding.layoutTag.removeAllViews()
-
             val textView = TextView(context)
             textView.text = "#" + tag.tag_name
             textView.backgroundResource = R.drawable.background_fill_gray
