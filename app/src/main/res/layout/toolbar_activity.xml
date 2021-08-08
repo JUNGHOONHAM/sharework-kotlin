@@ -9,7 +9,6 @@
     android:orientation="vertical"
     app:contentInsetStart="0dp">
 
-
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -40,7 +39,7 @@
             android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/textViewToolbarTitle"
+            android:layout_below="@+id/imageViewBack"
             android:background="#dddddd" />
     </RelativeLayout>
 </androidx.appcompat.widget.Toolbar>

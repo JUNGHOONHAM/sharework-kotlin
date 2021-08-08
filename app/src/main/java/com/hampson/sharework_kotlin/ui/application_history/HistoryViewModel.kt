@@ -34,6 +34,18 @@ class HistoryViewModel (private val historyRepository: HistoryRepository) : View
         historyRepository.getReviewPagedList(compositeDisposable, "completed")
     }
 
+    fun appliedIsEmpty(): Boolean {
+        return appliedLiveData.value?.isEmpty() ?: true
+    }
+
+    fun hiredIsEmpty(): Boolean {
+        return hiredLiveData.value?.isEmpty() ?: true
+    }
+
+    fun completedIsEmpty(): Boolean {
+        return completedLiveData.value?.isEmpty() ?: true
+    }
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()

@@ -1,12 +1,15 @@
 package com.hampson.sharework_kotlin.ui.application_history.applied
 
+import android.opengl.Visibility
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.databinding.FragmentRecyclerViewBinding
 import com.hampson.sharework_kotlin.ui.application_history.HistoryPagedListAdapter
 import com.hampson.sharework_kotlin.ui.application_history.HistoryViewModel

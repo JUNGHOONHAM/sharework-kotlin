@@ -91,30 +91,39 @@ class NotificationPagedListAdapter(public val context: Context) : PagedListAdapt
             val userType = notification?.user_type
             val job = notification?.job
 
-            if (notType == context.getString(R.string.hired)) {
-                binding.imageView.setImageResource(R.drawable.ic_alram1)
-                binding.textViewMessage.text = job?.job_title + " 에 채택되었습니다. 늦지 않게 도착해주세요."
-            } else if (notType == context.getString(R.string.approved)) {
-                binding.imageView.setImageResource(R.drawable.ic_alram2)
-                binding.textViewMessage.text = job?.job_title + " 사장님이 알바를 승인 하셨어요. 힘차게 일해 볼까요!"
-            } else if (notType == context.getString(R.string.completed)) {
-                binding.imageView.setImageResource(R.drawable.ic_alram3)
-                binding.textViewMessage.text = job?.job_title + " 일이 끝났어요. 고생 많으셨습니다!"
-            } else if (notType == context.getString(R.string.rejected)) {
-                binding.imageView.setImageResource(R.drawable.ic_alram4)
-                binding.textViewMessage.text = job?.job_title + " 에서 아쉽게도 일을 취소하셨어요. 다른 곳에 지원해주세요."
-            } else if (notType == context.getString(R.string.extended)) {
-                binding.imageView.setImageResource(R.drawable.ic_alram5)
-                binding.textViewMessage.text = job?.job_title + " 사장님이 일을 연장하셨습니다."
-            } else if (notType == context.getString(R.string.review)) {
-                binding.imageView.setImageResource(R.drawable.ic_alram3)
-                binding.textViewMessage.text = job?.job_title + " 님이 소중한 리뷰를 남겨주셨습니다."
-            } else if (notType == context.getString(R.string.applied)) {
-                binding.imageView.setImageResource(R.drawable.ic_alram3)
-                binding.textViewMessage.text = job?.job_title + " 에 " + notification.sender.name + "님이 지원하였습니다."
-            } else if (notType == context.getString(R.string.failed)) {
-                binding.imageView.setImageResource(R.drawable.ic_alram3)
-                binding.textViewMessage.text = job?.job_title + " 에 아무도 채택되지 않거나 출근하지 않아 구인이 자동으로 마감되었습니다."
+            when (notType) {
+                context.getString(R.string.hired) -> {
+                    binding.imageView.setImageResource(R.drawable.ic_alram1)
+                    binding.textViewMessage.text = job?.job_title + " 에 채택되었습니다. 늦지 않게 도착해주세요."
+                }
+                context.getString(R.string.approved) -> {
+                    binding.imageView.setImageResource(R.drawable.ic_alram2)
+                    binding.textViewMessage.text = job?.job_title + " 사장님이 알바를 승인 하셨어요. 힘차게 일해 볼까요!"
+                }
+                context.getString(R.string.completed) -> {
+                    binding.imageView.setImageResource(R.drawable.ic_alram3)
+                    binding.textViewMessage.text = job?.job_title + " 일이 끝났어요. 고생 많으셨습니다!"
+                }
+                context.getString(R.string.rejected) -> {
+                    binding.imageView.setImageResource(R.drawable.ic_alram4)
+                    binding.textViewMessage.text = job?.job_title + " 에서 아쉽게도 일을 취소하셨어요. 다른 곳에 지원해주세요."
+                }
+                context.getString(R.string.extended) -> {
+                    binding.imageView.setImageResource(R.drawable.ic_alram5)
+                    binding.textViewMessage.text = job?.job_title + " 사장님이 일을 연장하셨습니다."
+                }
+                context.getString(R.string.review) -> {
+                    binding.imageView.setImageResource(R.drawable.ic_alram3)
+                    binding.textViewMessage.text = job?.job_title + " 님이 소중한 리뷰를 남겨주셨습니다."
+                }
+                context.getString(R.string.applied) -> {
+                    binding.imageView.setImageResource(R.drawable.ic_alram3)
+                    binding.textViewMessage.text = job?.job_title + " 에 " + notification.sender.name + "님이 지원하였습니다."
+                }
+                context.getString(R.string.failed) -> {
+                    binding.imageView.setImageResource(R.drawable.ic_alram3)
+                    binding.textViewMessage.text = job?.job_title + " 에 아무도 채택되지 않거나 출근하지 않아 구인이 자동으로 마감되었습니다."
+                }
             }
 
 

@@ -1,6 +1,7 @@
 package com.hampson.sharework_kotlin.ui.application_history.completed
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
