@@ -42,12 +42,12 @@ class DialogLocationFavorites(context: FragmentActivity?, position: LatLng): Dia
 
         mBinding = DialogLocationFavoritesBinding.inflate(layoutInflater, container, false)
 
-        val sessionManagement = SessionManagement(activity as FragmentActivity)
+        val sessionManagement = SessionManagement(requireActivity())
         userId = sessionManagement.getSessionID()
 
         setRecyclerView()
 
-        apiService = DBClient.getClient(activity as FragmentActivity)
+        apiService = DBClient.getClient(requireActivity())
         locationFavoritesRepository = LocationFavoritesRepository(apiService)
         locationViewModel = getViewModelLocation(userId)
 
@@ -89,7 +89,7 @@ class DialogLocationFavorites(context: FragmentActivity?, position: LatLng): Dia
             }
         })
 
-        locationViewModel.getToast().observe(activity as FragmentActivity, {
+        locationViewModel.getToast().observe(requireActivity(), {
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
         })
 

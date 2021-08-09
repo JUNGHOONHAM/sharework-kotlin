@@ -31,11 +31,11 @@ class IntroduceFragment(private val viewModel: ProfileViewModel) : Fragment() {
 
         mBinding = binding
 
-        viewModel.userInfoLiveData.observe(activity as FragmentActivity, {
+        viewModel.userInfoLiveData.observe(requireActivity(), {
             bindUI(it)
         })
 
-        viewModel.tagLiveData.observe(activity as FragmentActivity, {
+        viewModel.tagLiveData.observe(requireActivity(), {
             bindTagUI(it)
         })
 
@@ -70,17 +70,17 @@ class IntroduceFragment(private val viewModel: ProfileViewModel) : Fragment() {
         val param = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         param.setMargins(0, 0, 0, 8)
 
-        val linearLayout = LinearLayout(activity as FragmentActivity)
+        val linearLayout = LinearLayout(requireActivity())
         linearLayout.layoutParams = param
         linearLayout.orientation = LinearLayout.HORIZONTAL
 
-        val textViewTagName = TextView(activity as FragmentActivity)
+        val textViewTagName = TextView(requireActivity())
         textViewTagName.textSize = 16f
         textViewTagName.setTextColor(Color.rgb(0, 0, 0))
         textViewTagName.typeface = Typeface.DEFAULT_BOLD
         textViewTagName.text = "#$key"
 
-        val textViewTagCount = TextView(activity as FragmentActivity)
+        val textViewTagCount = TextView(requireActivity())
         textViewTagCount.layoutParams = param
         textViewTagCount.gravity = Gravity.END
         textViewTagCount.textSize = 14f

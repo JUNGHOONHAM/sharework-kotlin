@@ -46,14 +46,14 @@ class HistoryFragment : Fragment() {
 
         binding.toolbar.textViewToolbarTitle.text = "프로필"
 
-        sessionManagement = SessionManagement(activity as FragmentActivity)
+        sessionManagement = SessionManagement(requireActivity())
         userId = sessionManagement.getSessionID()
 
-        val apiService : DBInterface = DBClient.getClient(activity as FragmentActivity)
+        val apiService : DBInterface = DBClient.getClient(requireActivity())
         historyRepository = HistoryRepository(apiService)
         viewModel = getViewModel()
 
-        val adapter = ViewPagerAdapter((activity as FragmentActivity).supportFragmentManager, lifecycle, viewModel)
+        val adapter = ViewPagerAdapter(requireActivity().supportFragmentManager, lifecycle, viewModel)
 
         binding.viewPager.adapter = adapter
 

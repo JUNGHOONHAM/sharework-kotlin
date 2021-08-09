@@ -66,18 +66,18 @@ class MyPageFragment : Fragment() {
 
         mBinding = binding
 
-        sessionManagement = SessionManagement(activity as FragmentActivity)
+        sessionManagement = SessionManagement(requireActivity())
         userId = sessionManagement.getSessionID()
 
-        apiService = DBClient.getClient(activity as FragmentActivity)
+        apiService = DBClient.getClient(requireActivity())
         myPageRepository = MyPageRepository(apiService)
         viewModel = getViewModel()
         
-        viewModel.userInfoLiveData.observe(activity as FragmentActivity, {
+        viewModel.userInfoLiveData.observe(requireActivity(), {
             bindUI(it)
         })
         
-        viewModel.updateProfileLiveData().observe(activity as FragmentActivity, {
+        viewModel.updateProfileLiveData().observe(requireActivity(), {
             if (it) {
                 toast("이미지 변경 완료")
             } else {
@@ -85,14 +85,14 @@ class MyPageFragment : Fragment() {
             }
         })
 
-        viewModel.networkState().observe(activity as FragmentActivity, {
+        viewModel.networkState().observe(requireActivity(), {
             binding.progressBar.visibility = if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
             binding.textViewError.visibility = if (it == NetworkState.ERROR) View.VISIBLE else View.GONE
         })
 
         binding.imageViewProfile.setOnClickListener {
             if (isStoragePermissionGranted()) {
-                //ImagePicker.with(activity as FragmentActivity)
+                //ImagePicker.with(requireActivity())
                 //    .crop()
                 //    .cropOval()
                 //    .createIntentFromDialog { launcher.launch(it) }
@@ -193,11 +193,11 @@ class MyPageFragment : Fragment() {
 
     private fun isStoragePermissionGranted(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if ((activity as FragmentActivity).checkSelfPermission(permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && (activity as FragmentActivity).checkSelfPermission(permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if (requireActivity().checkSelfPermission(permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                && requireActivity().checkSelfPermission(permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 return true
             } else {
-                ActivityCompat.requestPermissions(activity as FragmentActivity, arrayOf(permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE), 1)
+                ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE), 1)
                 return false
             }
         } else {
@@ -213,7 +213,7 @@ class MyPageFragment : Fragment() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-            ImagePicker.with(activity as FragmentActivity)
+            ImagePicker.with(requireActivity())
                 .crop()
                 .cropOval()
                 .createIntentFromDialog { launcher.launch(it) }
@@ -242,10 +242,10 @@ class MyPageFragment : Fragment() {
     }
 
     private fun logout() {
-        (activity as FragmentActivity).finishAffinity() // 현재 activity의 모든 fragment를 제거
+        requireActivity().finishAffinity() // 현재 activity의 모든 fragment를 제거
         sessionManagement.removeSession()
 
-        val intent = Intent(activity as FragmentActivity, AuthenticationPhoneNumberActivity::class.java)
+        val intent = Intent(requireActivity(), AuthenticationPhoneNumberActivity::class.java)
         startActivity(intent)
     }
 }

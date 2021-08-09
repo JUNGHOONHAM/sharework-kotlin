@@ -91,35 +91,35 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         mView.onCreate(savedInstanceState)
         mView.getMapAsync(this)
         //mView.getMapAsync {
-        //    clusterRenderer = ClusterRenderer(activity as FragmentActivity, it, clusterManager)
+        //    clusterRenderer = ClusterRenderer(requireActivity(), it, clusterManager)
         //}
 
         imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
-        val sessionManagement = SessionManagement(activity as FragmentActivity)
+        val sessionManagement = SessionManagement(requireActivity())
         userId = sessionManagement.getSessionID()
 
-        apiService = DBClient.getClient(activity as FragmentActivity)
+        apiService = DBClient.getClient(requireActivity())
 
         homeWorkerRepository = HomeWorkerRepository(apiService)
         locationFavoritesRepository = LocationFavoritesRepository(apiService)
 
         viewModel = getViewModel()
 
-        viewModel.jobInMapList().observe(activity as FragmentActivity, {
+        viewModel.jobInMapList().observe(requireActivity(), {
             addItems(it)
         })
 
-        viewModel.getSearchPosition().observe(activity as FragmentActivity, {
+        viewModel.getSearchPosition().observe(requireActivity(), {
             map.moveCamera(CameraUpdateFactory.newLatLng(it))
         })
 
-        viewModel.networkState().observe(activity as FragmentActivity, {
+        viewModel.networkState().observe(requireActivity(), {
             binding.textViewError.visibility = if (it == NetworkState.ERROR) View.VISIBLE else View.GONE
         })
 
         locationViewModel = getViewModelLocation(userId)
-        locationViewModel.locationFavoritesList.observe(activity as FragmentActivity, Observer {
+        locationViewModel.locationFavoritesList.observe(requireActivity(), Observer {
             initSpeedDial(it)
         })
 
@@ -177,7 +177,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
         clusterManager.renderer =
             ClusterRenderer(
-                activity as FragmentActivity,
+                requireActivity(),
                 map,
                 clusterManager
             )
@@ -202,7 +202,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         clusterManager.setOnClusterClickListener(this)
         clusterManager.renderer =
             ClusterRenderer(
-                activity as FragmentActivity,
+                requireActivity(),
                 map,
                 clusterManager
             )
@@ -251,7 +251,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     }
 
     private fun locationInit() {
-        fusedLocationProviderClient = FusedLocationProviderClient(activity as FragmentActivity)
+        fusedLocationProviderClient = FusedLocationProviderClient(requireActivity())
         locationCallback = MyLocationCallBack()
 
         locationRequest = LocationRequest()   // LocationRequest객체로 위치 정보 요청 세부 설정을 함
@@ -262,7 +262,9 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     }
 
     private fun addLocationListener() {
-        if (ActivityCompat.checkSelfPermission(activity as FragmentActivity, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity as FragmentActivity, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(requireActivity(),
+                ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireActivity(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return
         }
@@ -297,12 +299,12 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
     private fun permissionCheck(cancel: () -> Unit, ok: () -> Unit) { // 전달인자도, 리턴값도 없는
         // 두 개의 함수를 받음
-        if (ContextCompat.checkSelfPermission(activity as FragmentActivity, // 권한이 없는 경우
+        if (ContextCompat.checkSelfPermission(requireActivity(), // 권한이 없는 경우
                         android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity as FragmentActivity, ACCESS_FINE_LOCATION)) { // 권한 거부 이력이 있는 경우
+            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), ACCESS_FINE_LOCATION)) { // 권한 거부 이력이 있는 경우
                 cancel()
             } else {
-                ActivityCompat.requestPermissions(activity as FragmentActivity,
+                ActivityCompat.requestPermissions(requireActivity(),
                         arrayOf(ACCESS_FINE_LOCATION),
                         REQUEST_ACCESS_FINE_LOCATION)
             }
@@ -314,7 +316,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
     private fun showPermissionInfoDialog() {
         alert("위치 권한을 허용하셔야 서비스 이용이 가능합니다.", "권한이 필요한 이유"){
             yesButton {
-                ActivityCompat.requestPermissions(activity as FragmentActivity,
+                ActivityCompat.requestPermissions(requireActivity(),
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     REQUEST_ACCESS_FINE_LOCATION)
             }
@@ -406,7 +408,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         bundle.putIntegerArrayList("jobIdList", jobIdList)
         fragment.arguments = bundle
 
-        (activity as FragmentActivity).supportFragmentManager.beginTransaction()?.add(
+        (requireActivity()).supportFragmentManager.beginTransaction()?.add(
             fragment, "test")
             .commit()
 
@@ -494,8 +496,8 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
 
                     val position = map.projection.visibleRegion.latLngBounds.center
 
-                    var dialog = DialogLocationFavorites(activity as FragmentActivity, position)
-                    dialog.show((activity as FragmentActivity).supportFragmentManager, "")
+                    var dialog = DialogLocationFavorites(requireActivity(), position)
+                    dialog.show(requireActivity().supportFragmentManager, "")
 
                     dialog.setDialogResult(object : DialogLocationFavorites.OnDialogResult{
                         override fun finish(result: ArrayList<LocationFavorites>) {

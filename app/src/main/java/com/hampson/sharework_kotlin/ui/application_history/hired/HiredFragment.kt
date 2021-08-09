@@ -26,13 +26,13 @@ class HiredFragment(private val viewModel: HistoryViewModel) : Fragment() {
 
         mBinding = binding
 
-        adapter = HistoryPagedListAdapter((activity as FragmentActivity))
+        adapter = HistoryPagedListAdapter(requireActivity())
 
-        val layout = LinearLayoutManager((activity as FragmentActivity))
+        val layout = LinearLayoutManager(requireActivity())
         binding.recyclerView.layoutManager = layout
         binding.recyclerView.adapter = adapter
 
-        viewModel.hiredLiveData.observe(activity as FragmentActivity, {
+        viewModel.hiredLiveData.observe(requireActivity(), {
             adapter.submitList(it)
         })
 

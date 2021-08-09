@@ -36,22 +36,22 @@ class ReviewFragment(private val viewModel: ProfileViewModel) : Fragment() {
 
         mBinding = binding
 
-        viewModel.rateReviewLiveData.observe(activity as FragmentActivity, {
+        viewModel.rateReviewLiveData.observe(requireActivity(), {
             setRecyclerView(it.review_base_count_list)
             setRating(it.review_rate_sum)
         })
 
-        val reviewAdapter = ReviewPagedListAdapter(activity as FragmentActivity)
+        val reviewAdapter = ReviewPagedListAdapter(requireActivity())
 
-        val layout = LinearLayoutManager((activity as FragmentActivity))
+        val layout = LinearLayoutManager(requireActivity())
         binding.recyclerView.layoutManager = layout
         binding.recyclerView.adapter = reviewAdapter
 
-        viewModel.reviewPagedList.observe(activity as FragmentActivity, {
+        viewModel.reviewPagedList.observe(requireActivity(), {
             reviewAdapter.submitList(it)
         })
 
-        viewModel.getPagedNetworkState.observe(activity as FragmentActivity, {
+        viewModel.getPagedNetworkState.observe(requireActivity(), {
             binding.progressBar.visibility = if (viewModel.listIsEmpty() && it == NetworkState.LOADING) View.VISIBLE else View.GONE
             binding.textViewError.visibility = if (viewModel.listIsEmpty() && it == NetworkState.ERROR) View.VISIBLE else View.GONE
 

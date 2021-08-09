@@ -36,23 +36,23 @@ class NotificationFragment : Fragment() {
 
         binding.toolbar.textViewToolbarTitle.text = "알림"
 
-        val apiService : DBInterface = DBClient.getClient(activity as FragmentActivity)
+        val apiService : DBInterface = DBClient.getClient(requireActivity())
 
         notificationRepository = NotificationRepository(apiService)
 
         viewModel = getViewModel()
 
-        val adapter = NotificationPagedListAdapter(activity as FragmentActivity)
+        val adapter = NotificationPagedListAdapter(requireActivity())
 
-        val layout = LinearLayoutManager((activity as FragmentActivity))
+        val layout = LinearLayoutManager(requireActivity())
         binding.recyclerView.layoutManager = layout
         binding.recyclerView.adapter = adapter
 
-        viewModel.notificationPagedList.observe(activity as FragmentActivity, Observer {
+        viewModel.notificationPagedList.observe(requireActivity(), Observer {
             adapter.submitList(it)
         })
 
-        viewModel.networkState.observe(activity as FragmentActivity, Observer {
+        viewModel.networkState.observe(requireActivity(), Observer {
             binding.progressBar.visibility = if (viewModel.listIsEmpty() && it == NetworkState.LOADING) View.VISIBLE else View.GONE
             binding.textViewError.visibility = if (viewModel.listIsEmpty() && it == NetworkState.ERROR) View.VISIBLE else View.GONE
 
