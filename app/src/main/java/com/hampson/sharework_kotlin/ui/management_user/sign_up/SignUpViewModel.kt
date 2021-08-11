@@ -63,16 +63,9 @@ class SignUpViewModel (private val apiService : DBInterface, application: Applic
         val id = it.id
         val phoneNumber = it.phone
         val email = it.email
-        val get_app_type = it.app_type
+        var appType: String = context.getString(R.string.worker)
 
-        var app_type: String = context.getString(R.string.worker)
-        if (get_app_type == "0") {
-            app_type = context.getString(R.string.giver)
-        } else if (get_app_type == "1") {
-            app_type = context.getString(R.string.worker)
-        }
-
-        val user = User(id, phoneNumber, app_type, email, null, null, null,
+        val user = User(id, null, appType, null, null, null, null,
             null, null, null, null, null)
 
         val sessionManagement = SessionManagement(context)

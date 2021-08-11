@@ -87,16 +87,9 @@ class AuthenticationPhoneNumberViewModel (private val authenticationPhoneNumberR
         val id = it.payload.smsAuth.user.id
         val phoneNumber = it.payload.smsAuth.user.phone
         val email = it.payload.smsAuth.user.email
-        val get_app_type = it.payload.smsAuth.user.app_type
+        var appType: String = context.getString(R.string.worker)
 
-        var app_type: String = context.getString(R.string.worker)
-        if (get_app_type == "0") {
-            app_type = context.getString(R.string.giver)
-        } else if (get_app_type == "1") {
-            app_type = context.getString(R.string.worker)
-        }
-
-        val user = User(id, phoneNumber, app_type, email, null, null, null, null,
+        val user = User(id, null, appType, null, null, null, null, null,
             null, null, null, null)
 
         val sessionManagement = SessionManagement(context)

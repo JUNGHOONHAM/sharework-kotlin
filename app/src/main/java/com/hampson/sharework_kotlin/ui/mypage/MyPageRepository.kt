@@ -1,16 +1,9 @@
 package com.hampson.sharework_kotlin.ui.mypage
 
-import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
 import com.hampson.sharework_kotlin.data.api.DBInterface
-import com.hampson.sharework_kotlin.data.api.POST_PER_PAGE
 import com.hampson.sharework_kotlin.data.repository.*
-import com.hampson.sharework_kotlin.data.vo.Job
-import com.hampson.sharework_kotlin.data.vo.JobApplication
-import com.hampson.sharework_kotlin.data.vo.Meta
+import com.hampson.sharework_kotlin.data.repository.user.UserInfoUpdateNetworkDataSource
 import com.hampson.sharework_kotlin.data.vo.User
 import io.reactivex.disposables.CompositeDisposable
 import okhttp3.MultipartBody
@@ -32,6 +25,13 @@ class MyPageRepository (private val apiService : DBInterface) {
         userInfoUpdateNetworkDataSource.updateProfileImage(profileImage, user_id)
 
         return userInfoUpdateNetworkDataSource.updateProfileImageResult
+    }
+
+    fun updateUser (compositeDisposable: CompositeDisposable, userId: Int, user: User) : LiveData<User> {
+        userInfoUpdateNetworkDataSource = UserInfoUpdateNetworkDataSource(apiService, compositeDisposable)
+        userInfoUpdateNetworkDataSource.updateUser(userId, user)
+
+        return userInfoUpdateNetworkDataSource.downloadedUserResponse
     }
 
     fun getNetworkState(): LiveData<NetworkState> {

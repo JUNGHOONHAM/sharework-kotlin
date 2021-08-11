@@ -7,6 +7,7 @@ import androidx.paging.PagedList
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.api.POST_PER_PAGE
 import com.hampson.sharework_kotlin.data.repository.*
+import com.hampson.sharework_kotlin.data.repository.user.UserInfoUpdateNetworkDataSource
 import com.hampson.sharework_kotlin.data.vo.*
 import io.reactivex.disposables.CompositeDisposable
 

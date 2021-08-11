@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,6 +86,17 @@ class MyPageFragment : Fragment() {
             }
         })
 
+        viewModel.updateAppTypeLiveData().observe(requireActivity(), {
+            var appType = ""
+            if (appType == "2") {
+                appType = requireActivity().getString(R.string.giver)
+            } else {
+                appType = requireActivity().getString(R.string.worker)
+            }
+
+
+        })
+
         viewModel.networkState().observe(requireActivity(), {
             binding.progressBar.visibility = if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
             binding.textViewError.visibility = if (it == NetworkState.ERROR) View.VISIBLE else View.GONE
@@ -117,7 +129,8 @@ class MyPageFragment : Fragment() {
         }
 
         binding.textViewAppTypeChange.setOnClickListener {
-
+            updateAppType()
+            activity?.finish()
         }
 
         binding.textViewLogout.setOnClickListener {
@@ -165,7 +178,7 @@ class MyPageFragment : Fragment() {
             .placeholder(R.drawable.ic_baseline_account_circle_24)
             .into(mBinding?.imageViewProfile!!)
 
-        if (user.app_type == "0") {
+        if (sessionManagement.getAppType() == requireActivity().getString(R.string.worker)) {
             mBinding?.textViewAppTypeChange?.text = "일 주는 사람으로 변경"
         } else {
             mBinding?.textViewAppTypeChange?.text = "일 하는 사람으로 변경"
@@ -247,5 +260,23 @@ class MyPageFragment : Fragment() {
 
         val intent = Intent(requireActivity(), AuthenticationPhoneNumberActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun updateAppType() {
+        val userId = sessionManagement.getSessionID()
+        var appType = sessionManagement.getAppType()
+
+        if (appType == requireActivity().getString(R.string.worker)) {
+            appType = requireActivity().getString(R.string.giver)
+        } else {
+            appType = requireActivity().getString(R.string.worker)
+        }
+
+        val user = User(userId, null, appType, null, null, null, null,
+            null, null, null, null, null)
+
+        val sessionManagement = SessionManagement(requireContext())
+        sessionManagement.removeSession()
+        sessionManagement.saveSession(user)
     }
 }
