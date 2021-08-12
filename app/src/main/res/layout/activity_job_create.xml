@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/layoutMain"
+    android:background="#ffffff"
+    android:layout_width="wrap_content" android:layout_height="fill_parent">
 
     <include
         android:id="@+id/toolbar"
@@ -22,4 +23,555 @@
         android:gravity="center"
         android:text="연결에 실패했습니다."
         android:visibility="gone" />
+
+    <ScrollView
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:scrollbars="vertical"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:fitsSystemWindows="true"
+            android:background="#ffffff"
+            >
+
+            <!-- 날짜, 시간 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="24dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="24dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="공고 제목"
+                        android:textColor="#000000"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:hint="공고 제목을 입력해 주세요."
+                        android:textSize="14sp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/background_right_angle_gray"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="24dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="일할 장소"
+                        android:textColor="#000000"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="10"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textViewAddress1"
+                            android:layout_weight="8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:textSize="14sp"
+                            android:gravity="center_vertical"
+                            android:textColor="#000000"
+                            android:background="@drawable/background_right_angle_gray"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp" />
+
+                        <Button
+                            android:id="@+id/btnAddress"
+                            android:layout_weight="2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:layout_marginLeft="6dp"
+                            android:text="주소검색"
+                            android:textColor="#64d8d1"
+                            android:textStyle="bold"
+                            android:background="@drawable/background_right_angle_gray"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/editTextAddress2"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:textSize="14sp"
+                        android:hint=""
+                        android:gravity="center_vertical"
+                        android:background="@drawable/background_right_angle_gray"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="24dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="도움이 필요한 날짜"
+                        android:textColor="#000000"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textViewDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:hint="날짜를 선택해 주세요."
+                        android:textSize="14sp"
+                        android:textColor="#000000"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/background_right_angle_gray"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="10"
+                    android:layout_marginBottom="24dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="시작시간"
+                            android:textColor="#000000"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textViewStartTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:textSize="14sp"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/background_right_angle_gray"
+                            android:paddingLeft="15dp"
+                            android:textColor="#000000"
+                            android:paddingRight="15dp" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:layout_marginLeft="8dp"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="종료시간"
+                            android:textColor="#000000"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textViewEndTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:textSize="14sp"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/background_right_angle_gray"
+                            android:paddingLeft="15dp"
+                            android:textColor="#000000"
+                            android:paddingRight="15dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="24dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="필요한 인원"
+                        android:textColor="#000000"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textViewPersonnel"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:textSize="14sp"
+                        android:textColor="#000000"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/background_right_angle_gray"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="24dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="업무 태그"
+                        android:textColor="#000000"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="업무와 관련된 키워드를 추가해주세요."
+                        android:textColor="#707070"
+                        android:textSize="12sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/layoutTag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" />
+
+                        <Button
+                            android:id="@+id/btnTag"
+                            android:layout_width="match_parent"
+                            android:layout_height="33dp"
+                            android:background="@drawable/background_right_angle_gray"
+                            android:text="+ 추가하기"
+                            android:textColor="#ffffff"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="10"
+                    android:layout_marginBottom="24dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="임금"
+                            android:textColor="#000000"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <Spinner
+                                android:id="@+id/spinnerPayType"
+                                android:layout_width="90dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="6dp"
+                                android:background="@drawable/background_right_angle_gray"
+                                android:gravity="center"
+                                android:textAlignment="center"
+                                android:spinnerMode="dropdown" />
+
+                            <EditText
+                                android:id="@+id/editTextPay"
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:textSize="14sp"
+                                android:gravity="center_vertical"
+                                android:background="@drawable/background_right_angle_gray"
+                                android:paddingLeft="15dp"
+                                android:textColor="#000000"
+                                android:inputType="number"
+                                android:paddingRight="15dp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:layout_marginLeft="8dp"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="당일지급"
+                            android:textColor="#000000"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switchBtnPayment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="24dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="상세설명"
+                        android:textColor="#000000"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextContents"
+                        android:layout_width="match_parent"
+                        android:layout_height="136dp"
+                        android:textSize="14sp"
+                        android:gravity="top"
+                        android:background="@drawable/background_right_angle_gray"
+                        android:hint="업무에 대한 자세한 내용을 써주세요."
+                        android:paddingTop="15dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:background="#f7f7f7"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginBottom="40dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="상세 정보 등록"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="상세 정보를 입력해 주시면 큰 도움이 됩니다."
+                    android:textColor="#919191"
+                    android:layout_marginBottom="24dp"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="제공항목"
+                    android:layout_marginBottom="16dp"
+                    android:textSize="14sp"
+                    android:textColor="#000000" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="40dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginRight="16dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/imageViewFoodOn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp"
+                            android:background="@drawable/background_round_fill_mint"
+                            android:visibility="gone"
+                            android:src="@drawable/ic_baseline_fastfood_24_mint" />
+
+                        <ImageView
+                            android:id="@+id/imageViewFoodOff"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/background_round_fill_gray"
+                            android:padding="15dp"
+                            android:src="@drawable/ic_baseline_fastfood_24_gray" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="식사제공"
+                            android:textSize="14sp"
+                            android:layout_marginTop="8dp"
+                            android:textColor="#707070" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginRight="16dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/imageViewExtrapayOn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp"
+                            android:background="@drawable/background_round_fill_mint"
+                            android:visibility="gone"
+                            android:src="@drawable/ic_baseline_attach_money_24_mint" />
+
+                        <ImageView
+                            android:id="@+id/imageViewExtrapayOff"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp"
+                            android:background="@drawable/background_round_fill_gray"
+                            android:src="@drawable/ic_baseline_attach_money_24_gray" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="교통비지원"
+                            android:textColor="#707070"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="체크리스트"
+                    android:layout_marginBottom="8dp"
+                    android:textSize="14sp"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="알바에게 궁금한 항목을 선택해주세요.\n알바가 지원할 때 체크하게 됩니다."
+                    android:layout_marginBottom="16dp"
+                    android:textSize="14sp"
+                    android:textColor="#919191" />
+
+                <LinearLayout
+                    android:id="@+id/layoutChecklist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewChecklist"
+                        android:layout_width="match_parent"
+                        android:overScrollMode="never"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnChecklist"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="+ 체크리스트 등록"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="32dp"
+                    android:background="@drawable/background_fill_mint" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnCreateJob"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="공고 등록"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="#ffffff"
+        android:layout_gravity="center"
+        android:background="@drawable/background_fill_mint"/>
 </LinearLayout>
