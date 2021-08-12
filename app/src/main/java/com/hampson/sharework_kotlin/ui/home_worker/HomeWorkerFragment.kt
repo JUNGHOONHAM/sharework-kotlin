@@ -1,4 +1,4 @@
-package com.hampson.sharework_kotlin.ui.home
+package com.hampson.sharework_kotlin.ui.home_worker
 
 import android.Manifest
 import android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -37,12 +36,12 @@ import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.data.vo.LocationFavorites
-import com.hampson.sharework_kotlin.databinding.FragmentHomeworkerBinding
+import com.hampson.sharework_kotlin.databinding.FragmentHomeWorkerBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.BottomSheetJobList
-import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.DialogLocationFavorites
-import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.LocationFavoritesRepository
-import com.hampson.sharework_kotlin.ui.home.fab_location_favorites.LocationFavoritesViewModel
+import com.hampson.sharework_kotlin.ui.home_worker.bottom_sheet_job_list.BottomSheetJobList
+import com.hampson.sharework_kotlin.ui.home_worker.fab_location_favorites.DialogLocationFavorites
+import com.hampson.sharework_kotlin.ui.home_worker.fab_location_favorites.LocationFavoritesRepository
+import com.hampson.sharework_kotlin.ui.home_worker.fab_location_favorites.LocationFavoritesViewModel
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
 import org.jetbrains.anko.noButton
@@ -51,7 +50,7 @@ import org.jetbrains.anko.yesButton
 
 class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClusterClickListener<HomeWorkerFragment.MyClusterItem> {
 
-    private var mBinding : FragmentHomeworkerBinding? = null
+    private var mBinding : FragmentHomeWorkerBinding? = null
     private lateinit var mView : MapView
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -82,7 +81,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentHomeworkerBinding.inflate(inflater, container, false)
+        val binding = FragmentHomeWorkerBinding.inflate(inflater, container, false)
 
         mBinding = binding
         speedDialView = binding.speedDial

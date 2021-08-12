@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/homeWorkerFragment"
-        android:name="com.hampson.sharework_kotlin.ui.home.HomeWorkerFragment"
-        android:label="fragment_homeworker"
-        tools:layout="@layout/fragment_homeworker" />
+        android:name="com.hampson.sharework_kotlin.ui.home_worker.HomeWorkerFragment"
+        android:label="fragment_home_worker"
+        tools:layout="@layout/fragment_home_worker" />
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.hampson.sharework_kotlin.ui.application_history.HistoryFragment"

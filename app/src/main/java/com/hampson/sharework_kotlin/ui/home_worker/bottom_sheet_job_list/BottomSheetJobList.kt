@@ -1,14 +1,12 @@
-package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list
+package com.hampson.sharework_kotlin.ui.home_worker.bottom_sheet_job_list
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel

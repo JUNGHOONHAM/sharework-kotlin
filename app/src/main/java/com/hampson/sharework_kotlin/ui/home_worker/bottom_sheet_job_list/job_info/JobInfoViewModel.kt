@@ -1,19 +1,12 @@
-package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.job_info
+package com.hampson.sharework_kotlin.ui.home_worker.bottom_sheet_job_list.job_info
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
-import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.data.vo.JobApplication
-import com.hampson.sharework_kotlin.data.vo.LocationFavorites
 import com.hampson.sharework_kotlin.data.vo.Response
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import java.lang.Exception
 
 class JobInfoViewModel (private val jobInfoRepository: JobInfoRepository) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()

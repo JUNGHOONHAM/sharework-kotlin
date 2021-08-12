@@ -1,8 +1,7 @@
-package com.hampson.sharework_kotlin.ui.home.fab_location_favorites
+package com.hampson.sharework_kotlin.ui.home_worker.fab_location_favorites
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView

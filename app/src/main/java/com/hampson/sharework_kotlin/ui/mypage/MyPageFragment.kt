@@ -10,14 +10,12 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -29,13 +27,14 @@ import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.User
 import com.hampson.sharework_kotlin.databinding.FragmentMypageBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.job_info.JobInfoActivity
+import com.hampson.sharework_kotlin.ui.GiverMainActivity
+import com.hampson.sharework_kotlin.ui.SplashActivity
+import com.hampson.sharework_kotlin.ui.WorkerMainActivity
 import com.hampson.sharework_kotlin.ui.management_user.authentication_phone_number.AuthenticationPhoneNumberActivity
 import com.hampson.sharework_kotlin.ui.mypage.payment_history.PaymentHistoryWorkerActivity
 import com.hampson.sharework_kotlin.ui.mypage.profile_update.UserInfoUpdateActivity
 import com.hampson.sharework_kotlin.ui.user_profile.ProfileActivity
 import ir.androidexception.andexalertdialog.AndExAlertDialog
-import ir.androidexception.andexalertdialog.AndExAlertDialogListener
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -86,17 +85,6 @@ class MyPageFragment : Fragment() {
             }
         })
 
-        viewModel.updateAppTypeLiveData().observe(requireActivity(), {
-            var appType = ""
-            if (appType == "2") {
-                appType = requireActivity().getString(R.string.giver)
-            } else {
-                appType = requireActivity().getString(R.string.worker)
-            }
-
-
-        })
-
         viewModel.networkState().observe(requireActivity(), {
             binding.progressBar.visibility = if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
             binding.textViewError.visibility = if (it == NetworkState.ERROR) View.VISIBLE else View.GONE
@@ -130,6 +118,7 @@ class MyPageFragment : Fragment() {
 
         binding.textViewAppTypeChange.setOnClickListener {
             updateAppType()
+            moveToMainActivity()
             activity?.finish()
         }
 
@@ -278,5 +267,16 @@ class MyPageFragment : Fragment() {
         val sessionManagement = SessionManagement(requireContext())
         sessionManagement.removeSession()
         sessionManagement.saveSession(user)
+    }
+
+    fun moveToMainActivity() {
+        var intent: Intent
+        if (sessionManagement.getAppType() == getString(R.string.worker)) {
+            intent = Intent(requireContext(), WorkerMainActivity::class.java)
+        } else {
+            intent = Intent(requireContext(), GiverMainActivity::class.java)
+        }
+
+        startActivity(intent)
     }
 }

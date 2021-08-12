@@ -1,9 +1,7 @@
-package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.job_info
+package com.hampson.sharework_kotlin.ui.home_worker.bottom_sheet_job_list.job_info
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,13 +10,9 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.maps.model.LatLng
 import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.vo.JobChecklists
-import com.hampson.sharework_kotlin.data.vo.LocationFavorites
-import com.hampson.sharework_kotlin.data.vo.UserChecklist
 import com.hampson.sharework_kotlin.databinding.DialogJobInfoChecklistBinding
-import com.hampson.sharework_kotlin.session.SessionManagement
 
 class DialogJobInfoChecklist(context: FragmentActivity?, jobChecklists: ArrayList<JobChecklists>): DialogFragment(),
     JobInfoChecklistAdapter.OnItemClickListener {

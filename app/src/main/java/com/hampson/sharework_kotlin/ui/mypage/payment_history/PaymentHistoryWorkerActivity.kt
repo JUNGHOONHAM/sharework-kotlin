@@ -2,11 +2,8 @@ package com.hampson.sharework_kotlin.ui.mypage.payment_history
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +13,6 @@ import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.Meta
 import com.hampson.sharework_kotlin.databinding.ActivityPaymentHistoryWorkerBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.JobPagedListRepository
 import java.text.DecimalFormat
 import java.util.*
 

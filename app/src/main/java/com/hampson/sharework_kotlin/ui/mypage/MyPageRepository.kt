@@ -27,13 +27,6 @@ class MyPageRepository (private val apiService : DBInterface) {
         return userInfoUpdateNetworkDataSource.updateProfileImageResult
     }
 
-    fun updateUser (compositeDisposable: CompositeDisposable, userId: Int, user: User) : LiveData<User> {
-        userInfoUpdateNetworkDataSource = UserInfoUpdateNetworkDataSource(apiService, compositeDisposable)
-        userInfoUpdateNetworkDataSource.updateUser(userId, user)
-
-        return userInfoUpdateNetworkDataSource.downloadedUserResponse
-    }
-
     fun getNetworkState(): LiveData<NetworkState> {
         return userInfoUpdateNetworkDataSource.networkState
     }

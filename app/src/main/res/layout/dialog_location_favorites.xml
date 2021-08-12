@@ -6,7 +6,7 @@
     android:layout_gravity="center"
     android:layout_height="match_parent"
     android:minHeight="320dp"
-    tools:context=".ui.home.fab_location_favorites.DialogLocationFavorites">
+    tools:context=".ui.home_worker.fab_location_favorites.DialogLocationFavorites">
 
     <LinearLayout
         android:id="@+id/toolbar"

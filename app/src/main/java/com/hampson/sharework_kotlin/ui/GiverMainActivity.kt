@@ -5,16 +5,16 @@ import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.hampson.sharework_kotlin.R
-import com.hampson.sharework_kotlin.databinding.ActivityMainBinding
+import com.hampson.sharework_kotlin.databinding.ActivityGiverMainBinding
 
-class MainActivity : AppCompatActivity() {
+class GiverMainActivity : AppCompatActivity() {
 
-    private lateinit var  mBinding : ActivityMainBinding
+    private lateinit var  mBinding : ActivityGiverMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mBinding = ActivityMainBinding.inflate(layoutInflater)
+        mBinding = ActivityGiverMainBinding.inflate(layoutInflater)
 
         setContentView(mBinding.root)
 

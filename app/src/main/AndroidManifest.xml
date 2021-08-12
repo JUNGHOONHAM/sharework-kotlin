@@ -34,7 +34,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.MainActivity"></activity>
+        <activity android:name=".ui.WorkerMainActivity" />
+        <activity android:name=".ui.GiverMainActivity" />
 
         <activity android:name=".ui.management_user.authentication_phone_number.AuthenticationPhoneNumberActivity" />
         <activity android:name=".ui.management_user.sign_up.SignUpActivity" />
@@ -44,6 +45,6 @@
 
         <activity android:name=".ui.user_profile.ProfileActivity" />
 
-        <activity android:name=".ui.home.bottom_sheet_job_list.job_info.JobInfoActivity" />
+        <activity android:name=".ui.home_worker.bottom_sheet_job_list.job_info.JobInfoActivity" />
     </application>
 </manifest>

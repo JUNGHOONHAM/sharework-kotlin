@@ -1,17 +1,12 @@
-package com.hampson.sharework_kotlin.ui.home.fab_location_favorites
+package com.hampson.sharework_kotlin.ui.home_worker.fab_location_favorites
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.paging.PagedList
-import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
-import com.hampson.sharework_kotlin.data.vo.JobApplication
 import com.hampson.sharework_kotlin.data.vo.LocationFavorites
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import java.lang.Exception
 
 class LocationFavoritesViewModel (private val locationFavoritesRepository: LocationFavoritesRepository, userId: Int) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()

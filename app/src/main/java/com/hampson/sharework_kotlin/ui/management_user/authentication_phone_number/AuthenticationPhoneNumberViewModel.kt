@@ -1,21 +1,17 @@
 package com.hampson.sharework_kotlin.ui.management_user.authentication_phone_number
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.hampson.sharework_kotlin.R
-import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.*
 import com.hampson.sharework_kotlin.session.SessionManagement
-import com.hampson.sharework_kotlin.ui.MainActivity
+import com.hampson.sharework_kotlin.ui.WorkerMainActivity
 import com.hampson.sharework_kotlin.ui.management_user.sign_up.SignUpActivity
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import java.lang.Exception
 
 class AuthenticationPhoneNumberViewModel (private val authenticationPhoneNumberRepository : AuthenticationPhoneNumberRepository,
                                           application: Application) : AndroidViewModel(application) {
@@ -73,7 +69,7 @@ class AuthenticationPhoneNumberViewModel (private val authenticationPhoneNumberR
             if (value != null) {
                 if (value.payload.meta.is_already_auth_phone_number) {
                     saveSession(value)
-                    moveToActivity(MainActivity::class.java)
+                    moveToActivity(WorkerMainActivity::class.java)
                 } else {
                     isNotPhoneNumber()
                 }

@@ -2,28 +2,18 @@ package com.hampson.sharework_kotlin.ui.notification
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.repository.NetworkState
-import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.data.vo.Notification
-import com.hampson.sharework_kotlin.data.vo.Tag
-import com.hampson.sharework_kotlin.databinding.ItemJobListBinding
 import com.hampson.sharework_kotlin.databinding.ItemNotificationBinding
 import com.hampson.sharework_kotlin.databinding.NetworkStateItemBinding
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.job_info.JobInfoActivity
-import org.jetbrains.anko.backgroundResource
-import java.io.Serializable
+import com.hampson.sharework_kotlin.ui.home_worker.bottom_sheet_job_list.job_info.JobInfoActivity
 
 class NotificationPagedListAdapter(public val context: Context) : PagedListAdapter<Notification, RecyclerView.ViewHolder>(
     NotificationDiffCallback()

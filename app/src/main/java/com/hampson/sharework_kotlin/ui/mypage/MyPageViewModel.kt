@@ -22,7 +22,6 @@ class MyPageViewModel (private val myPageRepository: MyPageRepository, private v
 
     private val networkStateLiveData: MutableLiveData<NetworkState> = MutableLiveData()
     private val updateProfileLiveData: MediatorLiveData<Boolean> = MediatorLiveData()
-    private val updateAppTypeLiveData: MediatorLiveData<User> = MediatorLiveData<User>()
 
     val userInfoLiveData : LiveData<User> by lazy {
         myPageRepository.getUser(compositeDisposable, userId)
@@ -30,10 +29,6 @@ class MyPageViewModel (private val myPageRepository: MyPageRepository, private v
 
     fun updateProfileLiveData() : LiveData<Boolean> {
         return updateProfileLiveData
-    }
-
-    fun updateAppTypeLiveData() : LiveData<User> {
-        return updateAppTypeLiveData
     }
 
     fun networkState() : LiveData<NetworkState> {
@@ -51,15 +46,6 @@ class MyPageViewModel (private val myPageRepository: MyPageRepository, private v
 
         updateProfileLiveData.addSource(repositoryLiveData) { value: Boolean ->
             updateProfileLiveData.setValue(value)
-        }
-    }
-
-    fun updateUser(user: User) {
-        val repositoryLiveData: LiveData<User> =
-            myPageRepository.updateUser(compositeDisposable, userId, user)
-
-        updateAppTypeLiveData.addSource(repositoryLiveData) { value: User ->
-            updateAppTypeLiveData.setValue(value)
         }
     }
 }

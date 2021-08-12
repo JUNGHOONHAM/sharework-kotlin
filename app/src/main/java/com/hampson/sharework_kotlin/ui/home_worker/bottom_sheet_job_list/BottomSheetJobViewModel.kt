@@ -1,4 +1,4 @@
-package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list
+package com.hampson.sharework_kotlin.ui.home_worker.bottom_sheet_job_list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

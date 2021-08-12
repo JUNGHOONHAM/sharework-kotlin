@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -14,9 +13,6 @@ import com.hampson.sharework_kotlin.data.api.DBClient
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.databinding.FragmentNotificationBinding
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.BottomSheetJobPagedListAdapter
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.BottomSheetJobViewModel
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.JobPagedListRepository
 
 class NotificationFragment : Fragment() {
 

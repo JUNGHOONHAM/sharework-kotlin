@@ -1,16 +1,12 @@
 package com.hampson.sharework_kotlin.data.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.vo.*
-import com.hampson.sharework_kotlin.ui.MainActivity
-import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
-import java.util.logging.Handler
 
 class AuthenticationPhoneNumberNetworkDataSource (private val apiService : DBInterface, private val compositeDisposable : CompositeDisposable) {
     private val _networkState = MutableLiveData<NetworkState>()

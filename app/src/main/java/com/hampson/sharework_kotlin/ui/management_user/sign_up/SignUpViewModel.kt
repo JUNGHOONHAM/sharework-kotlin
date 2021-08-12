@@ -8,7 +8,7 @@ import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.vo.User
 import com.hampson.sharework_kotlin.session.SessionManagement
-import com.hampson.sharework_kotlin.ui.MainActivity
+import com.hampson.sharework_kotlin.ui.WorkerMainActivity
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
@@ -44,7 +44,7 @@ class SignUpViewModel (private val apiService : DBInterface, application: Applic
                         {
                             if (it.status == "success") {
                                 saveSession(it.payload.user)
-                                moveToActivity(MainActivity::class.java)
+                                moveToActivity(WorkerMainActivity::class.java)
                             } else {
 
                             }

@@ -1,9 +1,11 @@
 package com.hampson.sharework_kotlin.ui
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
+import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.databinding.ActivitySplashBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
 import com.hampson.sharework_kotlin.ui.management_user.authentication_phone_number.AuthenticationPhoneNumberActivity
@@ -37,8 +39,14 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    private fun moveToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
+    fun moveToMainActivity() {
+        var intent: Intent
+        if (sessionManagement.getAppType() == getString(R.string.worker)) {
+            intent = Intent(this, WorkerMainActivity::class.java)
+        } else {
+            intent = Intent(this, GiverMainActivity::class.java)
+        }
+
         startActivity(intent)
     }
 

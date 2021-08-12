@@ -1,13 +1,11 @@
-package com.hampson.sharework_kotlin.ui.home.fab_location_favorites
+package com.hampson.sharework_kotlin.ui.home_worker.fab_location_favorites
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.LocationFavoritesNetworkDataSource
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.LocationFavorites
-import com.hampson.sharework_kotlin.data.vo.Response
 import io.reactivex.disposables.CompositeDisposable
 
 class LocationFavoritesRepository (private val apiService : DBInterface) {

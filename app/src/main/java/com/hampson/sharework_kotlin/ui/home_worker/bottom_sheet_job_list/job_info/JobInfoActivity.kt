@@ -1,4 +1,4 @@
-package com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.job_info
+package com.hampson.sharework_kotlin.ui.home_worker.bottom_sheet_job_list.job_info
 
 import android.content.Context
 import android.graphics.Color

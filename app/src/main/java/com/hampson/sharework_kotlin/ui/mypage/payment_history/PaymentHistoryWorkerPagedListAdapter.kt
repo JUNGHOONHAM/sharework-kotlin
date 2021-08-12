@@ -1,32 +1,16 @@
 package com.hampson.sharework_kotlin.ui.mypage.payment_history
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.data.repository.NetworkState
-import com.hampson.sharework_kotlin.data.vo.Job
 import com.hampson.sharework_kotlin.data.vo.JobApplication
-import com.hampson.sharework_kotlin.data.vo.Tag
-import com.hampson.sharework_kotlin.databinding.ActivityPaymentHistoryWorkerBinding
 import com.hampson.sharework_kotlin.databinding.ItemPaymentHistoryWorkerBinding
 import com.hampson.sharework_kotlin.databinding.NetworkStateItemBinding
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.job_info.JobInfoActivity
-import org.jetbrains.anko.backgroundResource
-import java.io.Serializable
 
 class PaymentHistoryWorkerPagedListAdapter(public val context: Context) : PagedListAdapter<JobApplication, RecyclerView.ViewHolder>(
     ApplicationDiffCallback()

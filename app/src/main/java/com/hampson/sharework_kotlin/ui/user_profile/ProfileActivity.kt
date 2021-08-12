@@ -3,11 +3,8 @@ package com.hampson.sharework_kotlin.ui.user_profile
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hampson.sharework_kotlin.R
@@ -15,11 +12,8 @@ import com.hampson.sharework_kotlin.data.api.DBClient
 import com.hampson.sharework_kotlin.data.api.DBInterface
 import com.hampson.sharework_kotlin.data.repository.NetworkState
 import com.hampson.sharework_kotlin.data.vo.User
-import com.hampson.sharework_kotlin.databinding.ActivityMainBinding
 import com.hampson.sharework_kotlin.databinding.ActivityProfileBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
-import com.hampson.sharework_kotlin.ui.mypage.MyPageRepository
-import com.hampson.sharework_kotlin.ui.mypage.MyPageViewModel
 
 class ProfileActivity : AppCompatActivity() {
 

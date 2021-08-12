@@ -18,7 +18,7 @@ import com.hampson.sharework_kotlin.data.vo.JobApplication
 import com.hampson.sharework_kotlin.data.vo.Tag
 import com.hampson.sharework_kotlin.databinding.ItemJobListBinding
 import com.hampson.sharework_kotlin.databinding.NetworkStateItemBinding
-import com.hampson.sharework_kotlin.ui.home.bottom_sheet_job_list.job_info.JobInfoActivity
+import com.hampson.sharework_kotlin.ui.home_worker.bottom_sheet_job_list.job_info.JobInfoActivity
 import org.jetbrains.anko.backgroundResource
 
 class HistoryPagedListAdapter(public val context: Context) : PagedListAdapter<JobApplication, RecyclerView.ViewHolder>(
