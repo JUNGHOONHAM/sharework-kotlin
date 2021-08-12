@@ -15,11 +15,11 @@
         android:name="com.hampson.sharework_kotlin.ui.chat.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" />
-    <fragment
-        android:id="@+id/historyFragment"
-        android:name="com.hampson.sharework_kotlin.ui.application_history.HistoryFragment"
-        android:label="fragment_history"
-        tools:layout="@layout/fragment_history" />
+    <activity
+        android:id="@+id/jobCreateActivity"
+        android:name="com.hampson.sharework_kotlin.ui.job_create.JobCreateActivity"
+        android:label="activity_job_create"
+        tools:layout="@layout/activity_job_create" />
     <fragment
         android:id="@+id/notificationFragment"
         android:name="com.hampson.sharework_kotlin.ui.notification.NotificationFragment"

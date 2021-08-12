@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/homeGiverFragment"
         android:icon="@drawable/ic_bottom_home"
@@ -7,13 +8,13 @@
         />
 
     <item
-        android:id="@+id/historyFragment"
+        android:id="@+id/chatFragment"
         android:icon="@drawable/ic_bottom_chat"
         android:title="채팅"
         />
 
     <item
-        android:id="@+id/chatFragment"
+        android:id="@+id/jobCreateActivity"
         android:icon="@drawable/ic_bottom_write"
         android:title="일감등록"
         />

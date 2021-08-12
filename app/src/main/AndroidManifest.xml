@@ -46,5 +46,7 @@
         <activity android:name=".ui.user_profile.ProfileActivity" />
 
         <activity android:name=".ui.home_worker.bottom_sheet_job_list.job_info.JobInfoActivity" />
+
+        <activity android:name=".ui.job_create.JobCreateActivity" />
     </application>
 </manifest>
