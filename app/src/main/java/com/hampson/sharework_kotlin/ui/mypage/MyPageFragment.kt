@@ -101,7 +101,6 @@ class MyPageFragment : Fragment() {
                 intent.type = MediaStore.Images.Media.CONTENT_TYPE
                 startActivityForResult(intent, PICK_FROM_ALBUM)
             }
-
         }
 
         binding.layoutMyProfile.setOnClickListener {

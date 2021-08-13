@@ -111,7 +111,7 @@
                             android:paddingRight="15dp" />
 
                         <Button
-                            android:id="@+id/btnAddress"
+                            android:id="@+id/buttonAddress"
                             android:layout_weight="2"
                             android:layout_width="wrap_content"
                             android:layout_height="48dp"
@@ -293,7 +293,7 @@
                             android:orientation="horizontal" />
 
                         <Button
-                            android:id="@+id/btnTag"
+                            android:id="@+id/buttonTag"
                             android:layout_width="match_parent"
                             android:layout_height="33dp"
                             android:background="@drawable/background_right_angle_gray"
@@ -553,7 +553,7 @@
                 </LinearLayout>
 
                 <Button
-                    android:id="@+id/btnChecklist"
+                    android:id="@+id/buttonChecklist"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:text="+ 체크리스트 등록"
@@ -565,7 +565,7 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/btnCreateJob"
+        android:id="@+id/buttonCreateJob"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:text="공고 등록"
