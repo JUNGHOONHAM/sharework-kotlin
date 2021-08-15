@@ -23,6 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         app:menu="@menu/worker_bottom_nav_menu"
+        app:itemHorizontalTranslationEnabled="false"
+        app:labelVisibilityMode="labeled"
         android:background="#ffffff"
         />
 
