@@ -408,7 +408,7 @@ class HomeWorkerFragment : Fragment(), OnMapReadyCallback, ClusterManager.OnClus
         fragment.arguments = bundle
 
         (requireActivity()).supportFragmentManager.beginTransaction()?.add(
-            fragment, "test")
+            fragment, "com.hampson.sharework_kotlin.test")
             .commit()
 
         return true

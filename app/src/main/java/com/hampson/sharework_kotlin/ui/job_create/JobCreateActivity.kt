@@ -2,42 +2,30 @@ package com.hampson.sharework_kotlin.ui.job_create
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.graphics.Color
 import android.os.Bundle
-import android.view.View
 import android.widget.DatePicker
+import android.widget.TextView
+import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.hampson.sharework_kotlin.data.api.DBClient
-import com.hampson.sharework_kotlin.data.api.DBInterface
-import com.hampson.sharework_kotlin.data.repository.NetworkState
-import com.hampson.sharework_kotlin.data.vo.Meta
+import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.databinding.ActivityJobCreateBinding
-import com.hampson.sharework_kotlin.databinding.ActivityPaymentHistoryWorkerBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
-import java.text.DecimalFormat
 import java.util.*
 
-class JobCreateActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
+class JobCreateActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityJobCreateBinding
 
     private var userId: Int = -1
     private lateinit var sessionManagement: SessionManagement
 
-    private var day = 0
-    private var month = 0
-    private var year = 0
-    private var hour = 0
-    private var minute = 0
+    private val DEFAULT_INTERVAL = 10
+    private val MINUTES_MIN = 0
+    private val MINUTES_MAX = 60
 
-    private var savedDay = 0
-    private var savedMonth = 0
-    private var savedYear = 0
-    private var savedHour = 0
-    private var savedMinute = 0
+    private var jobDate = ""
+    private var startDate = ""
+    private var endDate = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,18 +45,17 @@ class JobCreateActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
 
         // 날짜 선택
         mBinding.textViewDate.setOnClickListener {
-            getDateCalendar()
-            DatePickerDialog(this, this, year, month, day).show()
+            showDatePickerDialog()
         }
 
         // 시작 시간 선택
         mBinding.textViewStartTime.setOnClickListener {
-
+            showTimePickerDialog(mBinding.textViewStartTime)
         }
 
         // 마감 시간 선택
         mBinding.textViewEndTime.setOnClickListener {
-
+            showTimePickerDialog(mBinding.textViewEndTime)
         }
 
         // 인원 선택
@@ -97,28 +84,58 @@ class JobCreateActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         }
     }
 
-    private fun pickDate() {
+    private fun showDatePickerDialog() {
 
+        val calendar: Calendar = Calendar.getInstance()
+        DatePickerDialog(
+            this,
+            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                // 선택된 날짜가 필요하면 이 currentDate 변수를 적절하게 사용하면 된다.
+                //val currentDate =
+                //    Calendar.getInstance().apply { set(year, monthOfYear, dayOfMonth) }
+
+                val selectYear = year
+                val selectMonth = monthOfYear + 1
+                val selectDay = dayOfMonth
+
+                jobDate = "$selectYear-$selectMonth-$selectDay"
+                mBinding.textViewDate.text = jobDate
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).apply {
+            val calendar: Calendar = Calendar.getInstance()
+            val currentTime = calendar.timeInMillis // 현재 시간
+
+            calendar.add(Calendar.DATE, 7)
+            val maxDay = calendar.timeInMillis // 일주일
+
+            datePicker.minDate = currentTime
+            datePicker.maxDate = maxDay
+        }.show()
     }
 
-    private fun getDateCalendar() {
+    private fun showTimePickerDialog(textView: TextView) {
         val cal = Calendar.getInstance()
-        day = cal.get(Calendar.DAY_OF_MONTH)
-        month = cal.get(Calendar.MONTH)
-        year = cal.get(Calendar.YEAR)
-    }
 
-    private fun getTimeCalendar() {
-        val cal = Calendar.getInstance()
-        hour = cal.get(Calendar.HOUR)
-        minute = cal.get(Calendar.MINUTE)
-    }
+        val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
+            cal.set(Calendar.HOUR_OF_DAY, hour)
+            cal.set(Calendar.MINUTE, minute)
 
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        savedDay = dayOfMonth
-        savedMonth = month
-        savedYear = year
+            if (textView == mBinding.textViewStartTime) {
+                startDate = "$hour:$minute"
+                textView.text = startDate
+            } else if (textView == mBinding.textViewEndTime) {
+                endDate = "$hour:$minute"
+                textView.text = endDate
+            }
+        }
 
-        getDateCalendar()
+        TimePickerDialog(
+            this,
+            android.R.style.Theme_Holo_Dialog,
+            timeSetListener,
+            cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false).show()
     }
 }

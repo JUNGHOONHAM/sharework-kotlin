@@ -15,7 +15,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.com.hampson.sharework_kotlin.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -45,8 +45,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.com.hampson.sharework_kotlin.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.com.hampson.sharework_kotlin.test.espresso:espresso-core:3.3.0'
 
     def lifecycle_version = "2.3.1"
     def nav_version = "2.3.5"
