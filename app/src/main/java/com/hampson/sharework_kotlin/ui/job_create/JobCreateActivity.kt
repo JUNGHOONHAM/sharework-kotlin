@@ -1,9 +1,11 @@
 package com.hampson.sharework_kotlin.ui.job_create
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.widget.DatePicker
+import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +13,7 @@ import com.hampson.sharework_kotlin.R
 import com.hampson.sharework_kotlin.databinding.ActivityJobCreateBinding
 import com.hampson.sharework_kotlin.session.SessionManagement
 import java.util.*
-
+import androidx.annotation.IntRange as AndroidIntRange
 class JobCreateActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityJobCreateBinding
@@ -132,10 +134,43 @@ class JobCreateActivity : AppCompatActivity() {
             }
         }
 
-        TimePickerDialog(
+        val test = TimePickerDialog(
             this,
             android.R.style.Theme_Holo_Dialog,
             timeSetListener,
             cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false).show()
+    }
+
+
+
+    @SuppressLint("PrivateApi")
+    fun TimePicker.setTimeInterval(
+        @AndroidIntRange(from = 0, to = 30)
+        timeInterval: Int = DEFAULT_INTERVAL
+    ) {
+        try {
+            val classForId = Class.forName("com.android.internal.R\$id")
+            val fieldId = classForId.getField("minute").getInt(null)
+
+            (this.findViewById(fieldId) as NumberPicker).apply {
+                minValue = MINUTES_MIN
+                maxValue = MINUTES_MAX / timeInterval - 1
+                displayedValues = getDisplayedValue(timeInterval)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun getDisplayedValue(
+        @AndroidIntRange(from = 0, to = 30)
+        timeInterval: Int = DEFAULT_INTERVAL
+    ): Array<String> {
+        val minutesArray = ArrayList<String>()
+        for (i in 0 until MINUTES_MAX step timeInterval) {
+            minutesArray.add(i.toString())
+        }
+
+        return minutesArray.toArray(arrayOf(""))
     }
 }
