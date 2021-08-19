@@ -23,42 +23,12 @@ class TimePicker @JvmOverloads constructor(
             }
 
             field = MathUtils.clamp(minInterval, maxInterval, value)
-            setInterval(field)
+
             invalidate()
         }
 
     init {
-        setInterval()
+
     }
 
-    @SuppressLint("PrivateApi")
-    fun setInterval(
-        @IntRange(from = 1, to = 30)
-        timeInterval: Int = defaultInterval
-    ) {
-        try {
-            val classForId = Class.forName("com.android.internal.R\$id")
-            val fieldId = classForId.getField("minute").getInt(null)
-            (this.findViewById(fieldId) as NumberPicker).apply {
-                minValue = DateTimeUtil.MINUTES_MIN
-                maxValue = DateTimeUtil.MINUTES_MAX / timeInterval - 1
-                displayedValues = getDisplayedValue()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    fun getDisplayedMinutes(): Int = minute * timeInterval
-
-    private fun getDisplayedValue(
-        interval: Int = timeInterval
-    ): Array<String> {
-        val minutesArray = ArrayList<String>()
-        for (i in 0 until DateTimeUtil.MINUTES_MAX step interval) {
-            minutesArray.add(String.format(DateTimeUtil.MINUTE_FORMAT, i))
-        }
-
-        return minutesArray.toArray(arrayOf(""))
-    }
 }

@@ -32,12 +32,11 @@ class JobInMapDataSource (private val apiService : DBInterface, private val comp
                         },
                         {
                             _networkState.postValue(NetworkState.ERROR)
-                            Log.d("JobDataSource", it.message)
                         }
                     )
             )
         } catch (e: Exception) {
-            Log.d("JobDataSource", e.message)
+
         }
     }
 }

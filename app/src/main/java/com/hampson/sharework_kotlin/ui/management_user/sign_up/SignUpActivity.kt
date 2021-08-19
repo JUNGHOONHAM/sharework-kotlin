@@ -43,7 +43,7 @@ class SignUpActivity : AppCompatActivity() {
         mBinding.toolbar.textViewToolbarTitle.text = "회원가입"
 
         if (intent.hasExtra("phoneNumber")) {
-            phoneNumber = intent.getStringExtra("phoneNumber")
+            phoneNumber = intent.getStringExtra("phoneNumber").toString()
         }
 
         viewModel = getViewModel()
